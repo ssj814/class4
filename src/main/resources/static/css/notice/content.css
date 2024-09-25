@@ -1,0 +1,286 @@
+@charset "UTF-8";
+/* 전체 스타일 초기화 */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: Arial, sans-serif;
+}
+
+/* boardList 전체 스타일 */
+#boardList {
+	width: 80%;
+	margin: 20px auto;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	background-color: #f9f9f9;
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+}
+
+/* 제목 스타일 */
+#boardList_title {
+	background-color: #333;
+	color: #fff;
+	padding: 10px;
+	font-size: 2em;
+	font-weight: bold;
+	text-align: center;
+	border-radius: 8px 8px 0 0;
+	margin-bottom: 20px;
+}
+
+/* boardArticle 스타일 */
+#boardArticle {
+	margin-bottom: 20px;
+}
+
+/* 게시물 헤더 스타일 */
+.boardHeader {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 20px;
+}
+
+.boardHeader th, .boardHeader td {
+	padding: 10px;
+	border: 1px solid #ddd;
+	text-align: center;
+}
+
+.boardHeader th {
+	background-color: #f1f1f1;
+	font-weight: bold;
+}
+
+.boardHeader td {
+	background-color: #fff;
+}
+
+/* 게시물 내용 스타일 */
+#boardArticle_content {
+	padding: 10px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 20px;
+}
+
+#boardArticle_content table {
+	width: 100%;
+	border-collapse: collapse; /* 테이블 경계 겹침 제거 */
+}
+
+#boardArticle_content td {
+	padding: 10px;
+	line-height: 1.6;
+	border: 1px solid #ddd; /* 테이블 셀 경계 */
+}
+
+/* 게시물 푸터 스타일 */
+#boardArticle_footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-top: 1px solid #ddd;
+	padding: 10px 0;
+}
+
+#boardArticle_footer input {
+	border: none;
+	background-color: #333;
+	color: #fff;
+	padding: 8px 15px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin: 0 5px;
+	transition: background-color 0.3s; /* 부드러운 전환 효과 추가 */
+}
+
+#boardArticle_footer input:hover {
+	background-color: #555;
+}
+/* 댓글 스타일 */
+.reply-container {
+	padding: 10px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 15px;
+}
+
+.reply-table {
+	width: 100%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.reply-userid {
+	font-weight: bold;
+	font-size: 15px;
+	border-bottom: 1px solid #ddd;
+	padding: 3px 10px;
+}
+
+.reply-content {
+	font-size: 17px;
+	border-bottom: 1px solid #ddd;
+	padding: 10px;
+}
+
+.reply-createdate {
+	font-size: 15px;
+	color: gray;
+	padding: 5px;
+}
+
+.reply-button {
+	text-align: right;
+	padding-right: 10px;
+}
+
+.reply-button input {
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-top: 10px;
+	transition: background-color 0.3s;
+}
+
+/* textarea와 버튼을 감싸는 컨테이너 */
+.reply-textarea-container {
+    position: relative;
+    margin-top: 10px;
+}
+
+/* textarea 스타일 */
+.reply-textarea-container textarea {
+    width: 100%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	height: 80px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	font-size: 14px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+
+/* submit 버튼을 포함하는 컨테이너 */
+.submit-reply-button-container {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* 버튼 스타일 */
+.submit-reply-button-container button {
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	padding: 5px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin:10px 0px 5px 5px;
+	transition: background-color 0.3s;
+}
+
+/* asdf */
+.comment-container {
+	width: 100%;
+	margin: 0 auto;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 20px;
+}
+
+.comment-header {
+	margin-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+	font-size: 15px;
+}
+
+.comment-body {
+	position: relative; /* 부모 컨테이너를 기준으로 자식 요소의 위치를 설정 */
+	margin-bottom: 10px;
+}
+
+#comment-textarea {
+	width: 100%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 14px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+
+#submit-comment {
+	position: absolute;
+	bottom: 15px; /* 텍스트 에리어 내부의 오른쪽 아래 위치 */
+	right: 10px;
+	background-color: #333;
+	color: #ffffff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+.hidden {
+	display: none; /* 기본적으로 숨겨진 상태 */
+}
+
+#submit-comment:hover {
+	background-color: #0056b3;
+}
+/* textarea와 버튼을 포함하는 컨테이너 */
+.edit-content-container {
+	position: relative;
+	margin-top: 10px;
+}
+
+.edit-content-textarea {
+	width: 100%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	height: 80px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	font-size: 14px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+/* 버튼 컨테이너 */
+.edit-buttons {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+/* 저장 및 취소 버튼 스타일 */
+.edit-buttons button {
+	margin:10px 0px 5px 5px;
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	padding: 4px 9px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
+/* 푸터 스타일 */
+footer {
+	text-align: center;
+	padding: 10px;
+	background-color: #333;
+	color: #fff;
+	border-radius: 0 0 8px 8px; /* 푸터 모서리 둥글게 */
+}
+
+footer p {
+	margin: 0;
+	font-size: 0.9em; /* 텍스트 크기 조정 */
+}

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TrainerBoardCommentMapper">	<!-- 네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;; -->
+	
+<select id="commentSelect" parameterType="int" resultType="TrainerBoardCommentDTO">
+    SELECT * FROM TRAINERBOARD_COMMENTS WHERE postid = #{postid}
+</select>
+	
+	<insert id="commentAdd" parameterType="TrainerBoardCommentDTO">
+	insert into TRAINERBOARD_COMMENTS (commID, postid, userid, commcontent, comcrdate, comupdate)
+	values (0, #{postid}, 2000, #{commcontent}, sysdate, sysdate)
+	</insert>
+
+<delete id="commentDelete" parameterType="int">
+delete from TRAINERBOARD_COMMENTS
+where postid=#{postid}
+</delete>
+
+</mapper>

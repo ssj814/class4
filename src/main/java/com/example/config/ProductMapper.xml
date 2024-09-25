@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductMapper"> <!-- 구별용 이름 -->
+	
+	<select id="selectProductMainList" resultType="ProductDTO">
+		SELECT * FROM product ORDER BY PRODUCT_VIEW DESC
+	</select>
+	
+	<select id="selectDetailproduct" parameterType="int" resultType="ProductDTO">
+		SELECT * FROM product WHERE product_id = #{product_id}
+	</select>
+	
+	<select id="selectProductList" resultType="ProductDTO" parameterType="hashmap">
+		SELECT * FROM product
+		<where>
+			<if test="category!=null">
+				product_category_id=#{category}
+			</if>
+			<if test="category != null and search != null">
+		        AND 
+		    </if>
+			<if test="search != null">
+				product_name LIKE '%'||#{search}||'%'
+			</if>
+		</where>
+		<if test="sortList != null">
+			ORDER BY
+			<foreach collection="sortList" item="item" separator=" ">
+				${item}
+			</foreach>
+		</if>
+	</select>	
+	
+	<select id="selectProductListCount" parameterType="hashmap" resultType="int">
+		SELECT count(*) FROM product
+		<where>
+			<if test="category!=null">
+				product_category_id=#{category}
+			</if>
+			<if test="category != null and search != null">
+		        AND 
+		    </if>
+			<if test="search != null">
+				product_name LIKE '%'||#{search}||'%'
+			</if>
+		</where>
+	</select>
+	
+	<update id="addViewCount" parameterType="int">
+		UPDATE product SET product_view = product_view+1 WHERE product_id=#{product_id}
+	</update>
+
+	<select id="maxProductId" resultType="int">
+		SELECT LAST_NUMBER FROM USER_SEQUENCES WHERE SEQUENCE_NAME = 'PRODUCT_ID_SEQ'
+	</select>
+	
+	<delete id="productDelete" parameterType="int">
+		DELETE FROM product WHERE product_id = #{product_id}
+	</delete>
+	
+	<insert id="insertProduct" parameterType="ProductDTO">
+		insert into product (product_category_id,product_name,product_price,product_description,product_imagename,product_inventory,product_createdat,product_isactive)
+		values (#{product_category_id},#{product_name},#{product_price},#{product_description},#{product_imagename},#{product_inventory},sysdate,#{product_isactive})	
+	</insert>
+	
+	<update id="updateProduct" parameterType="ProductDTO">
+		UPDATE product
+  		SET 
+  		product_category_id=#{product_category_id},
+  		product_name=#{product_name},
+  		product_price=#{product_price},
+  		product_description=#{product_description},
+  		<if test="product_imagename!=null">
+  			product_imagename=#{product_imagename},
+  		</if>
+  		product_inventory = #{product_inventory}
+  		where product_id = #{product_id}
+	</update>
+	
+	
+</mapper>

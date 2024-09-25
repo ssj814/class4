@@ -1,0 +1,89 @@
+@charset "UTF-8";
+/* 전체 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* 배경색 */
+    margin: 0;
+    padding: 0;
+}
+
+/* 트레이너 카드 컨테이너 */
+.trainer-card {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* 이미지와 텍스트가 카드 내부에 맞도록 */
+}
+
+/* 트레이너 헤더 스타일 */
+.trainer-header {
+    margin-bottom: 20px;
+}
+
+/* 트레이너 이름 스타일 */
+.trainer-name {
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* 트레이너 소개 스타일 */
+.trainer-intro {
+    font-size: 1.2em;
+    color: #666;
+    margin: 10px 0;
+}
+
+/* 트레이너 전문 수업 버튼 스타일 */
+.trainer-card button {
+    background-color: lightgrey;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    color: #333;
+    cursor: pointer;
+    font-size: 14px;
+    margin: 5px;
+    transition: background-color 0.3s;
+}
+
+.trainer-card button:hover {
+    background-color: #dcdcdc;
+}
+
+/* 트레이너 이미지 스타일 */
+.trainer-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* 각 트레이너 카드 내의 텍스트 스타일 */
+.trainer-center,
+.trainer-spec,
+.trainer-date,
+.trainer-cert {
+    display: block;
+    margin: 5px 0;
+    color: #333;
+}
+
+/* 링크 스타일 */
+a {
+    color: #007bff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 카드 내 요소들 사이의 간격 */
+.trainer-card span {
+    display: block;
+    margin: 10px 0;
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.TrainerDBDao">
+	<!-- 전체 페이지수 얻기 -->
+	<select id="getTotalLists" resultType="int">
+		select count(*) from trainer_profile
+		<where>
+			<if test="field != null and field != ''">
+				and field like '%' || #{field} || '%'
+			</if>
+			<choose>
+			  	<when test="searchType == 'intro'">
+			  			and intro like '%' || #{searchVal} || '%'
+			  	</when>
+			  	<when test="searchType == 'gender'">
+			  			and gender like '%' || #{searchVal} || '%' 
+			  	</when>
+			  	<when test="searchType == 'loc'">
+			  			and lesson_area1 like '%' || #{searchVal} || '%'
+			  			or lesson_area2 like '%' || #{searchVal} || '%'
+			  	</when>
+			  	<otherwise></otherwise>
+			 </choose>
+		</where>
+	</select>
+	<!-- 해당 페이지에 나올 리스트 -->
+	<select id="getlistsByPage" resultType="TrainerDTO" parameterType="map">
+		select * from 
+			(select a.*, rownum as rnum from 
+				(select * from trainer_profile 
+					 <where>
+					 <if test="field != null and field != ''">
+					       and field like '%' || #{field} || '%'
+					  </if>
+					  <choose>
+					  	<when test="searchType == 'intro'">
+					  			and intro like '%' || #{searchVal} || '%'
+					  	</when>
+					  	<when test="searchType == 'gender'">
+<!-- 					  			and gender = #{searchVal}  -->
+		 			  			and gender like '%' || #{searchVal} || '%'
+					  	</when>
+					  	<when test="searchType == 'loc'">
+					  			and lesson_area1 like '%' || #{searchVal} || '%'
+					  			or lesson_area2 like '%' || #{searchVal} || '%'
+					  	</when>
+					  	<otherwise></otherwise>
+					  </choose>
+				 	</where>
+				
+				order by reg_date desc) 
+			a where rownum <![CDATA[<=]]> #{endRow}) where rnum <![CDATA[>=]]> #{startRow}
+	</select>
+	
+	<!-- 트레이너 등록 -->
+	<insert id="insertTrainer" parameterType="TrainerDTO">
+		insert into trainer_profile(name,nickname,gender,field, center_name, 
+		center_postcode, center_address1, center_address2, intro, content, img_url, img_name, certificate_type, 
+		certificate, lesson_area1, lesson_area2, lesson_program) values (#{name}, #{nickname}, 
+		#{gender}, #{field}, #{center_name}, #{center_postcode}, #{center_address1}, #{center_address2}, #{intro}, 
+		#{content}, #{img_url}, #{img_name}, #{certificate_type}, #{certificate}, #{lesson_area1}, #{lesson_area2}, #{lesson_program})
+	</insert>
+	
+<!-- 	<select id="selectTrainer" parameterType="map" resultType="TrainerProfileDTO">
+		select * from  trainer_profile 
+	     <where>
+		  <if test="specialization != null and specialization != ''">
+		       specialization like '%' || #{specialization} || '%'
+		  </if>
+		 </where>
+		order by reg_date
+	</select> -->
+	
+	<!-- 트레이너 리스팅, 검색 -->
+	<select id="select" parameterType="map" resultType="TrainerDTO">
+		select * from  trainer_profile 
+ 	   <where>
+			  <if test="field != null and field != ''">
+			       and field like '%' || #{field} || '%'
+			  </if>
+			  <choose>
+			  	<when test="searchType == 'intro'">
+			  			and intro like '%' || #{searchVal} || '%'
+			  	</when>
+			  	<when test="searchType == 'gender'">
+			  			<!-- and gender = #{searchVal}  -->
+ 			  			and gender like '%' || #{searchVal} || '%' 
+			  	</when>
+			  	<when test="searchType == 'loc'">
+			  			and lesson_area1 like '%' || #{searchVal} || '%'
+			  			or lesson_area2 like '%' || #{searchVal} || '%'
+			  	</when>
+			  	<otherwise></otherwise>
+			  </choose>
+		 </where>
+		order by reg_date
+	</select>
+	
+	<!-- 트레이너 개인 정보 꺼내기 -->
+	<select id="selectTrainer" resultType="TrainerDTO">
+		select * from trainer_profile where trainer_id = #{idx}
+	</select>
+	
+	<!-- 트레이너 개인 정보 업데이트 -->
+	<update id="updateTrainer" parameterType="TrainerDTO">
+		update trainer_profile 
+		set name=#{name}, nickname = #{nickname}, field = #{field}, center_name = #{center_name}, center_postcode= #{center_postcode},
+		center_address1 = #{center_address1}, center_address2 =#{center_address2}, intro = #{intro}, 
+		content = #{content}, img_url = #{img_url}, img_name = #{img_name}, certificate_type = #{certificate_type},
+		certificate = #{certificate}, lesson_area1 = #{lesson_area1}, lesson_area2 = #{lesson_area2}, lesson_program = #{lesson_program}
+		where trainer_id = #{trainer_id}
+	</update>
+	
+	<!-- 트레이너 개인 정보 삭제 -->
+	<delete id="deleteTrainer" parameterType="int">
+		delete from trainer_profile where trainer_id = #{trainer_id}
+	</delete>
+</mapper>

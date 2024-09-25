@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="WishMapper"> <!-- 구별용 이름 -->
+
+	<select id="selectWishList" parameterType="int" resultType="int">
+		SELECT product_id FROM product_wish  WHERE user_id=#{user_id}
+	</select>
+
+	<insert id="wishInsert" parameterType="hashmap">
+		INSERT INTO product_wish VALUES(#{user_id},#{product_Id})
+	</insert>
+	
+	<select id="checkWish" parameterType="hashmap" resultType="int">
+		SELECT count(*) FROM product_wish  WHERE user_id=#{user_id} and product_Id=#{product_Id}
+	</select>
+	
+	<delete id="wishDelete" parameterType="hashmap">
+		DELETE FROM product_wish WHERE user_id=#{user_id} and product_Id=#{product_Id}
+	</delete>
+	
+	<delete id="AllwishDelete" parameterType="hashmap">
+		DELETE FROM product_wish
+		WHERE user_id=#{user_id}
+		and product_Id
+		<foreach collection="productIdList" item="item" open="IN(" separator="," close=")">
+			#{item}
+		</foreach>
+	</delete>
+	
+</mapper>

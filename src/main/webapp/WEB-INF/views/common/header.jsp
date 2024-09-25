@@ -1,0 +1,82 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+	integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMYd4M5G7SxAR/Ztq9nK7/WKg+j4pQ5g1R67I9"
+	crossorigin="anonymous">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="resources/css/main.css">
+<title>Insert title here</title>
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg bg-dark border-body p-3"
+		style="position: fixed; top: 0; left: 0; right: 0; z-index: 10;">
+		<div class="container-fluid">
+			<a class="navbar-brand fs-4" href="/app"
+				style="color: pink; font-style: italic;">PD </a>
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+				aria-controls="navbarNavDropdown" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item"><a class="nav-link active"
+						href="shopList" style="color: beige;">ShoppingMall</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="trainer_list" style="color: beige;">For Trainer</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="TrainerBoard" style="color: beige;">TrainerBoard</a></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="color: beige;">Meal Plan</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="cookingTip">Cooking Tip</a></li>
+							<li><a class="dropdown-item" href="#">Sicdan</a></li>
+						</ul>
+					</li>
+					<li class="nav-item"><a class="nav-link active"
+						href="shopList" style="color: beige;">For Contest</a></li>
+					<li class="nav-item"><a class="nav-link active" href="notice"
+						style="color: beige;">Notice</a></li>
+
+
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="color: beige;">dropdown test</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="#">Action</a></li>
+							<li><a class="dropdown-item" href="#">Another action</a></li>
+							<li><a class="dropdown-item" href="#">Something else
+									here</a></li>
+						</ul></li>
+				</ul>
+				<ul class="navbar-nav ms-auto">
+					<li class="nav-item"><a class="nav-link active"
+						href="wishList" style="color: pink;">WISH</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="cartList" style="color: pink;">CART</a></li>
+					<li class="nav-item"><a class="nav-link active" href="#"
+						style="color: pink;">LOGIN</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<br>
+	<br>
+	<br>

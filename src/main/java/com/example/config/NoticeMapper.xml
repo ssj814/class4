@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="NoticeMapper">
+	<!-- 전체 글 목록 조회, 제목/작성자/내용 검색 -->
+	<select id="selectBoardList" resultType="NoticeDTO" parameterType="hashmap">
+		select *
+    	from (
+      	  select rownum as rnum, t.*
+      	  from (
+           	 select postid, title, content, writer, to_char(createdate,'yy/mm/dd') createdate, viewcount, category
+           	 from notice
+           	 <if test="searchKey != null and searchValue != null">
+          	      where LOWER(${searchKey}) like '%' || LOWER(#{searchValue}) || '%'
+          	  </if>
+         	   order by postid desc
+        	) t
+    	) where rnum between #{startRow} and #{endRow}
+	</select>
+	
+	
+	<!-- 글 세부내용 조회 -->
+	<select id="selectBoardOne" resultType="NoticeDTO" parameterType="int">
+		select postid, title, content, writer, createdate, viewcount 
+		from notice	
+		where postid=#{postid}
+	</select>
+	
+	<!-- 조회수 증가 -->
+	<update id="increaseViewCount" parameterType="int">
+		update notice set viewcount= viewcount+1 where postid=#{postid}	
+	</update>
+		
+	<!-- 글 저장 -->
+	<insert id="insertContent" parameterType="NoticeDTO">
+		insert into notice (title, content, createdate, category) 
+		values (#{title}, #{content}, sysdate, #{category})
+	</insert>
+	
+	<!-- 글 삭제 -->
+	<delete id="boardDelete" parameterType="int">
+		delete from notice where postid=#{postid}
+	</delete>
+	
+	<!-- 글 수정 -->
+	<update id="updateContent" parameterType="NoticeDTO">
+		update notice set title=#{title}, content=#{content}, category=#{category} 
+		where postid=#{postid}
+	</update>
+	
+	<!-- 전체 글 갯수 -->
+	<select id="getTotalCount" parameterType="hashmap" resultType="int">
+		select count(*) from notice 
+		<if test="searchKey != null and searchValue != null">
+			where LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
+		</if>
+	</select>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CartMapper"> <!-- 구별용 이름 -->
+	
+	<select id="selectCart" parameterType="int" resultType="CartProductDTO">
+		select * from product JOIN product_cart using(product_id) where user_id=#{user_id}
+	</select>
+	
+	<select id="cartCheck" parameterType="hashmap" resultType="int">
+		SELECT count(*) FROM product_cart WHERE user_id=#{user_id} and product_Id=#{product_Id}
+	</select>
+
+	<insert id="cartInsert" parameterType="hashmap">
+		INSERT INTO product_cart VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id},1)
+	</insert>
+	
+	<update id="cartUpdate" parameterType="CartDTO">
+		update product_cart set quantity=#{quantity} WHERE user_id=#{user_id} AND product_id=#{product_id}
+	</update>
+	
+</mapper>

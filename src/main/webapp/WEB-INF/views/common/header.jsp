@@ -34,23 +34,23 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link active"
-						href="shopList" style="color: beige;">ShoppingMall</a></li>
+						href="/app/shopList" style="color: beige;">ShoppingMall</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="trainer_list" style="color: beige;">For Trainer</a></li>
+						href="/app/trainer_list" style="color: beige;">For Trainer</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="TrainerBoard" style="color: beige;">TrainerBoard</a></li>
+						href="/app/TrainerBoard" style="color: beige;">TrainerBoard</a></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" role="button"
 						data-bs-toggle="dropdown" aria-expanded="false"
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="cookingTip">Cooking Tip</a></li>
+							<li><a class="dropdown-item" href="/app/cookingTip">Cooking Tip</a></li>
 							<li><a class="dropdown-item" href="#">Sicdan</a></li>
 						</ul>
 					</li>
 					<li class="nav-item"><a class="nav-link active"
 						href="shopList" style="color: beige;">For Contest</a></li>
-					<li class="nav-item"><a class="nav-link active" href="notice"
+					<li class="nav-item"><a class="nav-link active" href="/app/notice"
 						style="color: beige;">Notice</a></li>
 
 

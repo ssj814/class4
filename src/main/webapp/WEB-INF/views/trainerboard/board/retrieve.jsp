@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
+ 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css"> <!-- 수정 -->
      <script>
         function confirmDelete(postid) {
             if (confirm("삭제하시겠습니까?")) {
@@ -24,7 +24,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" style="margin-top:40px;">
     <main>
         
       

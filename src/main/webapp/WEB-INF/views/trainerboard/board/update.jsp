@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
 </head>
 <body>
-<div class="container">
+<div class="container" style="margin-top:40px;">
         <main>
 		   <form action="${pageContext.request.contextPath}/update" method="post" id="updateForm">
 		    	<input type="hidden" name="postid" value="${dto.postid}">

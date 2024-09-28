@@ -139,7 +139,7 @@ public class ProductController {
 	
 	@PostMapping(value="/product")
 	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m) {
-		String uploadDir = "C:/images/"; //이미지 저장 경로
+		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		InputStream inputStream = null;
 		try {
 			inputStream = product_image.getInputStream();

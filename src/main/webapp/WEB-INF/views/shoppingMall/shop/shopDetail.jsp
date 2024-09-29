@@ -60,10 +60,10 @@
 
 			<span class="btn-wish fs-1" data-id="${product.getProduct_id()}"
                 data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요"
-                style="cursor: pointer;">🌈<i class="fa-solid fa-heart fs-3"></i></span>
+                style="cursor: pointer;"><i class="fa-solid fa-heart fs-3"></i></span>
             <span class="btn-cart fs-1" data-id="${product.getProduct_id()}"
                 data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-title="장바구니" style="cursor: pointer;">⭐<i
+                data-bs-title="장바구니" style="cursor: pointer;"><i
                 class="fa-solid fa-cart-shopping fs-3 "></i></span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>

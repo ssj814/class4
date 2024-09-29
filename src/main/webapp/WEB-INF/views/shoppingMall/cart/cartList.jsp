@@ -20,11 +20,11 @@
 				</div>
 				<div class="col-2">
 					<p>개수</p>
-					<input name="product-count-${product.getProduct_id()}" class="product-count" id="count-${product.getProduct_id()}" data-id="${product.getProduct_id()}" type="number" min="1" value="${product.getQuantity()}" >
+					<input name="product-count-${product.getProduct_id()}" class="product-count form-control" id="count-${product.getProduct_id()}" data-id="${product.getProduct_id()}" type="number" min="1" value="${product.getQuantity()}" >
 				</div>
 				<div class="col-2">
 					<p>total</p>
-					<input name="product-totalPrice-${product.getProduct_id()}" id="total-${product.getProduct_id()}" class="total" type="text" disabled value="${product.getProduct_price()*product.getQuantity()}">
+					<input name="product-totalPrice-${product.getProduct_id()}" id="total-${product.getProduct_id()}" class="total form-control" type="text" disabled value="${product.getProduct_price()*product.getQuantity()}">
 				</div>
 			</div>
 		</c:forEach>
@@ -36,11 +36,11 @@
 			<div class="col-6"></div>
 			<div class="col-2">
 				<span>총 구매 상품개수</span> 
-				<input type="text" class="order-count" disabled value="0" >
+				<input type="text" class="order-count form-control" disabled value="0" >
 			</div>
 			<div class="col-2">
 				<span>총 구매 가격</span>
-				<input class="order-total" type="text" disabled value="0">
+				<input class="order-total form-control" type="text" disabled value="0">
 			</div>
 		</div>
 		

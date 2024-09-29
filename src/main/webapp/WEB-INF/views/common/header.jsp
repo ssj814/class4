@@ -24,7 +24,7 @@
 		style="position: fixed; top: 0; left: 0; right: 0; z-index: 10;">
 		<div class="container-fluid">
 			<a class="navbar-brand fs-4" href="/app"
-				style="color: pink; font-style: italic;">PD </a>
+				style="color: pink; font-style: italic;">운동은 답이다. </a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
 				aria-controls="navbarNavDropdown" aria-expanded="false"

@@ -32,6 +32,10 @@ public class CartService {
 		dao.cartUpdate(dto);
 	}
 
+	public void cartDelete(CartDTO dto) {
+		dao.cartDelete(dto);
+	}
+
 		
 	
 }

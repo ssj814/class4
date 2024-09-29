@@ -20,4 +20,8 @@
 		update product_cart set quantity=#{quantity} WHERE user_id=#{user_id} AND product_id=#{product_id}
 	</update>
 	
+	<delete id="cartDelete" parameterType="CartDTO">
+    	delete from product_cart where user_id = #{user_id} and product_id = #{product_id}
+	</delete>
+	
 </mapper>

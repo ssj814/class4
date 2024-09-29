@@ -32,6 +32,10 @@ public class CartDAO {
 		session.update("CartMapper.cartUpdate",dto);
 	}
 
+	public void cartDelete(CartDTO dto) {
+		session.delete("CartMapper.cartDelete", dto);
+	}
+
 	
 
 }

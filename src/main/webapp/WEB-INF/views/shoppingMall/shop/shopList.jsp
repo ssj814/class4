@@ -114,7 +114,7 @@
 							<!-- 관리자 영역-->
 							<c:if test="true">
 								<button
-									onclick="location.href='productUpdate?productId=${product.getProduct_id()}'">수정하기</button>
+									onclick="location.href='<c:url value="/productUpdate?productId=${product.getProduct_id()}&page=${currentPage}" />'">수정하기</button>
 								<button class="del-product" data-id="${product.getProduct_id()}">삭제</button>
 							</c:if>
 						</div>

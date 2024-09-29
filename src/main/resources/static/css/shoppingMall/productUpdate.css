@@ -57,7 +57,7 @@ input[type="file"] {
 	margin-top: 20px; /* 버튼 상단 여백 */
 }
 
-input[type="submit"], input[type="reset"] {
+input[type="submit"], input[type="reset"], input[type="button"] {
 	background-color: #333;
 	color: #ffffff;
 	border: none;

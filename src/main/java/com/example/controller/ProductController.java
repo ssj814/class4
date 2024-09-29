@@ -3,7 +3,6 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -22,11 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
 import com.example.service.ProductService;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class ProductController {
@@ -92,6 +90,7 @@ public class ProductController {
 		m.addAttribute("search", search);
 		m.addAttribute("sort", sort);
 		m.addAttribute("totalPage", totalPage);
+		m.addAttribute("currentPage", page);
 		return "shoppingMall/shopList";
 	}
 	
@@ -174,14 +173,17 @@ public class ProductController {
 	}
 	
 	@GetMapping(value="/productUpdate")
-	public String productUpdate(int productId, Model m) {
+	public String productUpdate(int productId, Model m,
+			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		m.addAttribute("product", productDTO);
+		m.addAttribute("currentPage", page);
 		return "shoppingMall/productUpdate";
 	}
 	
 	@PostMapping(value="/productUpdate")
-	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m) {	
+	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
+			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/"; //이미지 저장 경로
 		InputStream inputStream = null;
 		try {
@@ -205,6 +207,8 @@ public class ProductController {
 				e.printStackTrace();
 			}
 		}
+		ra.addAttribute("page", page);
+		
 		return "redirect:/shopList";
 	}
 		

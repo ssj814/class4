@@ -31,9 +31,12 @@
 		<div class="row align-items-center">
 			<div class="col-2">
        			<input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
- 		 		<label class="form-check-label" for="flexCheckDefault">전체선택</label><br> 
+ 		 		<label class="form-check-label" for="flexCheckDefault">전체선택</label>
 			</div>
-			<div class="col-6"></div>
+			<div class="col-1">
+				<input type="button" id="btn-delete" value="삭제">
+			</div>
+			<div class="col-5"></div>
 			<div class="col-2">
 				<span>총 구매 상품개수</span> 
 				<input type="text" class="order-count form-control" disabled value="0" >
@@ -43,93 +46,128 @@
 				<input class="order-total form-control" type="text" disabled value="0">
 			</div>
 		</div>
-		
-		<button id="btn-order">결제화면으로 넘어가는 버튼</button>
-	
+		<button id="btn-order" style="margin: 20px 0">결제화면으로 넘어가는 버튼</button>
 	</form>
 	
 	
 
 <script>
 	
-	$(document).ready(function() {
+$(document).ready(function () {
+    // Quantity 업데이트 + 개별 total 계산 + 총 구매 개수 및 금액 업데이트
+    $(".product-count").on("change", function () {
+        var productId = $(this).data("id");
+        var quantity = $(this).val();
+        var price = parseInt($("#price-" + productId).text().replace(/,/g, ''));
+        var total = quantity * price;
+
+        // 개별 상품 총액 업데이트
+        $("#total-" + productId).val(total);
+
+        // 서버에 수량 업데이트 요청
+        $.ajax({
+            url: "cartQuantity",
+            type: "post",
+            data: {
+                productId: productId,
+                quantity: quantity
+            },
+            success: function (data, status, xhr) {
+                console.log(status);
+            },
+            error: function (xhr, status, error) {
+                console.log(error);
+            }
+        });
+
+        // 총 구매 개수와 금액 업데이트
+        calculateTotal();
+    });
+
+    // 선택된 상품들, 총 구매 개수, 금액 설정하기 (체크박스 변경 시)
+    $(".btn-product").on("change", function () {
+        calculateTotal();
+    });
+
+    // 전체선택 checkbox, 총 구매 개수, 금액 설정하기
+    $("#flexCheckDefault").on("click", function () {
+        var ck = this.checked;
+        $(".form-check-input").each(function (idx, data) {
+            data.checked = ck;
+        });
+
+        // 총 구매 개수와 금액 업데이트
+        calculateTotal();
+    });
+
+    // 결제화면으로 넘어갈때 체크 데이터 가지고 넘어가기
+    $("#btn-order").on("click", function () {
+        var productIdList = [];
+        $(".form-check-input").each(function (idx, data) {
+            if (data.checked) {
+                productIdList.push($(data).val());
+            }
+        });
+        $("form").attr("action", "orderList?productIdList=" + productIdList);
+    });
+
+    // 총 구매 상품 개수와 금액 계산 함수
+    function calculateTotal() {
+        var count = 0;
+        var total = 0;
+
+        $(".btn-product").each(function (idx, data) {
+            if (data.checked) {
+                var productId = $(data).val();
+                count += parseInt($("#count-" + productId).val());
+                total += parseInt($("#total-" + productId).val());
+            }
+        });
+
+        $(".order-count").val(count);
+        $(".order-total").val(total.toLocaleString() + ' 원');
+    }
+    
+ // 선택된 항목 삭제
+    $("#btn-delete").on("click", function () {
+        var selectedProductIds = [];
+        $(".form-check-input:checked").each(function () {
+            selectedProductIds.push($(this).val());
+        });
+
+        if (selectedProductIds.length === 0) {
+            alert("삭제할 항목을 선택해 주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: "cartDelete",
+            type: "post",
+            data: {
+                productIds: selectedProductIds
+            },
+            traditional: true, // 배열 형태로 파라미터를 전달하기 위해 필요
+            success: function () {
+                // 선택된 항목 삭제 후 DOM에서 제거
+                selectedProductIds.forEach(function (id) {
+                    $("#row-" + id).remove(); // 각 상품의 행 삭제
+                    location.reload();
+                });
+
+                // 총 구매 개수와 금액 업데이트
+                calculateTotal();
+            },
+            error: function (xhr, status, error) {
+                console.log("삭제 실패: " + error);
+            }
+        });
+    });
+
+    // 초기 총계 계산
+    calculateTotal();
+});
 		
-		// Quantity 업데이트 + total 계산
-		$(".product-count").on("change",function(){
-			var ProuctId = $(this).data("id");
-			var Quantity = $(this).val();
-	        $.ajax({
-		        url : "cartQuantity",
-		        type : "post",
-		        data : {
-		        	ProuctId:ProuctId,
-		        	Quantity:Quantity
-		        },
-		        success: function (data,status,xhr){
-		            console.log(status);
-		        },
-		        error:function(xhr,status,error){
-		            console.log(error);
-		        }
-	        });
-	    });
-	    
-		// 개수에 따른 개별 total 계산
-		$(".product-count").on("change",function(){
-			var ProuctId = $(this).data("id");
-			var Quantity = $(this).val();
-			var price = $("#price-"+ProuctId).text();
-			$("#total-"+ProuctId).val(Quantity*price);
-		})
 		
-		// 선택된 상품들, 총구매 개수, 금액 설정하기
-		$(".btn-product").on("change",function(){
-			var totalCount = $(this).val();
-			var count = 0;
-			var total = 0;
-			$(".btn-product").each(function(idx,data) {
-				if(data.checked){
-					var ProductId = $(data).val();
-					count += parseInt($("#count-"+ProductId).val());
-					total += parseInt($("#total-"+ProductId).val());
-				}
-			});
-			$(".order-count").val(count);
-			$(".order-total").val(total);
-		})
-				
-		// 전체선택 checkbox, 총구매 개수, 금액 설정하기
-		$("#flexCheckDefault").on("click",function(){
-			var ck = this.checked ;
-			$(".form-check-input").each(function(idx,data) {
-				data.checked = ck;
-			})
-			var count = 0;
-			var total = 0;
-			$(".btn-product").each(function(idx,data) {
-				if(data.checked){
-					var ProductId = $(data).val();
-					count += parseInt($("#count-"+ProductId).val());
-					total += parseInt($("#total-"+ProductId).val());
-				}
-			});
-			$(".order-count").val(count);
-			$(".order-total").val(total);
-		})
-		
-		// 결제화면으로 넘어갈때 체크 데이터 가지고 넘어가기
-		$("#btn-order").on("click",function(){
-			var productIdList = [];
-			$(".form-check-input").each(function(idx,data) {
-				if(data.checked){
-					productIdList.push($(data).val());
-				}
-			})
-			$("form").attr("action", "orderList?productIdList="+productIdList);
-		})
-		
-		
-	})
 	
 </script>
 

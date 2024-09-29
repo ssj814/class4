@@ -36,6 +36,10 @@ public class CartDAO {
 		session.delete("CartMapper.cartDelete", dto);
 	}
 
+	public int increaseQuantity(Map<String, Object> map) {
+		return session.update("CartMapper.increaseQuantity", map);
+	}
+
 	
 
 }

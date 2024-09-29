@@ -43,17 +43,25 @@ public class CartController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("user_id", user_Id);
 		map.put("product_Id", productId);
-		int check = service.cartCheck(map); //cart에 존재?
+		int check = service.cartCheck(map); //cart에 존재여부
 		Map<String,String> responseMap = new HashMap<String,String>();
-		responseMap.put("mesg","이미 장바구니에 존재하는 상품입니다");
-		if(check!=1) {
-			int n = service.cartInsert(map);
-			if(n==1) {
-				responseMap.put("mesg","장바구니 추가 완료");
-			}else {
-				responseMap.put("mesg","실패");
-			}
-		}
+		if (check == 1) {
+	        // 이미 장바구니에 존재하는 경우 수량 증가
+	        int updateResult = service.increaseQuantity(map);
+	        if (updateResult == 1) {
+	            responseMap.put("mesg", "장바구니에 기존 항목 수량 증가 완료");
+	        } else {
+	            responseMap.put("mesg", "수량 증가 실패");
+	        }
+	    } else {
+	        // 장바구니에 존재하지 않는 경우 새로 추가
+	        int insertResult = service.cartInsert(map);
+	        if (insertResult == 1) {
+	            responseMap.put("mesg", "장바구니 추가 완료");
+	        } else {
+	            responseMap.put("mesg", "장바구니 추가 실패");
+	        }
+	    }
 		return responseMap;
 	}
 	

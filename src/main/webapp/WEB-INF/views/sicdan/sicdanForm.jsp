@@ -6,4 +6,4 @@
 <!--  -->
 <jsp:include page="../common/header.jsp" flush="true"></jsp:include>
 <jsp:include page="sicdan/sicdanForm.jsp" flush="true" />
-<jsp:include page="../common/footer.jsp" flush="true"></jsp:include>
+ <jsp:include page="../common/footer.jsp" flush="true"></jsp:include> 

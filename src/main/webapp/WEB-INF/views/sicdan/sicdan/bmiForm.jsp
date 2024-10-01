@@ -8,6 +8,11 @@
 <!-- Bootstrap CSS 추가 -->
 
 <style>
+
+    main {
+        margin-top: 70px; /* 헤더 높이만큼 여백 추가 */
+    }
+
   body {
     background-color: #f8f9fa;
   }

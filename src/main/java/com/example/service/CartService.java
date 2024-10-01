@@ -32,6 +32,14 @@ public class CartService {
 		dao.cartUpdate(dto);
 	}
 
+	public void cartDelete(CartDTO dto) {
+		dao.cartDelete(dto);
+	}
+
+	public int increaseQuantity(Map<String, Object> map) {
+		return dao.increaseQuantity(map);
+	}
+
 		
 	
 }

@@ -20,7 +20,8 @@
 <link rel="stylesheet" href="resources/css/main.css">
 <title>Insert title here</title>
 </head>
-<body>
+<body> 
+<header>
 	<nav class="navbar navbar-expand-lg bg-dark border-body p-3"
 		style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;">
 		<div class="container-fluid">
@@ -79,3 +80,5 @@
 		</div>
 	</nav>
 	<div style="height: 70px"></div>
+</header>
+<main>

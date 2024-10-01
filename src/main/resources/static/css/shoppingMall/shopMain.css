@@ -9,7 +9,7 @@
 /* 공통 스타일 */
  body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
+    background-color: #ffffff;
     color: #333;
 } 
 
@@ -109,3 +109,16 @@
     color: #777;
 }
 
+.countdown {
+    display: flex;
+    gap: 15px;
+    font-size: 24px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

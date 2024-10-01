@@ -4,6 +4,6 @@
 //request.setAttribute("pageSpecificCss", "resources/css/notice/content.css");
 %>
 <!--  -->
-<jsp:include page="../common//header.jsp" flush="true"></jsp:include>
+<jsp:include page="../common/header.jsp" flush="true"></jsp:include>
 <jsp:include page="sicdan/Chart.jsp" flush="true" />
-<jsp:include page="../common//footer.jsp" flush="true"></jsp:include>
+<jsp:include page="../common/footer.jsp" flush="true"></jsp:include>

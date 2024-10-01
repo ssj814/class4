@@ -6,8 +6,8 @@
 <meta charset="UTF-8">
 <title>BMI 계산기 결과</title>
 
-<!-- Bootstrap CSS 추가 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
 
 <style>
     body {
@@ -209,6 +209,6 @@
 
 <!-- Bootstrap JS 추가 -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3-alpha3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

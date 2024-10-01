@@ -19,10 +19,12 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" href="resources/css/main.css">
 <title>Insert title here</title>
+
 </head>
-<body>
+<body> 
+<header>
 	<nav class="navbar navbar-expand-lg bg-dark border-body p-3"
-		style="position: fixed; top: 0; left: 0; right: 0; z-index: 10;">
+		style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;">
 		<div class="container-fluid">
 			<a class="navbar-brand fs-4" href="/app"
 				style="color: pink; font-style: italic;">운동은 답이다. </a>
@@ -45,9 +47,10 @@
 						data-bs-toggle="dropdown" aria-expanded="false"
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="/app/cookingTip">Cooking
-									Tip</a></li>
-							<li><a class="dropdown-item" href="#">Sicdan</a></li>
+							<li><a class="dropdown-item" href="/app/cookingTip">Cooking	Tip</a></li>
+							<li><a class="dropdown-item" href="/app/sicdan/list">Sicdan</a></li>
+							<li><a class="dropdown-item" href="/app/Chart">Chart</a></li>
+							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="shopList" style="color: beige;">For Contest</a></li>
@@ -78,3 +81,5 @@
 		</div>
 	</nav>
 	<div style="height: 70px"></div>
+</header>
+<main>

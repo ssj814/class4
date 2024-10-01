@@ -7,6 +7,7 @@
 <h1>상품 수정</h1>
     <form action="productUpdate" method="post" enctype="multipart/form-data">
         <input type="hidden" name="product_id" value="${product.getProduct_id()}"/>
+        <input type="hidden" name="page" value="${currentPage}"/>
         <label for="category_id">카테고리</label>
         <select id="product_category_id" name="product_category_id" required>
             <option value="0" <c:if test="${product.getProduct_category_id()==0}"> selected </c:if>>선택하세요</option>
@@ -33,6 +34,7 @@
         <div class="button-container">
             <input type="submit" value="수정"/>
             <input type="reset" onclick="location.href='productUpdate?productId=${product.getProduct_id()}'" value="취소" />
+            <input type="button" onclick="location.href='<c:url value="/shopList?page=${currentPage}" />'" value="목록"/>
         </div>
     </form>
  </div>

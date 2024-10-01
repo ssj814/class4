@@ -13,7 +13,7 @@
 	
 </head>
 <body>
-	<div class="container" style="margin-top:40px;">
+	<div class="container" style="margin-top:40px; ">
 		<main>
 		<form action="main" method="get" id="search">
 			<select name="searchName">

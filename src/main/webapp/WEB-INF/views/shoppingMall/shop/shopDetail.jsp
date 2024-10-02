@@ -20,6 +20,8 @@
 </div>
 
 <div class="container">
+
+	<!-- product -->
 	<div class="row productDetail-container">
 		<div class="col-7 productDetail-middle">
 			<img src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>"  alt="Image"
@@ -69,12 +71,29 @@
 		</div>
 		<div class="col-1"></div>
 	</div>
+	
+	<!-- product_review -->
+	<div class="container bg-light mt-5 mb-5">
+		<p> 리뷰 보여질 공간 </p>
+		<button id="Product-Review-openWindow">리뷰등록하기</button>
+	</div>
+	
 </div>
 
 <script>
 	
 	$(function() {
 		
+		//review 새창열기
+        $('#Product-Review-openWindow').on('click', function() {
+        	var width = 700;   
+            var height = 800; 
+            var left = Math.ceil((window.screen.width - width) / 2);
+            var top = Math.ceil((window.screen.height - height) / 2);
+            // 새 창 열기
+            window.open('/app', '_blank', "width="+width+", height="+height+", left="+left+",top="+top +"scrollbars=yes");
+        });
+
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
 			var productId = $(this).data("id");

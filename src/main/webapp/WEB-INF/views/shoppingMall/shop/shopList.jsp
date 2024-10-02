@@ -6,6 +6,20 @@
 
 <div class="main-container">
 
+	<!-- Modal -->
+	<div class="modal fade" id="messageModal" tabindex="-1"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mesg" class="modal-body"></div>
+				<div class="modal-footer border-top-0">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<nav class="navbar bg-body-tertiary mb-4">
 		<div class="container-fluid">
 		<!-- 현재 카페고리 -->
@@ -144,25 +158,38 @@
 </div>
 
 <script type="text/javascript">
-	// 상품 삭제 버튼 
-	$(".del-product").on("click", function() {
-		var delCheck = confirm("정말 삭제하시겠습니까?");
-		var dataId = $(this).data("id");
-		var parent = $(this).parent();
-		if (delCheck) {
-			$.ajax({
-				type : "DELETE",
-				url : "product/productId/"+dataId,
-				dataType : "json",
-				success : function(resData, status, xhr) {
-					alert(resData.mesg);
-					parent.remove();
-				},
-				error : function(xhr, status, error) {
-					alert("실패");
-					console.log(error);
-				}
-			});
-		}
-	});
+	
+	$(function() {
+		
+		// 모달창
+        var message = '${mesg}';
+        if (message) {
+            $("#mesg").html(message);
+            var messageModal = new bootstrap.Modal($('#messageModal')[0]);
+            messageModal.show();
+        }
+
+		// 상품 삭제 버튼 
+		$(".del-product").on("click", function() {
+			var delCheck = confirm("정말 삭제하시겠습니까?");
+			var dataId = $(this).data("id");
+			var parent = $(this).parent();
+			if (delCheck) {
+				$.ajax({
+					type : "DELETE",
+					url : "product/productId/"+dataId,
+					dataType : "json",
+					success : function(resData, status, xhr) {
+						alert(resData.mesg);
+						parent.remove();
+					},
+					error : function(xhr, status, error) {
+						alert("실패");
+						console.log(error);
+					}
+				});
+			}
+		});
+
+	})
 </script>

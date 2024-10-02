@@ -21,6 +21,8 @@
 
 <div class="container">
 
+	<input type="hidden" class="ProductId" value="${product.getProduct_id()}">
+
 	<!-- product -->
 	<div class="row productDetail-container">
 		<div class="col-7 productDetail-middle">
@@ -60,13 +62,12 @@
 				</div>
 			</div>
 
-			<span class="btn-wish fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요"
-                style="cursor: pointer;"><i class="fa-solid fa-heart fs-3"></i></span>
-            <span class="btn-cart fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-title="장바구니" style="cursor: pointer;"><i
-                class="fa-solid fa-cart-shopping fs-3 "></i></span>
+			<span class="btn-wish fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
+                <i class="fa-solid fa-heart fs-3"></i>
+            </span>
+            <span class="btn-cart fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+                <i class="fa-solid fa-cart-shopping fs-3 "></i>
+            </span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>
 		<div class="col-1"></div>
@@ -75,7 +76,7 @@
 	<!-- product_review -->
 	<div class="container bg-light mt-5 mb-5">
 		<p> 리뷰 보여질 공간 </p>
-		<button id="Product-Review-openWindow">리뷰등록하기</button>
+		<button id="Product-Review-openWindow">리뷰등록하기</button> <!-- 나중에 마이페이지로 이동 -->
 	</div>
 	
 </div>
@@ -86,17 +87,17 @@
 		
 		//review 새창열기
         $('#Product-Review-openWindow').on('click', function() {
-        	var width = 700;   
-            var height = 800; 
+        	var productId = $(".ProductId").val();
+        	var width = 600;   
+            var height = 700; 
             var left = Math.ceil((window.screen.width - width) / 2);
             var top = Math.ceil((window.screen.height - height) / 2);
-            // 새 창 열기
-            window.open('/app', '_blank', "width="+width+", height="+height+", left="+left+",top="+top +"scrollbars=yes");
+            window.open('/app/shop_productReview/'+productId, '_blank', "width="+width+", height="+height+", left="+left+",top="+top +"scrollbars=yes");
         });
 
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = $(".ProductId").val();
 		        $.ajax({
 		            type: "GET",
 		            url: "wish",
@@ -118,7 +119,7 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = $(".ProductId").val();
 		        $.ajax({
 		            type: "GET",
 		            url: "cart",

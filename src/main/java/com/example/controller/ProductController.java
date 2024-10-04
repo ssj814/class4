@@ -25,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductReviewDTO;
+import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
 
 @Controller
@@ -32,6 +34,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductService service;
+	
+	@Autowired
+	ProductReviewService productReviewService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m) {
@@ -125,8 +130,11 @@ public class ProductController {
 	@RequestMapping(value="/shopDetail", method=RequestMethod.GET)
 	public String shopDetail(int productId, Model m) {
 		service.addViewCount(productId); //조회수++
-		ProductDTO product = service.selectDetailproduct(productId);
-		m.addAttribute("product", product);
+		ProductDTO productDTO = service.selectDetailproduct(productId);
+		//리뷰//
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
+		m.addAttribute("product", productDTO);
+		m.addAttribute("productReview", productReviewDTO);
 		return "shoppingMall/shopDetail";
 	}
 	

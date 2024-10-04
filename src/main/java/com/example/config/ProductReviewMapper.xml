@@ -6,8 +6,35 @@
 
 	<insert id="insertReview" parameterType="ProductReviewDTO">
 		INSERT INTO product_review 
-		VALUES (product_review_seq.NEXTVAL,#{product_id},#{user_id},SYSDATE,#{content},#{rating},#{photos},null)
+		VALUES (product_review_seq.NEXTVAL,#{product_id},#{user_id},SYSDATE,#{content},#{rating},#{photos, jdbcType=VARCHAR},null)
 	</insert>
+	
+	<select id="selectReviewList" parameterType="Integer" resultType="ProductReviewDTO">
+		SELECT review_id,product_id,user_id,to_char(create_date,'yyyy-mm-dd') create_date,content,rating,photos,feedback 
+		FROM product_review WHERE product_id=#{product_id}
+		ORDER BY 1
+	</select>
+	
+	<select id="selectReview" parameterType="Integer" resultType="ProductReviewDTO">
+		SELECT *
+		FROM product_review 
+		WHERE review_id=#{review_id}
+	</select>
+	
+	<delete id="deleteReview" parameterType="Integer">
+		DELETE FROM product_review WHERE review_id=#{review_id}
+	</delete>
+	
+	<update id="updateReview" parameterType="ProductReviewDTO">
+		UPDATE product_review 
+		SET content=#{content},
+		<if test="photos!=null">
+  			photos=#{photos},
+  		</if>
+  		rating=#{rating} 
+		WHERE review_id=#{review_id}
+	</update>
+	
 
 	
 </mapper>

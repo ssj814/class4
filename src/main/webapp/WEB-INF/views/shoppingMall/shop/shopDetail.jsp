@@ -73,27 +73,11 @@
 		<div class="col-1"></div>
 	</div>
 	
-	<!-- product_review -->
-	<div class="container bg-light mt-5 mb-5">
-		<p> 리뷰 보여질 공간 </p>
-		<button id="Product-Review-openWindow">리뷰등록하기</button> <!-- 나중에 마이페이지로 이동 -->
-	</div>
-	
 </div>
 
 <script>
 	
 	$(function() {
-		
-		//review 새창열기
-        $('#Product-Review-openWindow').on('click', function() {
-        	var productId = $(".ProductId").val();
-        	var width = 600;   
-            var height = 700; 
-            var left = Math.ceil((window.screen.width - width) / 2);
-            var top = Math.ceil((window.screen.height - height) / 2);
-            window.open('/app/shop_productReview/'+productId, '_blank', "width="+width+", height="+height+", left="+left+",top="+top +"scrollbars=yes");
-        });
 
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
@@ -104,7 +88,6 @@
 		            dataType: "json",
 		            data: { productId: productId },
 		            success: function(resData, status, xhr) {
-		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);
 		            	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
 		                messageModal.show();

@@ -145,8 +145,6 @@ public class ProductController {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		InputStream inputStream = null;
 		
-		System.out.println(">>>>>"+optionTypes+"\t"+optionNames);
-		
 		try {
 			inputStream = product_image.getInputStream();
 			ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
@@ -199,13 +197,18 @@ public class ProductController {
 	public String productUpdate(int productId, Model m,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ProductDTO productDTO = service.selectDetailproduct(productId);
+		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		System.out.println(options);
 		m.addAttribute("product", productDTO);
+		m.addAttribute("options", options);
 		m.addAttribute("currentPage", page);
 		return "shoppingMall/productUpdate";
 	}
 	
 	@PostMapping(value="/productUpdate")
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
+			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
+            @RequestParam(value = "option_name", required = false) List<String> optionNames,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		InputStream inputStream = null;
@@ -221,6 +224,58 @@ public class ProductController {
 				m.addAttribute("mesg","상품을 수정했습니다.");
 			}
 			*/
+			// 기존 옵션 조회
+	        List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
+
+	        // 옵션 처리
+	        if (optionTypes != null && optionNames != null) {
+	            for (int i = 0; i < optionTypes.size(); i++) {
+	                String optionType = optionTypes.get(i);
+	                String optionName = optionNames.get(i);
+
+	                if (optionType != null && !optionType.isEmpty()) {
+	                    boolean isUpdated = false;
+
+	                    // 기존 옵션과 비교하여 업데이트 또는 추가
+	                    for (ProductOptionDTO existingOption : existingOptions) {
+	                        if (existingOption.getOption_type().equals(optionType)) {
+	                            // OPTION_TYPE이 같은 경우 OPTION_NAME 업데이트
+	                            existingOption.setOption_name(optionName);
+	                            service.updateProductOption(existingOption);
+	                            isUpdated = true;
+	                            break;
+	                        }
+	                    }
+
+	                    // OPTION_TYPE이 없는 경우 새로운 옵션 추가
+	                    if (!isUpdated) {
+	                        ProductOptionDTO newOption = new ProductOptionDTO();
+	                        newOption.setProduct_id(ProductDTO.getProduct_id());
+	                        newOption.setOption_type(optionType);
+	                        newOption.setOption_name(optionName);
+	                        service.insertProductOption(newOption);
+	                    }
+	                }
+	            }
+
+	            // 삭제해야 할 기존 옵션 처리
+	            for (ProductOptionDTO existingOption : existingOptions) {
+	                boolean shouldDelete = true;
+
+	                // 현재 옵션 리스트와 비교하여 삭제 여부 결정
+	                for (String optionType : optionTypes) {
+	                    if (existingOption.getOption_type().equals(optionType)) {
+	                        shouldDelete = false;
+	                        break;
+	                    }
+	                }
+
+	                if (shouldDelete) {
+	                    service.deleteProductOption(existingOption.getOption_id());
+	                }
+	            }
+	        }
+	        
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {

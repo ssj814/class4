@@ -79,5 +79,20 @@
 		INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE, OPTION_NAME)
 		VALUES (#{product_id}, #{option_type}, #{option_name})
 	</insert>
+	
+	 <!-- 상품 옵션 가져오기 -->
+    <select id="selectProductOptions" parameterType="int" resultType="ProductOptionDTO">
+        SELECT * FROM PRODUCT_OPTION WHERE PRODUCT_ID = #{productId}
+    </select>
+    
+    <update id="updateProductOption" parameterType="ProductOptionDTO">
+	    UPDATE PRODUCT_OPTION
+	    SET OPTION_NAME = #{option_name}
+	    WHERE OPTION_ID = #{option_id}
+	</update>
+	
+	<delete id="deleteProductOption" parameterType="int">
+	    DELETE FROM PRODUCT_OPTION WHERE OPTION_ID = #{optionId}
+	</delete>
 
 </mapper>

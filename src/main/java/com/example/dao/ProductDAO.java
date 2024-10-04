@@ -57,6 +57,18 @@ public class ProductDAO {
 		return session.insert("ProductMapper.insertProductOption", option);
 	}
 
+	public List<ProductOptionDTO> selectProductOptions(int productId) {
+		return session.selectList("ProductMapper.selectProductOptions", productId);
+	}
+
+	public void updateProductOption(ProductOptionDTO option) {
+		session.update("ProductMapper.updateProductOption", option);
+	}
+
+	public void deleteProductOption(int optionId) {
+		session.delete("ProductMapper.deleteProductOption", optionId);		
+	}
+
 
 
 }

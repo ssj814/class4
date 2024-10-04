@@ -56,5 +56,17 @@ public class ProductService {
 	public int insertProductOption(ProductOptionDTO option) {
 		 return dao.insertProductOption(option);
 	}
+
+	public List<ProductOptionDTO> selectProductOptions(int productId) {
+		return dao.selectProductOptions(productId);
+	}
+
+	public void updateProductOption(ProductOptionDTO option) {
+		dao.updateProductOption(option);
+	}
+
+	public void deleteProductOption(int optionId) {
+		dao.deleteProductOption(optionId);
+	}
 	
 }

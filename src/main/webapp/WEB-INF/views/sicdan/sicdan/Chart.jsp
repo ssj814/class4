@@ -14,6 +14,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
 <style>
+  
+    main {
+        margin-top: 70px; /* 헤더 높이만큼 여백 추가 */
+    }
+
     body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -109,7 +114,15 @@
     .gender-and-button button {
         flex: 1;
         max-width: 100px;
-    }
+    }body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+footer {
+    width: 100%; /* footer가 페이지 전체 너비를 차지하도록 설정 */
+}
 
 </style>
 </head>

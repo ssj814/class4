@@ -15,7 +15,7 @@
 <body>
 	<div class="container" style="margin-top:40px; ">
 		<main>
-		<form action="main" method="get" id="search">
+		<form action="TrainerBoard" method="get" id="search">
 			<select name="searchName">
 				<option value="userid">작성자</option>
 				<option value="title">제목</option>
@@ -65,15 +65,15 @@
 		</table>
 
 		<!-- 페이지 네비게이션 -->
-		<div class="pagination">
+		<div class="tbpagination">
 			<c:if test="${pDTO.curPage > 1}">
-				<a href="main?curPage=${pDTO.curPage - 1}&searchName=${searchName}&searchValue=${searchValue}">이전</a>
+				<a href="TrainerBoard?curPage=${pDTO.curPage - 1}&searchName=${searchName}&searchValue=${searchValue}">이전</a>
 			</c:if>
 			<c:forEach var="i" begin="1" end="${pDTO.totalPages}">
-				<a href="main?curPage=${i}&searchName=${searchName}&searchValue=${searchValue}">${i}</a>
+				<a href="TrainerBoard?curPage=${i}&searchName=${searchName}&searchValue=${searchValue}">${i}</a>
 			</c:forEach>
 			<c:if test="${pDTO.curPage < pDTO.totalPages}">
-				<a href="main?curPage=${pDTO.curPage + 1}&searchName=${searchName}&searchValue=${searchValue}">다음</a>
+				<a href="TrainerBoard?curPage=${pDTO.curPage + 1}&searchName=${searchName}&searchValue=${searchValue}">다음</a>
 			</c:if>
 		</div>
 

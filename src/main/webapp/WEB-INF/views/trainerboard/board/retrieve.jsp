@@ -8,7 +8,10 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css"> <!-- 수정 -->
+ 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
+ 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/app/retrieve/resources/css/main.css">
+ 	
      <script>
         function confirmDelete(postid) {
             if (confirm("삭제하시겠습니까?")) {
@@ -24,7 +27,7 @@
 </head>
 <body>
 
-<div class="container" style="margin-top:40px;">
+<div class="container">
     <main>
         
       
@@ -60,9 +63,10 @@
             
         </table>
         <br>
-        <a class="buttonmulti" href="/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}">수정</a> &nbsp;
-        <a class="buttonmulti" href="javascript:confirmDelete(${dto.postid})">삭제</a>&nbsp;
-        <a class="buttonmulti" href="/app/TrainerBoard?curPage=${curPage}">목록보기</a>
+      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}'">수정</button>&nbsp;
+	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
+	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
+
         <hr>
 
         <div class="comments">

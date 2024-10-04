@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
 
 @Repository
 public class ProductDAO {
@@ -50,6 +51,22 @@ public class ProductDAO {
 
 	public int updateProduct(ProductDTO dto) {
 		return session.update("ProductMapper.updateProduct", dto);
+	}
+
+	public int insertProductOption(ProductOptionDTO option) {
+		return session.insert("ProductMapper.insertProductOption", option);
+	}
+
+	public List<ProductOptionDTO> selectProductOptions(int productId) {
+		return session.selectList("ProductMapper.selectProductOptions", productId);
+	}
+
+	public void updateProductOption(ProductOptionDTO option) {
+		session.update("ProductMapper.updateProductOption", option);
+	}
+
+	public void deleteProductOption(int optionId) {
+		session.delete("ProductMapper.deleteProductOption", optionId);		
 	}
 
 

@@ -25,7 +25,8 @@
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
                 <button type="submit">저장</button>&nbsp;
-                <a class="buttonmulti" href="${pageContext.request.contextPath}/TrainerBoard">목록 보기</a>
+               <button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>
+
             </form>
         </main>
     </div>

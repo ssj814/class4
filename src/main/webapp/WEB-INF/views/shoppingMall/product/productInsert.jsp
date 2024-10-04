@@ -25,6 +25,29 @@
         <label for="product_name">상품명</label>
         <input type="text" id="product_name" name="product_name" placeholder="상품명을 입력하세요." required />
 
+		<div id="option-container">
+		    <div class="option-container">
+		        <label>옵션 타입 1</label>
+		        <input type="text" name="option_type" class="option-type" placeholder="예: Size" />
+		        <label>옵션 이름 1</label>
+		        <input type="text" name="option_name" class="option-name" placeholder="예: S, M, L" />
+		    </div>
+		
+		    <div class="option-container">
+		        <label>옵션 타입 2</label>
+		        <input type="text" name="option_type" class="option-type" placeholder="예: Color" />
+		        <label>옵션 이름 2</label>
+		        <input type="text" name="option_name" class="option-name" placeholder="예: Red, Blue, Black" />
+		    </div>
+		
+		    <div class="option-container">
+		        <label>옵션 타입 3</label>
+		        <input type="text" name="option_type" class="option-type" placeholder="예: Material" />
+		        <label>옵션 이름 3</label>
+		        <input type="text" name="option_name" class="option-name" placeholder="예: Cotton, Wool" />
+		    </div>
+		</div>
+
         <label for="product_price">가격</label>
         <input type="text" id="product_price" name="product_price" value="0" required />
 		

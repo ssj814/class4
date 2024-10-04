@@ -127,7 +127,10 @@ public class ProductController {
 	public String shopDetail(int productId, Model m) {
 		service.addViewCount(productId); //조회수++
 		ProductDTO product = service.selectDetailproduct(productId);
+		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		
 		m.addAttribute("product", product);
+		m.addAttribute("options", options);
 		return "shoppingMall/shopDetail";
 	}
 	

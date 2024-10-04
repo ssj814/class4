@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -45,6 +48,7 @@ public class ProductReviewController {
 	@PostMapping("/shop_productReview") // 리뷰 insert
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
+		System.out.println(productReviewDTO.getContent());
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
@@ -112,7 +116,7 @@ public class ProductReviewController {
 	
 	@Transactional
 	@PostMapping("/shop_productReview_update/{reviewid}") // 리뷰 update
-	public String patchProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos, 
+	public String postProductReview_update(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos, 
 			RedirectAttributes redirectAttributes) {
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
@@ -164,5 +168,15 @@ public class ProductReviewController {
 		redirectAttributes.addFlashAttribute("closeWindow", true);
 		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
+	
+	@PatchMapping("/shop_productReview_Feedback")
+	@ResponseBody
+	public void patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("feedback", feedback);
+		map.put("review_id", reviewid);
+		productReviewService.updateReviewFeedback(map);
+	}
+	
 
 }

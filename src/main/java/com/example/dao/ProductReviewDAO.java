@@ -1,7 +1,9 @@
 package com.example.dao;
 
 import java.util.List;
+import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -32,6 +34,10 @@ public class ProductReviewDAO {
 
 	public int updateReview(ProductReviewDTO productReviewDTO) {
 		return session.update("ProductReviewMapper.updateReview",productReviewDTO);
+	}
+
+	public int updateReviewFeedback(Map<String, Object> map) {
+		return session.update("ProductReviewMapper.updateReviewFeedback",map);
 	}
 
 }

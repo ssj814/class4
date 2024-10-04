@@ -19,6 +19,7 @@ public class ProductReviewDTO {
 	private String content;
 	private int rating;
 	private String photos;
-	private String feedback;
+	private int feedback_up;
+	private int feedback_down;
 
 }

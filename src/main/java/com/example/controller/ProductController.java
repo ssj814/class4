@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
 import com.example.service.ProductService;
 
 @Controller
@@ -137,14 +139,35 @@ public class ProductController {
 	}
 	
 	@PostMapping(value="/product")
-	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m) {
+	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m,
+			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
+            @RequestParam(value = "option_name", required = false) List<String> optionNames) {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		InputStream inputStream = null;
+		
+		System.out.println(">>>>>"+optionTypes+"\t"+optionNames);
+		
 		try {
 			inputStream = product_image.getInputStream();
 			ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
 			service.insertProduct(ProductDTO);
 			product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+			
+			// 옵션 처리
+	        if (optionTypes != null && optionNames != null) {
+	            for (int i = 0; i < optionTypes.size(); i++) {
+	                String optionType = optionTypes.get(i);
+	                String optionName = optionNames.get(i);
+
+	                if (optionType != null && !optionType.isEmpty()) {
+	                    ProductOptionDTO option = new ProductOptionDTO();
+	                    option.setProduct_id(ProductDTO.getProduct_id());
+	                    option.setOption_type(optionType);
+	                    option.setOption_name(optionName);
+	                    service.insertProductOption(option);
+	                }
+	            }
+	        }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {

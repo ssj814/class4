@@ -28,4 +28,8 @@
 	    update product_cart set quantity = quantity + 1 where user_id = #{user_id} and product_id = #{product_Id}
 	</update>
 	
+	<select id="selectProductOptions" parameterType="hashmap" resultType="CartDTO">
+	    SELECT * FROM product_cart WHERE product_id = #{product_id} and user_id = #{user_id}
+	</select>
+	
 </mapper>

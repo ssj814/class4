@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.example.dao.CartDAO;
 import com.example.dto.CartDTO;
 import com.example.dto.CartProductDTO;
+import com.example.dto.ProductOptionDTO;
 
 @Service
 public class CartService {
@@ -38,6 +39,10 @@ public class CartService {
 
 	public int increaseQuantity(Map<String, Object> map) {
 		return dao.increaseQuantity(map);
+	}
+
+	public List<CartDTO> selectProductOptions(int product_id, int user_id) {
+		return dao.selectProductOptions(product_id,user_id);
 	}
 
 		

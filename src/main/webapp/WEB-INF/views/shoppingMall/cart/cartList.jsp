@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 	
 <h1 class="text-center mt-2">장바구니</h1>
 	
@@ -16,6 +17,24 @@
 					<h2>
 						<a href="shopDetail?productId=${product.getProduct_id()}" class="text-dark fw-bold text-decoration-none fs-6" >${product.getProduct_name()}</a>
 					</h2>
+					 <c:forEach var="option" items="${product.allOptions}">
+					    <div>
+					        <label>${option.option_type} : </label>
+					        <select name="${option.option_type}">
+					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
+					                <c:set var="isSelected" value="false" />
+					                <c:if test="${product.selectedOptions != null}">
+					                    <c:forEach var="selectedOption" items="${product.selectedOptions}">
+					                        <c:if test="${selectedOption.option_type == option.option_type and selectedOption.option_name == name}">
+					                            <c:set var="isSelected" value="true" />
+					                        </c:if>
+					                    </c:forEach>
+					                </c:if>
+					                <option value="${name}" <c:if test="${isSelected}">selected</c:if>>${name}</option>
+					            </c:forEach>
+					        </select>
+					    </div>
+					</c:forEach>
 					₩ <span id="price-${product.getProduct_id()}">${product.getProduct_price()}</span>
 				</div>
 				<div class="col-2">

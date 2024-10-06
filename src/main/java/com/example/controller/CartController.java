@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.dto.CartDTO;
 import com.example.dto.CartProductDTO;
+import com.example.dto.ProductOptionDTO;
 import com.example.service.CartService;
 import com.example.service.ProductService;
 import com.example.service.WishService;
@@ -33,6 +34,15 @@ public class CartController {
 	public String cartList(Model m) {
 		int user_id = 1;
 		List<CartProductDTO> ProductList = service.selectCart(user_id);
+		 for (CartProductDTO product : ProductList) {
+			// 모든 옵션을 가져오기
+		        List<ProductOptionDTO> allOptions = productService.selectProductOptions(product.getProduct_id());
+		        product.setAllOptions(allOptions);
+		        
+		        // 장바구니에 선택된 옵션을 가져오기
+		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), user_id);
+		        product.setSelectedOptions(selectedOptions);
+		    }
 		m.addAttribute("ProductList", ProductList);
 		return "shoppingMall/cartList";
 	}

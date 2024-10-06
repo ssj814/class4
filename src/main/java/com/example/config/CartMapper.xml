@@ -13,7 +13,7 @@
 	</select>
 
 	<insert id="cartInsert" parameterType="hashmap">
-		INSERT INTO product_cart VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id},1)
+		INSERT INTO product_cart VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, 1, #{option_type}, #{option_name})
 	</insert>
 	
 	<update id="cartUpdate" parameterType="CartDTO">

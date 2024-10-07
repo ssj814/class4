@@ -78,7 +78,7 @@
 		</div>
 
 		<br>
-		<a class="buttonmulti" href="${pageContext.request.contextPath}/Write">글쓰기</a>
+		<a class="buttonmulti" href="${pageContext.request.contextPath}/TrainerBoardWrite">글쓰기</a>
 		</main>
 	</div>
 </body>

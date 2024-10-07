@@ -5,15 +5,9 @@
 <head>
 <meta charset="UTF-8">
 <title>글쓰기</title>
+<link href="resources/css/main.css" rel="stylesheet" type="text/css">
 <style type="text/css">
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-}
-
-.container {
+.custom-container {
     padding: 20px;
     max-width: 800px;
     margin: 50px auto;
@@ -23,14 +17,14 @@ body {
     background-color: #e7ebf7; /* Container background color */
 }
 
-h1 {
+.custom-container h1 {
     font-size: 2em;
     margin-bottom: 20px;
     text-align: center;
     color: #333;
 }
 
-form {
+.custom-container form {
     display: flex;
     flex-direction: column;
     background-color: #ffffff; /* Form background color */
@@ -39,17 +33,18 @@ form {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-form div {
+.custom-container form div {
     margin-bottom: 15px;
 }
 
-label {
+.custom-container label {
     margin-bottom: 5px;
     font-weight: bold;
     color: #333;
 }
 
-input[type="text"], textarea {
+.custom-container input[type="text"], 
+.custom-container textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -58,11 +53,11 @@ input[type="text"], textarea {
     background-color: #f9f9f9; /* Input field background color */
 }
 
-textarea {
+.custom-container textarea {
     resize: vertical;
 }
 
-button[type="submit"] {
+.custom-container button[type="submit"] {
     width: 100px;
     padding: 10px;
     background-color: #007BFF; /* Button background color */
@@ -74,13 +69,13 @@ button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
+.custom-container button[type="submit"]:hover {
     background-color: #0056b3; /* Button hover color */
 }
 </style>
 </head>
 <body>
-    <div class="container">
+    <div class="custom-container">
         <h1>글쓰기</h1>
         <form action="ContentInsert" method="get">
             <div>

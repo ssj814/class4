@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductReviewDTO;
+import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
 
 @Controller
@@ -31,6 +34,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductService service;
+	
+	@Autowired
+	ProductReviewService productReviewService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m) {
@@ -124,8 +130,11 @@ public class ProductController {
 	@RequestMapping(value="/shopDetail", method=RequestMethod.GET)
 	public String shopDetail(int productId, Model m) {
 		service.addViewCount(productId); //조회수++
-		ProductDTO product = service.selectDetailproduct(productId);
-		m.addAttribute("product", product);
+		ProductDTO productDTO = service.selectDetailproduct(productId);
+		//리뷰//
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
+		m.addAttribute("product", productDTO);
+		m.addAttribute("productReview", productReviewDTO);
 		return "shoppingMall/shopDetail";
 	}
 	
@@ -137,14 +146,17 @@ public class ProductController {
 	}
 	
 	@PostMapping(value="/product")
-	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m) {
+	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes) {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
+		int num = 0;
 		try {
 			inputStream = product_image.getInputStream();
-			ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
-			service.insertProduct(ProductDTO);
-			product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+			String imgName = uuid + product_image.getOriginalFilename();
+			ProductDTO.setProduct_imagename(imgName);
+			num = service.insertProduct(ProductDTO);
+			product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
@@ -154,6 +166,13 @@ public class ProductController {
 				e.printStackTrace();
 			}
 		}
+		String mesg = "";
+		if(num==1) {
+			mesg = "상품 등록이 완료되었습니다.";
+		} else {
+			mesg = "상품 등록에 실패했습니다.";
+		}
+		redirectAttributes.addFlashAttribute("mesg", mesg);
 		return "redirect:/shopList";
 	}
 	
@@ -185,12 +204,14 @@ public class ProductController {
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
 		try {
 			if(!product_image.isEmpty()) {
 				inputStream = product_image.getInputStream();
-				ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
-				product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+				String imgName = uuid + product_image.getOriginalFilename();
+				ProductDTO.setProduct_imagename(imgName);
+				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			} 
 			int n = service.updateProduct(ProductDTO);
 			/*

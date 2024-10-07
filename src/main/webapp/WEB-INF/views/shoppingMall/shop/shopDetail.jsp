@@ -20,6 +20,10 @@
 </div>
 
 <div class="container">
+
+	<input type="hidden" class="ProductId" value="${product.getProduct_id()}">
+
+	<!-- product -->
 	<div class="row productDetail-container">
 		<div class="col-7 productDetail-middle">
 			<img src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>"  alt="Image"
@@ -58,33 +62,32 @@
 				</div>
 			</div>
 
-			<span class="btn-wish fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요"
-                style="cursor: pointer;"><i class="fa-solid fa-heart fs-3"></i></span>
-            <span class="btn-cart fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-title="장바구니" style="cursor: pointer;"><i
-                class="fa-solid fa-cart-shopping fs-3 "></i></span>
+			<span class="btn-wish fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
+                <i class="fa-solid fa-heart fs-3"></i>
+            </span>
+            <span class="btn-cart fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+                <i class="fa-solid fa-cart-shopping fs-3 "></i>
+            </span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>
 		<div class="col-1"></div>
 	</div>
+	
 </div>
 
 <script>
 	
 	$(function() {
-		
+
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = $(".ProductId").val();
 		        $.ajax({
 		            type: "GET",
 		            url: "wish",
 		            dataType: "json",
 		            data: { productId: productId },
 		            success: function(resData, status, xhr) {
-		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);
 		            	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
 		                messageModal.show();
@@ -99,7 +102,7 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = $(".ProductId").val();
 		        $.ajax({
 		            type: "GET",
 		            url: "cart",

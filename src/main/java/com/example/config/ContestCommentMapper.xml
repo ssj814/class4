@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CommentMapper">
+<insert id="Commentinsert" parameterType="CommentDTO">
+    INSERT INTO CONTESTCOMMENTS (commentId, postid, userid, createdate, content)
+    VALUES (comments_seq.NEXTVAL, #{postid}, #{userid}, SYSDATE, #{content})
+</insert>
+<select id="commtSelect" resultType="CommentDTO">
+    SELECT commentid AS commentId, postid, userid, createdate, content
+    FROM CONTESTCOMMENTS
+    WHERE postid = #{postid}
+</select>
+<select id="commtInsertSelect" parameterType="CommentDTO" resultType="CommentDTO">
+select * from CONTESTCOMMENTS where postid = #{postid} and content =#{content} and userid= #{userid}
+</select>
+<update id="CommentUpdate" parameterType="CommentDTO">
+update CONTESTCOMMENTS set content =#{content}
+where commentId =#{commentId}
+</update>
+<select id="reComment" parameterType="String" resultType="CommentDTO">
+select *from CONTESTCOMMENTS where commentId =#{commentId}
+</select>
+<update id="DeleteComment" parameterType="CommentDTO">
+update CONTESTCOMMENTS set content =#{content}
+where commentId =#{commentId}
+</update>
+</mapper>

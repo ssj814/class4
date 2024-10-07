@@ -5,11 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>BMI 계산기 결과</title>
-
-<!-- Bootstrap CSS 추가 -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 <style>
+    main {
+        margin-top: 70px; /* 헤더 높이만큼 여백 추가 */
+    }
+
     body {
         background-color: #f8f9fa;
         font-family: 'Roboto', sans-serif;
@@ -188,13 +188,21 @@
                         고도비만 <br>
                     </li>
                 </ul>
-               
             </div>
 
             <!-- BMI 인디케이터 -->
             <div class="obesity_box_inner">
-                <div class="bmi-indicator" style="left: calc(${bmi / 40 * 100}%);"></div>
-                <div class="bmi-indicator-label" style="left: calc(${bmi / 40 * 100}%);">
+                <div class="bmi-indicator" style="left: calc(${(bmi < 18.5 ? (bmi / 18.5 * 20) : 
+                                                          bmi < 23 ? 20 + ((bmi - 18.5) / (23 - 18.5) * 20) : 
+                                                              bmi < 25 ? 40 + ((bmi - 23) / (25 - 23) * 20) : 
+                                                              bmi < 30 ? 60 + ((bmi - 25) / (30 - 25) * 20) : 
+                                                              80 + ((bmi - 30) / (40 - 30) * 20))}%);">
+                </div>
+                <div class="bmi-indicator-label" style="left: calc(${(bmi < 18.5 ? (bmi / 18.5 * 20) : 
+                                                                 bmi < 23 ? 20 + ((bmi - 18.5) / (23 - 18.5) * 20) : 
+                                                                      bmi < 25 ? 40 + ((bmi - 23) / (25 - 23) * 20) : 
+                                                                      bmi < 30 ? 60 + ((bmi - 25) / (30 - 25) * 20) : 
+                                                                      80 + ((bmi - 30) / (40 - 30) * 20))}%);">
                     나의 BMI 지수 <fmt:formatNumber value="${bmi}" type="number" maxFractionDigits="2" />
                 </div>
             </div>
@@ -209,6 +217,6 @@
 
 <!-- Bootstrap JS 추가 -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3-alpha3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

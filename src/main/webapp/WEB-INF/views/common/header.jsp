@@ -19,6 +19,7 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" href="resources/css/main.css">
 <title>Insert title here</title>
+
 </head>
 <body> 
 <header>

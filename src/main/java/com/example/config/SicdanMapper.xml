@@ -41,8 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <!-- 게시글 목록 조회 -->
-    <select id="listAll" parameterType="map" resultType="SicdanDTO">
-        SELECT sic_num, sic_title, user_id, content, TO_CHAR(writeday, 'yyyy/MM/dd') AS writeday, readCnt
+   <select id="listAll" parameterType="map" resultType="SicdanDTO">
+    SELECT * FROM (
+        SELECT ROWNUM AS rn, sic_num, sic_title, user_id, content, TO_CHAR(writeday, 'yyyy/MM/dd') AS writeday, readCnt
         FROM sicdan
         WHERE is_del = 'N'
         <if test="searchName != null and searchValue != null and searchValue != ''">
@@ -56,7 +57,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </choose>
         </if>
         ORDER BY sic_num DESC
-    </select>
+    )
+    WHERE rn BETWEEN #{startRow} AND #{endRow}
+</select>
 
     <!-- 총 게시글 개수 조회 -->
     <select id="getTotalCount" parameterType="map" resultType="int">

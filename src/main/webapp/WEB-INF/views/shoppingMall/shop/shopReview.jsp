@@ -102,6 +102,8 @@
            }
            $(this).html(stars);
        	});
+		
+		//총 별점 표시
 		totalRating = Math.round(totalRating/$('.rating-stars').length);
 		var totalStars = '';
 		for (var i = 0; i < totalRating; i++) {
@@ -110,8 +112,13 @@
         for (var i = totalRating; i < 5; i++) {
         	totalStars += '<i class="fa-regular fa-star text-warning"></i>'; // 빈 별
         }
-        $(".total-rating-star").html(totalStars);
-        $(".total-rating").text(totalRating);
+        if(totalRating){
+        	$(".total-rating-star").html(totalStars);
+        	$(".total-rating").text(totalRating);
+        } else {
+        	$(".total-rating").text(0);
+        }
+        
         
         
 		//review 새창열기 - 등록

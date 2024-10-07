@@ -19,7 +19,7 @@ body {
 
 h1 {
 	text-align: center;
-	color: #00000;
+	color: #000000;
 	margin-bottom: 20px;
 }
 
@@ -70,4 +70,30 @@ input[type="submit"], input[type="reset"], input[type="button"] {
 
 input[type="submit"]:hover, input[type="reset"]:hover {
 	background-color: #555;
+}
+
+.option-container {
+	display: flex;
+	align-items: center;
+	margin-bottom: 5px;
+}
+
+.option-container label {
+	width: 100px;
+	margin: 5px 5px 5px 0;
+	font-size: 13px;
+}
+
+.option-container input.option-type {
+	width: 100px;
+	padding: 5px;
+	margin: 5px 15px 5px 0;
+	font-size: 12px;
+}
+
+.option-container input.option-name {
+	width: 300px;
+	padding: 5px;
+	margin: 5px 0;
+	font-size: 12px;
 }

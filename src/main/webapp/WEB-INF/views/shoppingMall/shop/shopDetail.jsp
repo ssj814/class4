@@ -58,6 +58,18 @@
 						View: <strong>${product.getProduct_view()}</strong>
 					</p>
 					<hr class="container pb-0">
+					<!-- product_option 출력 -->
+					<c:forEach var="option" items="${options}">
+					    <div class="product-option-container">
+					        <label>${option.option_type}</label>
+					        <select class="form-select">
+					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
+					                <option value="${name}">${name}</option>
+					            </c:forEach>
+					        </select>
+					    </div>
+					</c:forEach>
+					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
 			</div>

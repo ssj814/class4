@@ -52,7 +52,6 @@ public class ProductReviewController {
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
-		List<String> imgs = new ArrayList<String>();
 		String imgNames = "";
 		int num = 0;
 		int user_id = 1; // 임시 유저
@@ -62,7 +61,6 @@ public class ProductReviewController {
 					inputStream = img.getInputStream();
 					String imgName = uuid + img.getOriginalFilename();
 					imgNames += imgName + ","; // DB저장용
-					imgs.add(imgName); // 파일저장용
 					img.transferTo(new File(uploadDir + imgName));
 				}
 				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
@@ -90,8 +88,8 @@ public class ProductReviewController {
 	}
 
 	@Transactional
-	@DeleteMapping("/shop_productReview/{reviewId}") // 리뷰 삭제
 	@ResponseBody
+	@DeleteMapping("/shop_productReview/{reviewId}") // 리뷰 delete
 	public void delProductReview(@PathVariable int reviewId) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewId);
 		if (productReviewDTO.getPhotos() != null) {
@@ -121,7 +119,6 @@ public class ProductReviewController {
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
-		List<String> imgs = new ArrayList<String>();
 		String imgNames = "";
 		int num = 0;
 		int user_id = 1; // 임시 유저
@@ -142,7 +139,6 @@ public class ProductReviewController {
 					inputStream = img.getInputStream();
 					String imgName = uuid + img.getOriginalFilename();
 					imgNames += imgName + ","; // DB저장용
-					imgs.add(imgName); // 파일저장용
 					img.transferTo(new File(uploadDir + imgName));
 				}
 				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
@@ -169,8 +165,8 @@ public class ProductReviewController {
 		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
-	@PatchMapping("/shop_productReview_Feedback")
 	@ResponseBody
+	@PatchMapping("/shop_productReview_Feedback") //후기 평가
 	public void patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
 		Map<String, Object> map = new HashMap<>();
 		map.put("feedback", feedback);

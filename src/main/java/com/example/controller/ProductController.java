@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductReviewDTO;
 import com.example.service.ProductReviewService;
+import com.example.dto.ProductOptionDTO;
 import com.example.service.ProductService;
 
 @Controller
@@ -131,10 +133,12 @@ public class ProductController {
 	public String shopDetail(int productId, Model m) {
 		service.addViewCount(productId); //조회수++
 		ProductDTO productDTO = service.selectDetailproduct(productId);
-		//리뷰//
 		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
+		List<ProductOptionDTO> options = service.selectProductOptions(productId);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
+		m.addAttribute("product", productDTO);
+		m.addAttribute("options", options);
 		return "shoppingMall/shopDetail";
 	}
 	
@@ -146,7 +150,9 @@ public class ProductController {
 	}
 	
 	@PostMapping(value="/product")
-	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes) {
+	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes,
+			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
+            @RequestParam(value = "option_name", required = false) List<String> optionNames) {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
@@ -157,6 +163,22 @@ public class ProductController {
 			ProductDTO.setProduct_imagename(imgName);
 			num = service.insertProduct(ProductDTO);
 			product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
+			
+			// 옵션 처리
+	        if (optionTypes != null && optionNames != null) {
+	            for (int i = 0; i < optionTypes.size(); i++) {
+	                String optionType = optionTypes.get(i);
+	                String optionName = optionNames.get(i);
+
+	                if (optionType != null && !optionType.isEmpty()) {
+	                    ProductOptionDTO option = new ProductOptionDTO();
+	                    option.setProduct_id(ProductDTO.getProduct_id());
+	                    option.setOption_type(optionType);
+	                    option.setOption_name(optionName);
+	                    service.insertProductOption(option);
+	                }
+	            }
+	        }
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {
@@ -195,13 +217,18 @@ public class ProductController {
 	public String productUpdate(int productId, Model m,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ProductDTO productDTO = service.selectDetailproduct(productId);
+		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		System.out.println(options);
 		m.addAttribute("product", productDTO);
+		m.addAttribute("options", options);
 		m.addAttribute("currentPage", page);
 		return "shoppingMall/productUpdate";
 	}
 	
 	@PostMapping(value="/productUpdate")
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
+			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
+            @RequestParam(value = "option_name", required = false) List<String> optionNames,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		UUID uuid = UUID.randomUUID();
@@ -219,6 +246,58 @@ public class ProductController {
 				m.addAttribute("mesg","상품을 수정했습니다.");
 			}
 			*/
+			// 기존 옵션 조회
+	        List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
+
+	        // 옵션 처리
+	        if (optionTypes != null && optionNames != null) {
+	            for (int i = 0; i < optionTypes.size(); i++) {
+	                String optionType = optionTypes.get(i);
+	                String optionName = optionNames.get(i);
+
+	                if (optionType != null && !optionType.isEmpty()) {
+	                    boolean isUpdated = false;
+
+	                    // 기존 옵션과 비교하여 업데이트 또는 추가
+	                    for (ProductOptionDTO existingOption : existingOptions) {
+	                        if (existingOption.getOption_type().equals(optionType)) {
+	                            // OPTION_TYPE이 같은 경우 OPTION_NAME 업데이트
+	                            existingOption.setOption_name(optionName);
+	                            service.updateProductOption(existingOption);
+	                            isUpdated = true;
+	                            break;
+	                        }
+	                    }
+
+	                    // OPTION_TYPE이 없는 경우 새로운 옵션 추가
+	                    if (!isUpdated) {
+	                        ProductOptionDTO newOption = new ProductOptionDTO();
+	                        newOption.setProduct_id(ProductDTO.getProduct_id());
+	                        newOption.setOption_type(optionType);
+	                        newOption.setOption_name(optionName);
+	                        service.insertProductOption(newOption);
+	                    }
+	                }
+	            }
+
+	            // 삭제해야 할 기존 옵션 처리
+	            for (ProductOptionDTO existingOption : existingOptions) {
+	                boolean shouldDelete = true;
+
+	                // 현재 옵션 리스트와 비교하여 삭제 여부 결정
+	                for (String optionType : optionTypes) {
+	                    if (existingOption.getOption_type().equals(optionType)) {
+	                        shouldDelete = false;
+	                        break;
+	                    }
+	                }
+
+	                if (shouldDelete) {
+	                    service.deleteProductOption(existingOption.getOption_id());
+	                }
+	            }
+	        }
+	        
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {

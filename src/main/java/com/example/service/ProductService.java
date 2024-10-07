@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dao.ProductDAO;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
 
 @Service
 public class ProductService {
@@ -51,5 +52,21 @@ public class ProductService {
 	public int updateProduct(ProductDTO dto) {
 		return dao.updateProduct(dto);
 	}//updateProduct() - 상품정보 update
+
+	public int insertProductOption(ProductOptionDTO option) {
+		 return dao.insertProductOption(option);
+	}
+
+	public List<ProductOptionDTO> selectProductOptions(int productId) {
+		return dao.selectProductOptions(productId);
+	}
+
+	public void updateProductOption(ProductOptionDTO option) {
+		dao.updateProductOption(option);
+	}
+
+	public void deleteProductOption(int optionId) {
+		dao.deleteProductOption(optionId);
+	}
 	
 }

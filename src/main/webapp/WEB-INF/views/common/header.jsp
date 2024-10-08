@@ -53,7 +53,7 @@
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="shopList" style="color: beige;">For Contest</a></li>
+						href="/app/FitnessContest" style="color: beige;">For Contest</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
 

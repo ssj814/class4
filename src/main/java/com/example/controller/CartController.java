@@ -9,11 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.dto.CartDTO;
 import com.example.dto.CartProductDTO;
+import com.example.dto.ProductOptionDTO;
 import com.example.service.CartService;
 import com.example.service.ProductService;
 import com.example.service.WishService;
@@ -32,17 +34,46 @@ public class CartController {
 	public String cartList(Model m) {
 		int user_id = 1;
 		List<CartProductDTO> ProductList = service.selectCart(user_id);
+		 for (CartProductDTO product : ProductList) {
+			// 모든 옵션을 가져오기
+		        List<ProductOptionDTO> allOptions = productService.selectProductOptions(product.getProduct_id());
+		        product.setAllOptions(allOptions);
+		        
+		        // 장바구니에 선택된 옵션을 가져오기
+		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), user_id);
+		        product.setSelectedOptions(selectedOptions);
+		    }
 		m.addAttribute("ProductList", ProductList);
 		return "shoppingMall/cartList";
 	}
 	
-	@GetMapping("/cart")
+	@PostMapping("/cart")
 	@ResponseBody
-	public Map<String,String> cartInsert(int productId, Model m) {
+	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
 		int user_Id = 1; //임시 유저
-		Map<String,Object> map = new HashMap<String,Object>();
+		int productId = (int) requestMap.get("productId");
+		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
+		
+		// 옵션 데이터를 쉼표로 구분된 문자열로 변환
+		// StringBuilder : 문자열을 반복적으로 수정하거나 추가하는 작업에서 String보다 성능 좋음
+	    StringBuilder optionTypes = new StringBuilder();
+	    StringBuilder optionNames = new StringBuilder();
+	    for (Map<String, String> option : options) {
+	        if (optionTypes.length() > 0) {
+	            optionTypes.append(",");
+	            optionNames.append(",");
+	        }
+	        optionTypes.append(option.get("type"));
+	        optionNames.append(option.get("name"));
+	    }
+		
+		
+		Map<String,Object> map = new HashMap<>();
 		map.put("user_id", user_Id);
 		map.put("product_Id", productId);
+		map.put("option_type", optionTypes.toString());
+	    map.put("option_name", optionNames.toString());
+		
 		int check = service.cartCheck(map); //cart에 존재여부
 		Map<String,String> responseMap = new HashMap<String,String>();
 		if (check == 1) {

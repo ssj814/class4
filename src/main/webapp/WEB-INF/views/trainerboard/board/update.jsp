@@ -20,7 +20,8 @@
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
 		    	<hr>
 		    	<button type="submit">수정완료</button>
-		    	<a class="buttonmulti" href="${pageContext.request.contextPath}/TrainerBoard">목록보기</a>
+		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
+
 			</form>
 
         </main>

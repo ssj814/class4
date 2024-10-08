@@ -7,9 +7,14 @@
 	<select id="selectCart" parameterType="int" resultType="CartProductDTO">
 		select * from product JOIN product_cart using(product_id) where user_id=#{user_id}
 	</select>
-	
+
 	<select id="cartCheck" parameterType="hashmap" resultType="int">
-		SELECT count(*) FROM product_cart WHERE user_id=#{user_id} and product_Id=#{product_Id}
+		SELECT count(*)
+		FROM product_cart
+		WHERE user_id=#{user_id}
+		AND product_Id=#{product_Id}
+		AND option_type=#{option_type}
+		AND option_name=#{option_name}
 	</select>
 
 	<insert id="cartInsert" parameterType="hashmap">

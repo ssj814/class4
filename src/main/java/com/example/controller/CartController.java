@@ -38,10 +38,12 @@ public class CartController {
 			// 모든 옵션을 가져오기
 		        List<ProductOptionDTO> allOptions = productService.selectProductOptions(product.getProduct_id());
 		        product.setAllOptions(allOptions);
+		        System.out.println("alloptions : "+allOptions);
 		        
 		        // 장바구니에 선택된 옵션을 가져오기
 		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), user_id);
 		        product.setSelectedOptions(selectedOptions);
+		        System.out.println(selectedOptions);
 		    }
 		m.addAttribute("ProductList", ProductList);
 		return "shoppingMall/cartList";

@@ -28,9 +28,13 @@
 	<delete id="cartDelete" parameterType="CartDTO">
     	delete from product_cart where user_id = #{user_id} and product_id = #{product_id}
 	</delete>
-	
+
 	<update id="increaseQuantity" parameterType="hashmap">
-	    update product_cart set quantity = quantity + 1 where user_id = #{user_id} and product_id = #{product_Id}
+		update product_cart set quantity = quantity + 1
+		WHERE user_id=#{user_id}
+		AND product_Id=#{product_Id}
+		AND option_type=#{option_type}
+		AND option_name=#{option_name}
 	</update>
 	
 	<select id="selectProductOptions" parameterType="hashmap" resultType="CartDTO">

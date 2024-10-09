@@ -54,43 +54,18 @@ public class CartController {
 		int productId = (int) requestMap.get("productId");
 		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
 		
-		// 옵션 데이터를 쉼표로 구분된 문자열로 변환
-		// StringBuilder : 문자열을 반복적으로 수정하거나 추가하는 작업에서 String보다 성능 좋음
-	    StringBuilder optionTypes = new StringBuilder();
-	    StringBuilder optionNames = new StringBuilder();
-	    for (Map<String, String> option : options) {
-	        if (optionTypes.length() > 0) {
-	            optionTypes.append(",");
-	            optionNames.append(",");
-	        }
-	        optionTypes.append(option.get("type"));
-	        optionNames.append(option.get("name"));
-	    }
-		
-		Map<String,Object> map = new HashMap<>();
-		map.put("user_id", user_Id);
-		map.put("product_Id", productId);
-		map.put("option_type", optionTypes.toString());
-	    map.put("option_name", optionNames.toString());
-		
+		Map<String,Object> map = createCartMap(user_Id, productId, -1, options);
 		int check = service.cartCheck(map); //cart에 존재여부
+		
 		Map<String,String> responseMap = new HashMap<String,String>();
 		if (check == 1) {
 	        // 이미 장바구니에 존재하는 경우 수량 증가
 	        int updateResult = service.increaseQuantity(map);
-	        if (updateResult == 1) {
-	            responseMap.put("mesg", "장바구니에 기존 항목 수량 증가 완료");
-	        } else {
-	            responseMap.put("mesg", "수량 증가 실패");
-	        }
+	        responseMap.put("mesg", updateResult == 1 ? "장바구니에 기존 항목 수량 증가 완료" : "수량 증가 실패");
 	    } else {
 	        // 장바구니에 존재하지 않는 경우 새로 추가
 	        int insertResult = service.cartInsert(map);
-	        if (insertResult == 1) {
-	            responseMap.put("mesg", "장바구니 추가 완료");
-	        } else {
-	            responseMap.put("mesg", "장바구니 추가 실패");
-	        }
+	        responseMap.put("mesg", insertResult == 1 ? "장바구니 추가 완료" : "장바구니 추가 실패");
 	    }
 		return responseMap;
 	}
@@ -135,31 +110,11 @@ public class CartController {
 	    int productId = Integer.parseInt((String) requestMap.get("productId"));
 	    List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
 	    
-	    // 옵션 데이터를 쉼표로 구분된 문자열로 변환
-	    StringBuilder optionTypes = new StringBuilder();
-	    StringBuilder optionNames = new StringBuilder();
-	    for (Map<String, String> option : options) {
-	        if (optionTypes.length() > 0) {
-	            optionTypes.append(",");
-	            optionNames.append(",");
-	        }
-	        optionTypes.append(option.get("type"));
-	        optionNames.append(option.get("name"));
-	    }
-
-	    Map<String, Object> map = new HashMap<>();
-	    map.put("user_id", user_Id);
-	    map.put("product_Id", productId);
-	    map.put("cart_Id", cartId);
-	    map.put("option_type", optionTypes.toString());
-	    map.put("option_name", optionNames.toString());
-	    System.out.println("controller map : "+map);
-	    
+	    Map<String, Object> map = createCartMap(user_Id, productId, cartId, options);
 	    // 동일한 상품이 장바구니에 있는지 확인
 	    int existingCartId = service.checkExistingCart(map); // 이미 있는 상품의 cartId를 리턴
-	    System.out.println(existingCartId);
+	    
 	    Map<String, String> responseMap = new HashMap<>();
-
 	    if (existingCartId > 0) {
 	        // 동일한 옵션이 있는 경우 수량 증가
 	        int updateResult = service.increaseQuantityByCartId(existingCartId);
@@ -173,14 +128,37 @@ public class CartController {
 	    } else {
 	        // 동일한 옵션이 없는 경우, 옵션을 업데이트
 	        int updateResult = service.updateCartOption(map);
-	        if (updateResult == 1) {
-	            responseMap.put("mesg", "옵션 업데이트 완료");
-	        } else {
-	            responseMap.put("mesg", "옵션 업데이트 실패");
-	        }
+	        responseMap.put("mesg", updateResult == 1 ? "옵션 업데이트 완료" : "옵션 업데이트 실패");
 	    }
 
 	    return responseMap;
 	}
 	
+	//옵션 데이터를 처리 및 장바구니에 존재하는지 확인
+	private Map<String, Object> createCartMap(int userId, int productId, int cartId, List<Map<String, String>> options) {
+		// 옵션 데이터를 쉼표로 구분된 문자열로 변환
+		// StringBuilder : 문자열을 반복적으로 수정하거나 추가하는 작업에서 String보다 성능 좋음
+	    StringBuilder optionTypes = new StringBuilder();
+	    StringBuilder optionNames = new StringBuilder();
+
+	    for (Map<String, String> option : options) {
+	        if (optionTypes.length() > 0) {
+	            optionTypes.append(",");
+	            optionNames.append(",");
+	        }
+	        optionTypes.append(option.get("type"));
+	        optionNames.append(option.get("name"));
+	    }
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", userId);
+	    map.put("product_Id", productId);
+	    if (cartId > 0) {
+	        map.put("cart_Id", cartId);
+	    }
+	    map.put("option_type", optionTypes.toString());
+		map.put("option_name", optionNames.toString());
+
+		return map;
+	}
 }

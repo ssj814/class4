@@ -114,7 +114,7 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
-			var productId = $(".ProductId").val();
+			var productId = parseInt($(".ProductId").val());
 			var options = [];
 			 // 각 옵션의 타입과 선택된 값 가져오기
              $(".product-option-container").each(function() {

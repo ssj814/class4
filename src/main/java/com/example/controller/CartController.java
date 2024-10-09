@@ -53,7 +53,6 @@ public class CartController {
 		int user_Id = 1; //임시 유저
 		int productId = (int) requestMap.get("productId");
 		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
-		System.out.println(requestMap.get("productId").getClass().getName());
 		Map<String,Object> map = createCartMap(user_Id, productId, -1, options);
 		int check = service.cartCheck(map); //cart에 존재여부
 		

@@ -70,7 +70,7 @@ public class TrainerBoardController {
 	}
 	
 	//Write.jsp로 이동 - 글쓰기폼
-	@RequestMapping(value = "/Write", method = RequestMethod.GET)
+	@RequestMapping(value = "/TrainerBoardWrite", method = RequestMethod.GET)
 	public String writeForm(Model m) {
 
 		return "trainerboard/Write"; //

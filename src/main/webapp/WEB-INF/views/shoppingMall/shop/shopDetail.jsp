@@ -115,11 +115,27 @@
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
 			var productId = $(".ProductId").val();
+			var options = [];
+			 // 각 옵션의 타입과 선택된 값 가져오기
+             $(".product-option-container").each(function() {
+                var optionType = $(this).find("label").text().trim();  // 옵션 타입
+                var optionName = $(this).find("select").val();  // 옵션 이름
+                if (optionType && optionName) {
+                    options.push({
+                        type: optionType,
+                        name: optionName
+                    });
+                }
+            });
 		        $.ajax({
-		            type: "GET",
+		            type: "POST",
 		            url: "cart",
 		            dataType: "json",
-		            data: { productId: productId },
+		            contentType: "application/json",
+		            data: JSON.stringify({
+	                    productId: productId,
+	                    options: options
+	                }),
 		            success: function(resData, status, xhr) {
 		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);

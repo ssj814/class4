@@ -1,31 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CartMapper"> <!-- 구별용 이름 -->
-	
+
 	<select id="selectCart" parameterType="int" resultType="CartProductDTO">
-		select * from product JOIN product_cart using(product_id) where user_id=#{user_id}
+		select * from product JOIN product_cart using(product_id) where
+		user_id=#{user_id}
 	</select>
-	
+
 	<select id="cartCheck" parameterType="hashmap" resultType="int">
-		SELECT count(*) FROM product_cart WHERE user_id=#{user_id} and product_Id=#{product_Id}
+		SELECT count(*)
+		FROM product_cart
+		WHERE user_id=#{user_id}
+		AND product_Id=#{product_Id}
+		AND option_type=#{option_type}
+		AND option_name=#{option_name}
 	</select>
 
 	<insert id="cartInsert" parameterType="hashmap">
-		INSERT INTO product_cart VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id},1)
+		INSERT INTO product_cart
+		VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, 1, #{option_type},
+		#{option_name})
 	</insert>
-	
+
 	<update id="cartUpdate" parameterType="CartDTO">
-		update product_cart set quantity=#{quantity} WHERE user_id=#{user_id} AND product_id=#{product_id}
+		update product_cart set quantity=#{quantity} WHERE user_id=#{user_id}
+		AND cart_id=#{cart_id}
 	</update>
-	
+
 	<delete id="cartDelete" parameterType="CartDTO">
-    	delete from product_cart where user_id = #{user_id} and product_id = #{product_id}
+		delete from product_cart 
+		where user_id = #{user_id} 
+		and cart_id = #{cart_id}
 	</delete>
-	
+
 	<update id="increaseQuantity" parameterType="hashmap">
-	    update product_cart set quantity = quantity + 1 where user_id = #{user_id} and product_id = #{product_Id}
+		update product_cart set quantity = quantity + 1
+		WHERE user_id=#{user_id}
+		AND product_Id=#{product_Id}
+		AND option_type=#{option_type}
+		AND option_name=#{option_name}
 	</update>
-	
+
+	<select id="selectProductOptions" parameterType="hashmap"
+		resultType="CartDTO">
+		SELECT * FROM product_cart WHERE product_id = #{product_id} and user_id
+		= #{user_id}
+	</select>
+
+	<update id="updateCartOption" parameterType="hashmap">
+		UPDATE product_cart
+		SET option_type = #{option_type, jdbcType=VARCHAR},
+		option_name = #{option_name, jdbcType=VARCHAR}
+		WHERE cart_id = #{cart_Id, jdbcType=INTEGER}
+	</update>
+
+	<!-- 동일한 상품과 옵션이 있는지 검사 -->
+	<select id="checkExistingCart" parameterType="hashmap" resultType="int">
+		SELECT cart_id FROM product_cart WHERE user_id = #{user_id,
+		jdbcType=INTEGER} AND product_id = #{product_Id, jdbcType=INTEGER} AND
+		option_type = #{option_type, jdbcType=VARCHAR} AND option_name =
+		#{option_name, jdbcType=VARCHAR} AND cart_id != #{cart_Id,
+		jdbcType=INTEGER} <!-- 현재 수정 중인 cart_id는 제외 -->
+	</select>
+
+	<!-- 수량 증가 -->
+	<update id="increaseQuantityByCartId" parameterType="int">
+		UPDATE product_cart
+		SET quantity = quantity + 1
+		WHERE cart_id = #{cart_Id, jdbcType=INTEGER}
+	</update>
+
+	<!-- 장바구니 항목 삭제 -->
+	<delete id="deleteCartById" parameterType="int">
+		DELETE FROM product_cart
+		WHERE cart_id = #{cart_Id}
+	</delete>
 </mapper>

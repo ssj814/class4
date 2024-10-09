@@ -9,9 +9,10 @@
 	<c:forEach var="product" items="${ProductList}">
 		<div class="row align-items-center border border-dark rounded"
 			style="margin-bottom: 0.3px">
+			<input type="hidden" class="cart-id" value="${product.getCart_id()}">
 			<div class="col-1">
 				<input class="btn-product form-check-input m-0 border border-dark"
-					type="checkbox" value="${product.getProduct_id()}">
+					type="checkbox" value="${product.getCart_id()}">
 			</div>
 			<div class="col-2">
 				<img
@@ -25,7 +26,7 @@
 						class="text-dark fw-bold text-decoration-none fs-6">${product.getProduct_name()}</a>
 				</h2>
 				<c:forEach var="option" items="${product.allOptions}">
-				    <div>
+				    <div class="product-option-container">
 				        <label>${option.option_type}:</label>
 				        <select name="${option.option_type}">
 				            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
@@ -49,20 +50,20 @@
 				        </select>
 				    </div>
 				</c:forEach>
-				₩ <span id="price-${product.getProduct_id()}">${product.getProduct_price()}</span>
+				₩ <span id="price-${product.getCart_id()}">${product.getProduct_price()}</span>
 			</div>
 			<div class="col-2">
 				<p>개수</p>
-				<input name="product-count-${product.getProduct_id()}"
+				<input name="product-count-${product.getCart_id()}"
 					class="product-count form-control"
-					id="count-${product.getProduct_id()}"
-					data-id="${product.getProduct_id()}" type="number" min="1"
+					id="count-${product.getCart_id()}"
+					data-id="${product.getCart_id()}" type="number" min="1"
 					value="${product.getQuantity()}">
 			</div>
 			<div class="col-2">
 				<p>total</p>
-				<input name="product-totalPrice-${product.getProduct_id()}"
-					id="total-${product.getProduct_id()}" class="total form-control"
+				<input name="product-totalPrice-${product.getCart_id()}"
+					id="total-${product.getCart_id()}" class="total form-control"
 					type="text" disabled
 					value="${product.getProduct_price()*product.getQuantity()}">
 			</div>
@@ -95,25 +96,41 @@
 <script>
 	$(document).ready(
 			function() {
+				// 총 구매 상품 개수와 금액 계산 함수
+				function calculateTotal() {
+					var count = 0;
+					var total = 0;
+
+					$(".btn-product").each(function(idx, data) {
+						if (data.checked) {
+							var cartId = $(data).val();
+							count += parseInt($("#count-" + cartId).val());
+				            total += parseInt($("#total-" + cartId).val());
+						}
+					});
+
+					$(".order-count").val(count);
+					$(".order-total").val(total.toLocaleString() + ' 원');
+				}
+				
 				// Quantity 업데이트 + 개별 total 계산 + 총 구매 개수 및 금액 업데이트
 				$(".product-count").on(
 						"change",
 						function() {
-							var productId = $(this).data("id");
-							var quantity = $(this).val();
-							var price = parseInt($("#price-" + productId)
-									.text().replace(/,/g, ''));
+							var cartId = $(this).data("id");
+						    var quantity = $(this).val();
+						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, ''));
 							var total = quantity * price;
 
 							// 개별 상품 총액 업데이트
-							$("#total-" + productId).val(total);
+							$("#total-" + cartId).val(total);
 
 							// 서버에 수량 업데이트 요청
 							$.ajax({
 								url : "cartQuantity",
 								type : "post",
 								data : {
-									productId : productId,
+									cartId: cartId, 
 									quantity : quantity
 								},
 								success : function(data, status, xhr) {
@@ -163,48 +180,33 @@
 													+ productIdList);
 								});
 
-				// 총 구매 상품 개수와 금액 계산 함수
-				function calculateTotal() {
-					var count = 0;
-					var total = 0;
 
-					$(".btn-product").each(function(idx, data) {
-						if (data.checked) {
-							var productId = $(data).val();
-							count += parseInt($("#count-" + productId).val());
-							total += parseInt($("#total-" + productId).val());
-						}
-					});
-
-					$(".order-count").val(count);
-					$(".order-total").val(total.toLocaleString() + ' 원');
-				}
 
 				// 선택된 항목 삭제
 				$("#btn-delete").on("click", function() {
-					var selectedProductIds = [];
-					$(".form-check-input:checked").each(function() {
-						selectedProductIds.push($(this).val());
-					});
+					var selectedCartIds = [];
+				    $(".form-check-input:checked").each(function() {
+				        selectedCartIds.push($(this).closest(".row").find(".cart-id").val());
+				    });
 
-					if (selectedProductIds.length === 0) {
-						alert("삭제할 항목을 선택해 주세요.");
-						return;
-					}
+				    if (selectedCartIds.length === 0) {
+				        alert("삭제할 항목을 선택해 주세요.");
+				        return;
+				    }
 
 					$.ajax({
 						url : "cartDelete",
 						type : "post",
 						data : {
-							productIds : selectedProductIds
+							cartIds: selectedCartIds
 						},
 						traditional : true, // 배열 형태로 파라미터를 전달하기 위해 필요
 						success : function() {
 							// 선택된 항목 삭제 후 DOM에서 제거
-							selectedProductIds.forEach(function(id) {
+							location.reload();
+							/* selectedCartIds.forEach(function(id) {
 								$("#row-" + id).remove(); // 각 상품의 행 삭제
-								location.reload();
-							});
+							}); */
 
 							// 총 구매 개수와 금액 업데이트
 							calculateTotal();
@@ -215,6 +217,38 @@
 					});
 				});
 
+				$(".product-option-container select").on("change", function () {
+				    var productId = $(this).closest(".row").find(".btn-product").val();
+				    var cartId = $(this).closest(".row").find(".cart-id").val();
+				    var options = [];
+				    
+				    $(this).closest(".row").find(".product-option-container select").each(function() {
+				        options.push({
+				            type: $(this).attr("name"),
+				            name: $(this).val()
+				        });
+				    });
+
+				    $.ajax({
+				        url: "updateCartOption",
+				        type: "POST",
+				        dataType: "json",
+				        contentType: "application/json",
+				        data: JSON.stringify({
+				            productId: productId,
+				            cartId: cartId,
+				            options: options
+				        }),
+				        success: function (resData) {
+				            console.log("옵션 변경 성공: " + resData.mesg);
+				            location.reload();
+				        },
+				        error: function (xhr, status, error) {
+				            console.log("옵션 변경 실패: " + error);
+				        }
+				    });
+				});
+				
 				// 초기 총계 계산
 				calculateTotal();
 			});

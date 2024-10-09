@@ -97,35 +97,90 @@ public class CartController {
 	
 	@PostMapping("/cartQuantity")
 	@ResponseBody
-	public void cartUpdate(@RequestParam("productId") Integer productId, 
-	                       @RequestParam("quantity") Integer quantity) {
-	    if (productId == null || quantity == null) {	// 유효성 검사
-	        throw new IllegalArgumentException("Product ID and Quantity cannot be null");
+	public void cartUpdate(@RequestParam("cartId") Integer cartId, 
+	@RequestParam("quantity") Integer quantity) {
+		if (cartId == null || quantity == null ) {	// 유효성 검사
+	        throw new IllegalArgumentException("Cart ID and Quantity cannot be null");
 	    }
 
 	    int user_Id = 1; // 임시 유저 ID 설정
 	    CartDTO dto = new CartDTO();
 	    dto.setUser_id(user_Id);
-	    dto.setProduct_id(productId);
+	    dto.setCart_id(cartId);
 	    dto.setQuantity(quantity);
 	    service.cartUpdate(dto);
 	}
 	
 	@PostMapping("/cartDelete")
 	@ResponseBody
-	public void deleteCartItems(@RequestParam("productIds") List<Integer> productIds) {
-	    if (productIds == null || productIds.isEmpty()) {
+	public void deleteCartItems(@RequestParam("cartIds") List<Integer> cartIds) {
+	    if (cartIds == null || cartIds.isEmpty()) {
 	        throw new IllegalArgumentException("삭제할 상품이 선택되지 않았습니다.");
 	    }
 
 	    int userId = 1; // 임시 유저 ID 설정
-	    productIds.forEach(productId -> {
+	    cartIds.forEach(cartId -> {
 	        CartDTO dto = new CartDTO();
 	        dto.setUser_id(userId);
-	        dto.setProduct_id(productId);
+	        dto.setCart_id(cartId);
 	        service.cartDelete(dto);
 	    });
 	}
 	
+	@PostMapping("/updateCartOption")
+	@ResponseBody
+	public Map<String, String> updateCartOption(@RequestBody Map<String, Object> requestMap) {
+	    int user_Id = 1; // 임시 유저
+	    int cartId = Integer.parseInt((String) requestMap.get("cartId"));
+	    int productId = Integer.parseInt((String) requestMap.get("productId"));
+	    List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
+	    
+	    // 옵션 데이터를 쉼표로 구분된 문자열로 변환
+	    StringBuilder optionTypes = new StringBuilder();
+	    StringBuilder optionNames = new StringBuilder();
+	    for (Map<String, String> option : options) {
+	        if (optionTypes.length() > 0) {
+	            optionTypes.append(",");
+	            optionNames.append(",");
+	        }
+	        optionTypes.append(option.get("type"));
+	        optionNames.append(option.get("name"));
+	    }
+
+	    Map<String, Object> map = new HashMap<>();
+	    map.put("user_id", user_Id);
+	    map.put("product_Id", productId);
+	    map.put("cart_Id", cartId);
+	    map.put("option_type", optionTypes.toString());
+	    map.put("option_name", optionNames.toString());
+	    System.out.println("controller map : "+map);
+	    
+	    // 동일한 상품이 장바구니에 있는지 확인
+	    int existingCartId = service.checkExistingCart(map); // 이미 있는 상품의 cartId를 리턴
+	    System.out.println(existingCartId);
+	    Map<String, String> responseMap = new HashMap<>();
+
+	    if (existingCartId > 0) {
+	        // 동일한 옵션이 있는 경우 수량 증가
+	        int updateResult = service.increaseQuantityByCartId(existingCartId);
+	        if (updateResult == 1) {
+	            // 현재 cartId 상품 삭제
+	            service.deleteCartById(cartId);
+	            responseMap.put("mesg", "장바구니의 기존 항목 수량 증가 완료");
+	        } else {
+	            responseMap.put("mesg", "수량 증가 실패");
+	        }
+	    } else {
+	        // 동일한 옵션이 없는 경우, 옵션을 업데이트
+	        int updateResult = service.updateCartOption(map);
+	        if (updateResult == 1) {
+	            responseMap.put("mesg", "옵션 업데이트 완료");
+	        } else {
+	            responseMap.put("mesg", "옵션 업데이트 실패");
+	        }
+	    }
+
+	    return responseMap;
+	}
 	
 }

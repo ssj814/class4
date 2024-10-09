@@ -61,8 +61,7 @@ public class ProductController {
 		if (page==null) {
 			bounds = new RowBounds(0,perPage);
 		} else {
-			int offset = (Integer.parseInt(page)-1)*perPage;
-			bounds = new RowBounds(offset,8);
+			bounds = new RowBounds((Integer.parseInt(page)-1)*perPage,8);
 		}
 		// 카테고리, 일반검색, 정렬용 map
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -105,11 +104,21 @@ public class ProductController {
 	}
 	
 	@GetMapping(value="/shopDetail")
-	public String shopDetail(int productId, Model m) {
-		service.addViewCount(productId); //조회수++
+	public String shopDetail(int productId, Integer reviewPage, Model m) {
+		//페이징
+		int perPage = 5;
+		if(reviewPage == null) reviewPage = 1;
+		int totalReviews = productReviewService.selectReviewList(productId, new RowBounds(0, Integer.MAX_VALUE)).size();
+		int totalPage = (int) Math.ceil((double) totalReviews / perPage);
+		RowBounds bounds = new RowBounds(0 , perPage*reviewPage);
+
 		ProductDTO productDTO = service.selectDetailproduct(productId);
-		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId,bounds);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		service.addViewCount(productId); //조회수++
+		
+		m.addAttribute("reviewPage", reviewPage);
+		m.addAttribute("totalPage", totalPage);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
 		m.addAttribute("options", options);

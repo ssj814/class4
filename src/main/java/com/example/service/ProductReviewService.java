@@ -3,6 +3,7 @@ package com.example.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class ProductReviewService {
 		return dao.insertReview(productReviewDTO); 
 	}
 
-	public List<ProductReviewDTO> selectReviewList(int productId) {
-		return dao.selectReviewList(productId); 
+	public List<ProductReviewDTO> selectReviewList(int productId, RowBounds bounds) {
+		return dao.selectReviewList(productId,bounds); 
 	}
 
 	public int deleteReview(int reviewId) {

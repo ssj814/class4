@@ -84,6 +84,15 @@
 			</c:forEach>
 		</div>
 	</div>
+	
+	<div class="btn-container text-center mt-3">
+		<c:if test="${empty reviewPage || reviewPage<totalPage}">
+			<button type="button" class="btn btn-dark" id="review-paging">
+				<i class="fa-solid fa-chevron-down"></i>
+			</button>
+		</c:if>
+	</div>
+
 </div>
 
 <script>
@@ -123,27 +132,34 @@
         
         //등록된 추천 비추천 표시
         var review_id = $(".review_id").map(function(){return $(this).val()}).get();
-        $.ajax({
-	        url: 'shop_Detail_productReviewFeedback',
-	        type: 'GET',
-	        data: {
-	        	review_id: review_id
-	        },
-	        success: function(resData) {
-	        	resData.forEach((data)=>{
-					console.log(data);
-					if(data.feedback=="up"){
-						$("#up-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
-					} else {
-						$("#down-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
-					}
-	        	})
-	        },
-	        error: function(xhr, status, error) {
-	            console.log(error);
-	        }
-    	});
+        if(review_id.length > 0){
+	        $.ajax({
+		        url: 'shop_Detail_productReviewFeedback',
+		        type: 'GET',
+		        data: {
+		        	review_id: review_id
+		        },
+		        success: function(resData) {
+		        	resData.forEach((data)=>{
+						if(data.feedback=="up"){
+							$("#up-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+						} else {
+							$("#down-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+						}
+		        	})
+		        },
+		        error: function(xhr, status, error) {
+		            console.log(error);
+		        }
+	    	});
+        }
         
+        // 리뷰 페이징시 스크롤 위치 조정
+        var reviewPage = parseInt(`${reviewPage}`);
+        console.log(reviewPage);
+        if (reviewPage > 1) {
+	        $(window).scrollTop($(document).height());
+	    }
         
 		//review 새창열기 - 등록
 		$('#Product-Review-openWindow').on(
@@ -229,8 +245,13 @@
 			});
 		});
 		
-		
-		
+		//페이징
+		$("#review-paging").on("click", function() {
+		    var productId = `${product.getProduct_id()}`; 
+		    var nextPage = parseInt(`${reviewPage}`) + 1; 
+			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage;	
+		});
+
 	})
 </script>
 

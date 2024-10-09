@@ -3,6 +3,7 @@ package com.example.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.RowBounds;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -20,8 +21,8 @@ public class ProductReviewDAO {
 		return session.insert("ProductReviewMapper.insertReview",productReviewDTO);
 	}
 
-	public List<ProductReviewDTO> selectReviewList(int productId) {
-		return session.selectList("ProductReviewMapper.selectReviewList",productId);
+	public List<ProductReviewDTO> selectReviewList(int productId, RowBounds bounds) {
+		return session.selectList("ProductReviewMapper.selectReviewList",productId,bounds);
 	}
 
 	public int deleteReview(int reviewId) {

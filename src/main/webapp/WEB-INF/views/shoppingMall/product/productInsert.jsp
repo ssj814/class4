@@ -55,7 +55,7 @@
         <input type="number" id="product_inventory" name="product_inventory" value="0" step="1" min="0" />
 		
 		<label for="product_image">대표 이미지</label>
-        <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')" />
+        <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')" required/>
         
         <img id="preview1" class="image-preview" style="display: none;" />
 

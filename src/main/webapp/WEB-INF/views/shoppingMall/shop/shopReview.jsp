@@ -68,14 +68,16 @@
 								data-reviewid="${productReview.review_id}">
 								<i class="fa-solid fa-trash"></i>
 							</button>
-							<button class="btn-feedback btn btn-outline-dark me-2 btn-sm" data-id="up" data-reviewid="${productReview.review_id}">
+							
+							<button class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="${productReview.review_id}">
 								<i class="fa-regular fa-thumbs-up"></i>
-								<span> ${productReview.feedback_up}</span> 
+								<span class="up-feedback-${productReview.review_id}"> ${productReview.feedback_up}</span> 
 							</button>
-							<button class="btn-feedback btn btn-outline-dark btn-sm" data-id="down" data-reviewid="${productReview.review_id}">
+							<button class="btn-feedback down btn btn-outline-dark btn-sm" data-reviewid="${productReview.review_id}">
 								<i class="fa-regular fa-thumbs-down"></i>
-								<span> ${productReview.feedback_down}</span>
+								<span class="down-feedback-${productReview.review_id}"> ${productReview.feedback_down}</span>
 							</button>
+							
 						</div>
 					</div>
 				</div>
@@ -86,6 +88,7 @@
 
 <script>
 	$(function() {
+		
 		
 		//리뷰 별점 표시
 		var totalRating = 0;
@@ -119,7 +122,10 @@
         	$(".total-rating").text(0);
         }
         
+        //등록된 추천 비추천 표시
+        //넘어온 리스트가 존재한다면 for문 돌면서 비활성화 ㄱㄱ
         
+
         
 		//review 새창열기 - 등록
 		$('#Product-Review-openWindow').on(
@@ -174,9 +180,17 @@
 		
 		//추천 비추천
 		$(".btn-feedback").on("click",function(){
-			var feedback = $(this).data('id');
+			var feedback = $(this).hasClass('up') ? 'up' : 'down';
+			var otherFeedback = $(this).hasClass('up') ? 'down' : 'up';
 			var reviewId = $(this).data('reviewid');
-			var count = $(this).find('span');
+			var thisCount = $("."+feedback+"-feedback-"+reviewId);
+			var otherCount = $("."+otherFeedback+"-feedback-"+reviewId);
+			$(this).attr('disabled', true)
+				.removeClass('btn-outline-dark')
+				.addClass('btn-dark');
+			$(".btn-feedback."+otherFeedback+"[data-reviewid="+reviewId+"]")
+				.attr('disabled', false).removeClass('btn-dark')
+				.addClass('btn-outline-dark');
 			$.ajax({
 				type : "patch",
 				url : "shop_productReview_Feedback",
@@ -185,15 +199,19 @@
 					reviewid : reviewId
 				},
 				success : function(resData, status, xhr) {
-					count.text(parseInt(count.text())+1);
+					if(resData=="insert"){
+						thisCount.text(parseInt(thisCount.text())+1);
+					} else if(resData=="update"){
+						thisCount.text(parseInt(thisCount.text())+1);
+						otherCount.text(parseInt(otherCount.text())-1);
+					}
 				},
 				error : function(xhr, status, error) {
 					alert("실패");
 					console.log(error);
-				}
+				},
 			});
 		});
-		
 		
 	})
 </script>

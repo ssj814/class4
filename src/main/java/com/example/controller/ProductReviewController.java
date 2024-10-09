@@ -165,13 +165,26 @@ public class ProductReviewController {
 		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
+	@Transactional
 	@ResponseBody
 	@PatchMapping("/shop_productReview_Feedback") //후기 평가
-	public void patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
+	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
+		int user_id = 1; // 임시 유저
 		Map<String, Object> map = new HashMap<>();
 		map.put("feedback", feedback);
 		map.put("review_id", reviewid);
-		productReviewService.updateReviewFeedback(map);
+		map.put("user_id", user_id);
+		String res = "";
+		if(productReviewService.checkUserFeedback(map) == 0) {
+			productReviewService.insertUserFeedback(map);
+			productReviewService.addReviewFeedback(map);
+			res = "insert";
+		} else {
+			productReviewService.updateUserFeedback(map);
+			productReviewService.updateReviewFeedback(map);
+			res = "update";
+		}
+		return res;
 	}
 	
 

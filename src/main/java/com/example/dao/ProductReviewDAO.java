@@ -3,12 +3,12 @@ package com.example.dao;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
 
 @Repository
 public class ProductReviewDAO {
@@ -39,5 +39,25 @@ public class ProductReviewDAO {
 	public int updateReviewFeedback(Map<String, Object> map) {
 		return session.update("ProductReviewMapper.updateReviewFeedback",map);
 	}
+	
+	public int addReviewFeedback(Map<String, Object> map) {
+		return session.update("ProductReviewMapper.addReviewFeedback",map);
+	}
+	
+	public int checkUserFeedback(Map<String, Object> map) {
+		return session.selectOne("ProductReviewMapper.checkUserFeedback",map);
+	}
+
+	public int updateUserFeedback(Map<String, Object> map) {
+		return session.update("ProductReviewMapper.updateUserFeedback",map);
+	}
+
+	public int insertUserFeedback(Map<String, Object> map) {
+		return session.insert("ProductReviewMapper.insertUserFeedback",map);
+	}
+
+
+
+
 
 }

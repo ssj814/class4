@@ -27,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
 import com.example.service.ProductReviewService;
 import com.example.dto.ProductOptionDTO;
 import com.example.service.ProductService;
@@ -102,42 +103,22 @@ public class ProductController {
 		return "shoppingMall/shopList";
 	}
 	
-	/*
-	@RequestMapping("/getImage") //image로 바꾸기
-	public void image(int productId, HttpServletResponse response) {
-		ProductDTO dto = service.selectDetailproduct(productId);
-        InputStream imageStream = (InputStream)dto.getProduct_image();
-        response.setContentType("image/jpeg"); //이미지 MIME 타입설정
-        OutputStream out = null; //응답스트림으로 데이터 쓰기
-		try {
-			out = response.getOutputStream();
-	        byte[] buffer = new byte[4096];
-	        int bytesRead = -1;
-	        while ((bytesRead = imageStream.read(buffer)) != -1) {
-	           out.write(buffer, 0, bytesRead);
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-	        try {
-	        	if(imageStream!=null)imageStream.close();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	*/
-	
 	@RequestMapping(value="/shopDetail", method=RequestMethod.GET)
 	public String shopDetail(int productId, Model m) {
+		int user_id = 1; //임시 유저
 		service.addViewCount(productId); //조회수++
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
+		for(ProductReviewDTO dto : productReviewDTO) {
+			System.out.println(dto.getReview_id());
+		}
+		Map<String, Object> map = new HashMap<>();
+		map.put("user_id", user_id);
+		//List<ProductReviewFeedbackDTO> productReviewFeedbackDTO = productReviewService.checkUserFeedback(map);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
-		m.addAttribute("product", productDTO);
+		//해당유저가 표시한 리뷰피드백이 있다면 그것들 리뷰피드백을 넘긴다 -> 여러개니까 리스트로 넘어가겠지???
 		m.addAttribute("options", options);
 		return "shoppingMall/shopDetail";
 	}

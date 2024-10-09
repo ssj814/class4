@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.dao.ProductReviewDAO;
 import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
 
 @Service
 public class ProductReviewService {
@@ -38,6 +39,26 @@ public class ProductReviewService {
 	public int updateReviewFeedback(Map<String, Object> map) {
 		return dao.updateReviewFeedback(map); 
 	}
+	
+	public int addReviewFeedback(Map<String, Object> map) {
+		return dao.addReviewFeedback(map); 
+	}
+	
+	public int checkUserFeedback(Map<String, Object> map) {
+		return dao.checkUserFeedback(map); 
+	}
+
+	public int updateUserFeedback(Map<String, Object> map) {
+		return dao.updateUserFeedback(map); 
+	}
+
+	public int insertUserFeedback(Map<String, Object> map) {
+		return dao.insertUserFeedback(map); 
+	}
+
+
+
+
 	
 
 

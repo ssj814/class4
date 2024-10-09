@@ -30,6 +30,7 @@
 	<div class="card">
 		<div class="list-group list-group-flush">
 			<c:forEach var="productReview" items="${productReview}">
+				<input type="hidden" class="review_id" value="${productReview.review_id}">
 				<div class="list-group-item m-3">
 					<div class="d-flex align-items-start">
 						<img src="https://via.placeholder.com/50" alt="사용자1 이미지"
@@ -68,12 +69,11 @@
 								data-reviewid="${productReview.review_id}">
 								<i class="fa-solid fa-trash"></i>
 							</button>
-							
-							<button class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="${productReview.review_id}">
+							<button id="up-${productReview.review_id}" class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="${productReview.review_id}">
 								<i class="fa-regular fa-thumbs-up"></i>
 								<span class="up-feedback-${productReview.review_id}"> ${productReview.feedback_up}</span> 
 							</button>
-							<button class="btn-feedback down btn btn-outline-dark btn-sm" data-reviewid="${productReview.review_id}">
+							<button id="down-${productReview.review_id}" class="btn-feedback down btn btn-outline-dark btn-sm" data-reviewid="${productReview.review_id}">
 								<i class="fa-regular fa-thumbs-down"></i>
 								<span class="down-feedback-${productReview.review_id}"> ${productReview.feedback_down}</span>
 							</button>
@@ -88,7 +88,6 @@
 
 <script>
 	$(function() {
-		
 		
 		//리뷰 별점 표시
 		var totalRating = 0;
@@ -123,9 +122,28 @@
         }
         
         //등록된 추천 비추천 표시
-        //넘어온 리스트가 존재한다면 for문 돌면서 비활성화 ㄱㄱ
+        var review_id = $(".review_id").map(function(){return $(this).val()}).get();
+        $.ajax({
+	        url: 'shop_Detail_productReviewFeedback',
+	        type: 'GET',
+	        data: {
+	        	review_id: review_id
+	        },
+	        success: function(resData) {
+	        	resData.forEach((data)=>{
+					console.log(data);
+					if(data.feedback=="up"){
+						$("#up-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+					} else {
+						$("#down-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+					}
+	        	})
+	        },
+	        error: function(xhr, status, error) {
+	            console.log(error);
+	        }
+    	});
         
-
         
 		//review 새창열기 - 등록
 		$('#Product-Review-openWindow').on(
@@ -185,12 +203,10 @@
 			var reviewId = $(this).data('reviewid');
 			var thisCount = $("."+feedback+"-feedback-"+reviewId);
 			var otherCount = $("."+otherFeedback+"-feedback-"+reviewId);
-			$(this).attr('disabled', true)
-				.removeClass('btn-outline-dark')
-				.addClass('btn-dark');
-			$(".btn-feedback."+otherFeedback+"[data-reviewid="+reviewId+"]")
-				.attr('disabled', false).removeClass('btn-dark')
-				.addClass('btn-outline-dark');
+			
+			$(this).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+			$("#"+otherFeedback+"-"+reviewId).attr('disabled', false).removeClass('btn-dark').addClass('btn-outline-dark');
+			
 			$.ajax({
 				type : "patch",
 				url : "shop_productReview_Feedback",
@@ -212,6 +228,8 @@
 				},
 			});
 		});
+		
+		
 		
 	})
 </script>

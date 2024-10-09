@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
 import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
 
@@ -175,17 +176,28 @@ public class ProductReviewController {
 		map.put("review_id", reviewid);
 		map.put("user_id", user_id);
 		String res = "";
-		if(productReviewService.checkUserFeedback(map) == 0) {
+		if(productReviewService.checkUserFeedback(map) == 0) { // 없으면 추가
 			productReviewService.insertUserFeedback(map);
 			productReviewService.addReviewFeedback(map);
 			res = "insert";
-		} else {
+		} else { // 있으면 수정
 			productReviewService.updateUserFeedback(map);
 			productReviewService.updateReviewFeedback(map);
 			res = "update";
 		}
 		return res;
 	}
+	
+	@ResponseBody
+    @GetMapping("/shop_Detail_productReviewFeedback")
+    public List<ProductReviewFeedbackDTO> getProductReviewFeedback(@RequestParam List<Integer> review_id) {
+        int user_id = 1; //임시유저
+    	Map<String, Object> map = new HashMap<>();
+        map.put("user_id", user_id);
+        map.put("review_id", review_id);
+        List<ProductReviewFeedbackDTO> productReviewFeedbackDTO = productReviewService.selectUserFeedback(map);
+        return productReviewFeedbackDTO; 
+    }
 	
 
 }

@@ -59,8 +59,17 @@
 		WHERE review_id=#{review_id}
 	</update>
 	
-	<select id="checkUserFeedback" parameterType="hashmap" resultType="Integer">
+	<select id="selectUserFeedback" parameterType="hashmap" resultType="ProductReviewFeedbackDTO">
 		SELECT *
+		FROM product_review_feedback 
+		where user_id=#{user_id} AND review_id IN
+	    <foreach item="id" collection="review_id" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
+	</select>
+	
+	<select id="checkUserFeedback" parameterType="hashmap" resultType="Integer">
+		SELECT count(*)
 		FROM product_review_feedback 
 		where user_id=#{user_id} AND review_id=#{review_id}
 	</select>

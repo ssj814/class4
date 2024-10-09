@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,22 +104,14 @@ public class ProductController {
 		return "shoppingMall/shopList";
 	}
 	
-	@RequestMapping(value="/shopDetail", method=RequestMethod.GET)
+	@GetMapping(value="/shopDetail")
 	public String shopDetail(int productId, Model m) {
-		int user_id = 1; //임시 유저
 		service.addViewCount(productId); //조회수++
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId);
-		for(ProductReviewDTO dto : productReviewDTO) {
-			System.out.println(dto.getReview_id());
-		}
-		Map<String, Object> map = new HashMap<>();
-		map.put("user_id", user_id);
-		//List<ProductReviewFeedbackDTO> productReviewFeedbackDTO = productReviewService.checkUserFeedback(map);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
-		//해당유저가 표시한 리뷰피드백이 있다면 그것들 리뷰피드백을 넘긴다 -> 여러개니까 리스트로 넘어가겠지???
 		m.addAttribute("options", options);
 		return "shoppingMall/shopDetail";
 	}

@@ -56,11 +56,12 @@
 
 	<!-- 동일한 상품과 옵션이 있는지 검사 -->
 	<select id="checkExistingCart" parameterType="hashmap" resultType="int">
-		SELECT cart_id FROM product_cart WHERE user_id = #{user_id,
-		jdbcType=INTEGER} AND product_id = #{product_Id, jdbcType=INTEGER} AND
-		option_type = #{option_type, jdbcType=VARCHAR} AND option_name =
-		#{option_name, jdbcType=VARCHAR} AND cart_id != #{cart_Id,
-		jdbcType=INTEGER} <!-- 현재 수정 중인 cart_id는 제외 -->
+		SELECT cart_id FROM product_cart 
+		WHERE user_id = #{user_id, jdbcType=INTEGER} 
+		AND product_id = #{product_Id, jdbcType=INTEGER} 
+		AND option_type = #{option_type, jdbcType=VARCHAR} 
+		AND option_name = #{option_name, jdbcType=VARCHAR} 
+		AND cart_id != #{cart_Id, jdbcType=INTEGER} <!-- 현재 수정 중인 cart_id는 제외 -->
 	</select>
 
 	<!-- 수량 증가 -->

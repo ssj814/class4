@@ -9,6 +9,7 @@
 	<c:forEach var="product" items="${ProductList}">
 		<div class="row align-items-center border border-dark rounded"
 			style="margin-bottom: 0.3px">
+			<input type="hidden" class="product-id" value="${product.getProduct_id()}">
 			<input type="hidden" class="cart-id" value="${product.getCart_id()}">
 			<div class="col-1">
 				<input class="btn-product form-check-input m-0 border border-dark"
@@ -202,11 +203,7 @@
 						},
 						traditional : true, // 배열 형태로 파라미터를 전달하기 위해 필요
 						success : function() {
-							// 선택된 항목 삭제 후 DOM에서 제거
 							location.reload();
-							/* selectedCartIds.forEach(function(id) {
-								$("#row-" + id).remove(); // 각 상품의 행 삭제
-							}); */
 
 							// 총 구매 개수와 금액 업데이트
 							calculateTotal();
@@ -218,7 +215,7 @@
 				});
 
 				$(".product-option-container select").on("change", function () {
-				    var productId = $(this).closest(".row").find(".btn-product").val();
+					var productId = $(this).closest(".row").find(".product-id").val();
 				    var cartId = $(this).closest(".row").find(".cart-id").val();
 				    var options = [];
 				    

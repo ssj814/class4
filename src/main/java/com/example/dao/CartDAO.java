@@ -48,4 +48,21 @@ public class CartDAO {
 		return session.selectList("CartMapper.selectProductOptions", data);
 	}
 
+	public int updateCartOption(Map<String, Object> map) {
+		return session.update("CartMapper.updateCartOption",map);
+	}
+
+	public int checkExistingCart(Map<String, Object> map) {
+		Integer existingCartId = session.selectOne("CartMapper.checkExistingCart", map);
+	    return existingCartId != null ? existingCartId : 0;
+	}
+
+	public int increaseQuantityByCartId(int cart_id) {
+		return session.update("CartMapper.increaseQuantityByCartId",cart_id);
+	}
+
+	public void deleteCartById(int cart_id) {
+		session.delete("CartMapper.deleteCartById", cart_id);
+	}
+
 }

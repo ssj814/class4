@@ -45,6 +45,22 @@ public class CartService {
 		return dao.selectProductOptions(product_id,user_id);
 	}
 
+	public int updateCartOption(Map<String, Object> map) {
+		return dao.updateCartOption(map);
+	}
+
+	public int checkExistingCart(Map<String, Object> map) {
+		return dao.checkExistingCart(map);
+	}
+
+	public int increaseQuantityByCartId(int cart_id) {
+		return dao.increaseQuantityByCartId(cart_id);
+	}
+
+	public void deleteCartById(int cart_id) {
+		dao.deleteCartById(cart_id);
+	}
+
 		
 	
 }

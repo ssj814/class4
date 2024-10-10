@@ -178,13 +178,13 @@ public class ProductReviewController {
 		String res = "";
 		if(productReviewService.checkUserFeedback(map) == 0) { // 없으면 추가
 			productReviewService.insertUserFeedback(map);
-			productReviewService.addReviewFeedback(map);
 			res = "insert";
 		} else { // 있으면 수정
 			productReviewService.updateUserFeedback(map);
-			productReviewService.updateReviewFeedback(map);
 			res = "update";
 		}
+		map.put("feedbackType", res);
+		productReviewService.updateReviewFeedback(map);
 		return res;
 	}
 	

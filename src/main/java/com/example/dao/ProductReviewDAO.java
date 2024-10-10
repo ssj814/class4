@@ -41,10 +41,6 @@ public class ProductReviewDAO {
 		return session.update("ProductReviewMapper.updateReviewFeedback",map);
 	}
 	
-	public int addReviewFeedback(Map<String, Object> map) {
-		return session.update("ProductReviewMapper.addReviewFeedback",map);
-	}
-	
 	public List<ProductReviewFeedbackDTO> selectUserFeedback(Map<String, Object> map) {
 		return session.selectList("ProductReviewMapper.selectUserFeedback",map);
 	}

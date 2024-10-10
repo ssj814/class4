@@ -39,22 +39,16 @@
 		UPDATE product_review 
 		SET 
 		<if test="feedback == 'up'">
-            feedback_up = feedback_up + 1, feedback_down = feedback_down - 1
-        </if>
-        <if test="feedback == 'down'">
-            feedback_up = feedback_up - 1, feedback_down = feedback_down + 1
-        </if>
-		WHERE review_id=#{review_id}
-	</update>
-	
-	<update id="addReviewFeedback" parameterType="hashmap">
-		UPDATE product_review 
-		SET 
-		<if test="feedback == 'up'">
             feedback_up = feedback_up + 1
+            <if test="feedbackType == 'update'">
+            	, feedback_down = feedback_down - 1
+            </if>
         </if>
         <if test="feedback == 'down'">
             feedback_down = feedback_down + 1
+            <if test="feedbackType == 'update'">
+            	, feedback_up = feedback_up - 1
+            </if>
         </if>
 		WHERE review_id=#{review_id}
 	</update>

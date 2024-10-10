@@ -41,10 +41,6 @@ public class ProductReviewService {
 		return dao.updateReviewFeedback(map); 
 	}
 	
-	public int addReviewFeedback(Map<String, Object> map) {
-		return dao.addReviewFeedback(map); 
-	}
-	
 	public List<ProductReviewFeedbackDTO> selectUserFeedback(Map<String, Object> map) {
 		return dao.selectUserFeedback(map); 
 	}

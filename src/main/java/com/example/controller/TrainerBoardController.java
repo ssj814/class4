@@ -60,7 +60,9 @@ public class TrainerBoardController {
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
+		System.out.println("1"+dto);
 		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
+		System.out.println(comments);
 		m.addAttribute("comments", comments);
 
 		

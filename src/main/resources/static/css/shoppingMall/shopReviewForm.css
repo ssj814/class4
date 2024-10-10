@@ -1,0 +1,9 @@
+.star {
+	cursor: pointer;
+	font-size: 2rem;
+	color: #ddd;
+}
+
+.star.checked {
+	color: gold;
+}

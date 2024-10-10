@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
+import com.example.service.ProductReviewService;
 import com.example.dto.ProductOptionDTO;
 import com.example.service.ProductService;
 
@@ -33,6 +38,9 @@ public class ProductController {
 	
 	@Autowired
 	ProductService service;
+	
+	@Autowired
+	ProductReviewService productReviewService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m) {
@@ -53,8 +61,7 @@ public class ProductController {
 		if (page==null) {
 			bounds = new RowBounds(0,perPage);
 		} else {
-			int offset = (Integer.parseInt(page)-1)*perPage;
-			bounds = new RowBounds(offset,8);
+			bounds = new RowBounds((Integer.parseInt(page)-1)*perPage,8);
 		}
 		// 카테고리, 일반검색, 정렬용 map
 		Map<String, Object> dataMap = new HashMap<String, Object>();
@@ -96,40 +103,24 @@ public class ProductController {
 		return "shoppingMall/shopList";
 	}
 	
-	/*
-	@RequestMapping("/getImage") //image로 바꾸기
-	public void image(int productId, HttpServletResponse response) {
-		ProductDTO dto = service.selectDetailproduct(productId);
-        InputStream imageStream = (InputStream)dto.getProduct_image();
-        response.setContentType("image/jpeg"); //이미지 MIME 타입설정
-        OutputStream out = null; //응답스트림으로 데이터 쓰기
-		try {
-			out = response.getOutputStream();
-	        byte[] buffer = new byte[4096];
-	        int bytesRead = -1;
-	        while ((bytesRead = imageStream.read(buffer)) != -1) {
-	           out.write(buffer, 0, bytesRead);
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-	        try {
-	        	if(imageStream!=null)imageStream.close();
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	*/
-	
-	@RequestMapping(value="/shopDetail", method=RequestMethod.GET)
-	public String shopDetail(int productId, Model m) {
-		service.addViewCount(productId); //조회수++
-		ProductDTO product = service.selectDetailproduct(productId);
+	@GetMapping(value="/shopDetail")
+	public String shopDetail(int productId, Integer reviewPage, Model m) {
+		//페이징
+		int perPage = 5;
+		if(reviewPage == null) reviewPage = 1;
+		int totalReviews = productReviewService.selectReviewList(productId, new RowBounds(0, Integer.MAX_VALUE)).size();
+		int totalPage = (int) Math.ceil((double) totalReviews / perPage);
+		RowBounds bounds = new RowBounds(0 , perPage*reviewPage);
+
+		ProductDTO productDTO = service.selectDetailproduct(productId);
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId,bounds);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		service.addViewCount(productId); //조회수++
 		
-		m.addAttribute("product", product);
+		m.addAttribute("reviewPage", reviewPage);
+		m.addAttribute("totalPage", totalPage);
+		m.addAttribute("product", productDTO);
+		m.addAttribute("productReview", productReviewDTO);
 		m.addAttribute("options", options);
 		return "shoppingMall/shopDetail";
 	}
@@ -142,17 +133,19 @@ public class ProductController {
 	}
 	
 	@PostMapping(value="/product")
-	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m,
+	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames) {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
-		
+		int num = 0;
 		try {
 			inputStream = product_image.getInputStream();
-			ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
-			service.insertProduct(ProductDTO);
-			product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+			String imgName = uuid + product_image.getOriginalFilename();
+			ProductDTO.setProduct_imagename(imgName);
+			num = service.insertProduct(ProductDTO);
+			product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			
 			// 옵션 처리
 	        if (optionTypes != null && optionNames != null) {
@@ -178,6 +171,13 @@ public class ProductController {
 				e.printStackTrace();
 			}
 		}
+		String mesg = "";
+		if(num==1) {
+			mesg = "상품 등록이 완료되었습니다.";
+		} else {
+			mesg = "상품 등록에 실패했습니다.";
+		}
+		redirectAttributes.addFlashAttribute("mesg", mesg);
 		return "redirect:/shopList";
 	}
 	
@@ -214,12 +214,14 @@ public class ProductController {
             @RequestParam(value = "option_name", required = false) List<String> optionNames,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
 		try {
 			if(!product_image.isEmpty()) {
 				inputStream = product_image.getInputStream();
-				ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
-				product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+				String imgName = uuid + product_image.getOriginalFilename();
+				ProductDTO.setProduct_imagename(imgName);
+				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			} 
 			int n = service.updateProduct(ProductDTO);
 			/*

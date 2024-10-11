@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.ProductDAO;
+import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 
@@ -67,6 +68,10 @@ public class ProductService {
 
 	public void deleteProductOption(int optionId) {
 		dao.deleteProductOption(optionId);
+	}
+
+	public List<ProductCategoryDTO> selectCategoryList() {
+		return dao.selectCategoryList();
 	}
 	
 }

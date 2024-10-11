@@ -35,7 +35,14 @@
 			<div class="card mb-1">
 				<div class="card-body d-flex flex-column">
 					<p class="product-category">
-						Category: <strong>${product.getProduct_category_id()}</strong>
+					    Category: 
+					    <strong>
+					        <c:forEach var="category" items="${CategoryList}">
+					            <c:if test="${category.product_category_id == product.getProduct_category_id()}">
+					                ${category.product_category_eng_name}
+					            </c:if>
+					        </c:forEach>
+					    </strong>
 					</p>
 					<p class="product-price">
 						Price: <strong>$${product.getProduct_price()}</strong>

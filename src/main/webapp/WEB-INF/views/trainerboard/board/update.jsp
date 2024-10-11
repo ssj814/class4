@@ -18,7 +18,7 @@
 		    	<input type="text" id="title" name="title"  maxlength="50" required value="${dto.title}"><br>
 		    	<label for="content">내용</label><br>
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
-		    	<hr>
+		    	
 		    	<button type="submit">수정완료</button>
 		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
 

@@ -78,7 +78,8 @@
 		</div>
 
 		<br>
-		<a class="buttonmulti" href="${pageContext.request.contextPath}/Write">글쓰기</a>
+			<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/Write'">글쓰기</button>
+
 		</main>
 	</div>
 </body>

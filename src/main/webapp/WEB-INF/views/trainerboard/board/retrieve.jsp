@@ -27,7 +27,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" style="margin-top:20px; ">
     <main>
         
       
@@ -39,6 +39,7 @@
             String content = dto.getContent();
             int userid = dto.getUserid();
         -->
+<br>
 
         <table border="1" id="retrieveForm">
             <colgroup>
@@ -75,7 +76,7 @@
                 <input type="hidden" id="postid" name="postid" value="${dto.postid}">
                  <input type="hidden" id="userid" name="userid" value="${dto.userid}">
                 <div id="commentbox">
-                   <textarea name="commentbox" class="commentbox" cols="220" rows="5" required></textarea>
+                <textarea name="commentbox" class="commentbox" rows="5" required style="width:80%; box-sizing: border-box;"></textarea>
                     <button type="submit" id="commentbutton">등록</button>
                    
                 </div>

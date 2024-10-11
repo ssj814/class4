@@ -127,7 +127,9 @@ table#listForm td {
 }
 
 form#writeForm {
-    margin-bottom: 1rem;
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
 }
 
 form#writeForm label {

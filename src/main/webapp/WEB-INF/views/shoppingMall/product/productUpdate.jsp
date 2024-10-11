@@ -10,12 +10,24 @@
         <input type="hidden" name="page" value="${currentPage}"/>
         <label for="category_id">카테고리</label>
         <select id="product_category_id" name="product_category_id" required>
-            <option value="0" <c:if test="${product.getProduct_category_id()==0}"> selected </c:if>>선택하세요</option>
-            <option value="1" <c:if test="${product.getProduct_category_id()==1}"> selected </c:if>>스포츠용품</option>
-            <option value="2" <c:if test="${product.getProduct_category_id()==2}"> selected </c:if>>스포츠의류</option>
-            <option value="3" <c:if test="${product.getProduct_category_id()==3}"> selected </c:if>>단백질보충제</option>
-            <option value="4" <c:if test="${product.getProduct_category_id()==4}"> selected </c:if>>헬스&피트니스식품</option>
-        </select>
+		    <!-- "기타" 카테고리를 제외한 카테고리 출력 -->
+		    <c:forEach var="category" items="${CategoryList}">
+		        <c:if test="${category.product_category_id != 0}">
+		            <option value="${category.product_category_id}" <c:if test="${product.getProduct_category_id() == category.product_category_id}"> selected </c:if>>
+		                ${category.product_category_name}
+		            </option>
+		        </c:if>
+		    </c:forEach>
+		    <!-- "기타" 카테고리를 마지막에 출력 -->
+		    <c:forEach var="category" items="${CategoryList}">
+		        <c:if test="${category.product_category_id == 0}">
+		            <option value="${category.product_category_id}" <c:if test="${product.getProduct_category_id() == 0}"> selected </c:if>>
+		                ${category.product_category_name}
+		            </option>
+		        </c:if>
+		    </c:forEach>
+		</select>
+
         <label for="product_name">상품명</label>
         <input type="text" id="product_name" name="product_name" value="${product.getProduct_name()}" required/><br/>
         

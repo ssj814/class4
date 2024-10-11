@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
-import com.example.dto.ProductReviewDTO;
-import com.example.dto.ProductReviewFeedbackDTO;
-import com.example.service.ProductReviewService;
 import com.example.dto.ProductOptionDTO;
+import com.example.dto.ProductReviewDTO;
+import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
 
 @Controller
@@ -45,7 +43,10 @@ public class ProductController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m) {
 		List<ProductDTO> ProductList = service.selectProductMainList();
+		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
+		
 		m.addAttribute("ProductList",ProductList);
+		m.addAttribute("CategoryList",CategoryList);
 		return "shoppingMall/shopMain";
 	}
 	
@@ -94,7 +95,11 @@ public class ProductController {
 		if(totalProductSize%perPage!=0) {
 			totalPage++;
 		}
+		
+		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
+		
 		m.addAttribute("ProductList", ProductList);
+		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("category", category);
 		m.addAttribute("search", search);
 		m.addAttribute("sort", sort);
@@ -117,6 +122,9 @@ public class ProductController {
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
 		service.addViewCount(productId); //조회수++
 		
+		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
+		
+		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("reviewPage", reviewPage);
 		m.addAttribute("totalPage", totalPage);
 		m.addAttribute("product", productDTO);
@@ -128,6 +136,9 @@ public class ProductController {
 	@GetMapping(value="/product")
 	public String productInsertForm(Model m) {
 		int n = service.maxProductId(); //등록될 상품id값
+		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
+		
+		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("ProductId",n);
 		return "shoppingMall/productInsert";
 	}
@@ -177,6 +188,7 @@ public class ProductController {
 		} else {
 			mesg = "상품 등록에 실패했습니다.";
 		}
+		
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		return "redirect:/shopList";
 	}
@@ -207,7 +219,9 @@ public class ProductController {
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
-		System.out.println(options);
+		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
+		
+		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("options", options);
 		m.addAttribute("currentPage", page);

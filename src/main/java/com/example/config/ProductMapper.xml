@@ -94,5 +94,9 @@
 	<delete id="deleteProductOption" parameterType="int">
 	    DELETE FROM PRODUCT_OPTION WHERE OPTION_ID = #{optionId}
 	</delete>
+	
+	<select id="selectCategoryList" resultType="ProductCategoryDTO">
+		SELECT * FROM PRODUCT_CATEGORY		
+	</select>
 
 </mapper>

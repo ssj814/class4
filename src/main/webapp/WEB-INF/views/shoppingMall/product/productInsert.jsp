@@ -7,13 +7,24 @@
     <h1>상품 등록</h1>
     <form action="<c:url value='/product'/>" method="post" enctype="multipart/form-data">
         <label for="product_category_id">카테고리</label>
-        <select id="product_category_id" name="product_category_id" >
-            <option value="0">선택하세요</option>
-            <option value="1">스포츠용품</option>
-            <option value="2">스포츠의류</option>
-            <option value="3">단백질보충제</option>
-            <option value="4">헬스&피트니스식품</option>
-        </select>
+	    <select id="product_category_id" name="product_category_id">
+		    <option value="0" disabled selected>선택하세요</option>
+		    <c:forEach var="category" items="${CategoryList}">
+		    	<c:if test="${category.product_category_id != 0}">
+			        <option value="${category.product_category_id}">
+			            ${category.product_category_name}
+			        </option>
+		        </c:if>
+		    </c:forEach>
+		    <c:forEach var="category" items="${CategoryList}">
+		    	<c:if test="${category.product_category_id == 0}">
+			        <option value="${category.product_category_id}">
+			            ${category.product_category_name}
+			        </option>
+		        </c:if>
+		    </c:forEach>
+		</select>
+	        
         
         <label for="product_isactive">판매상태</label>
         <input type="radio" name="product_isactive" value="1" checked="checked"/>판매중
@@ -91,6 +102,18 @@
             reader.readAsDataURL(file);
         }
     }
+    
+    document.getElementById('product_category_id').addEventListener('focus', function() {
+        // 선택하세요 옵션 숨기기
+        this.querySelector('option[value="0"]').style.display = 'none';
+    });
 
+    document.getElementById('product_category_id').addEventListener('change', function() {
+        // 다른 옵션이 선택되면 선택하세요 옵션을 완전히 제거
+        var optionToRemove = this.querySelector('option[value="0"]');
+        if (optionToRemove) {
+            optionToRemove.remove();
+        }
+    });
  
 </script>

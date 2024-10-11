@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 
@@ -67,6 +68,10 @@ public class ProductDAO {
 
 	public void deleteProductOption(int optionId) {
 		session.delete("ProductMapper.deleteProductOption", optionId);		
+	}
+
+	public List<ProductCategoryDTO> selectCategoryList() {
+		return session.selectList("ProductMapper.selectCategoryList");
 	}
 
 

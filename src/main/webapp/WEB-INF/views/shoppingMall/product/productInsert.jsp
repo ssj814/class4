@@ -8,7 +8,7 @@
     <form action="<c:url value='/product'/>" method="post" enctype="multipart/form-data">
         <label for="product_category_id">카테고리</label>
 	    <select id="product_category_id" name="product_category_id">
-		    <option value="0" disabled selected>선택하세요</option>
+		    <option value="select" disabled selected>선택하세요</option>
 		    <c:forEach var="category" items="${CategoryList}">
 		    	<c:if test="${category.product_category_id != 0}">
 			        <option value="${category.product_category_id}">
@@ -96,12 +96,12 @@
     
     document.getElementById('product_category_id').addEventListener('focus', function() {
         // 선택하세요 옵션 숨기기
-        this.querySelector('option[value="0"]').style.display = 'none';
+        this.querySelector('option[value="select"]').style.display = 'none';
     });
 
     document.getElementById('product_category_id').addEventListener('change', function() {
         // 다른 옵션이 선택되면 선택하세요 옵션을 완전히 제거
-        var optionToRemove = this.querySelector('option[value="0"]');
+        var optionToRemove = this.querySelector('option[value="select"]');
         if (optionToRemove) {
             optionToRemove.remove();
         }

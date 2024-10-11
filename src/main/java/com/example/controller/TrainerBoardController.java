@@ -35,9 +35,7 @@ public class TrainerBoardController {
 			@RequestParam(value = "searchValue", required = false) String searchValue) {
 		//페이지가 지정되지않으면 고정값 1
 		//검색필드 전달값으로 작성자, 제목, 내용 으로 검색할 수 있게 함
-		PageDTO pDTO = null;
-
-		pDTO = service.select(searchName, searchValue, curPage);
+		PageDTO pDTO = service.select(searchName, searchValue, curPage);
 		System.out.println(pDTO);
 		List<TrainerBoardDTO> list = pDTO.getList(); //
 		System.out.println("list출력" + list);
@@ -46,7 +44,6 @@ public class TrainerBoardController {
 		m.addAttribute("searchValue", searchValue);
 
 		return "trainerboard/main"; //main.jsp로
-
 	}
 
 	//페이지상태 유지용 retrieve

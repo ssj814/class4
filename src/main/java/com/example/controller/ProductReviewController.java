@@ -49,7 +49,6 @@ public class ProductReviewController {
 	@PostMapping("/shop_productReview") // 리뷰 insert
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
-		System.out.println(productReviewDTO.getContent());
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;

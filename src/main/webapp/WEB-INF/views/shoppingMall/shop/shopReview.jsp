@@ -252,9 +252,8 @@
 		$("#review-paging").on("click", function() {
 		    var productId = `${product.getProduct_id()}`; 
 		    var nextPage = parseInt(`${reviewPage}`) + 1; 
-			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage + "#tag";	
+			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage + "#tag";
 		});
-		
 		
 
 	})

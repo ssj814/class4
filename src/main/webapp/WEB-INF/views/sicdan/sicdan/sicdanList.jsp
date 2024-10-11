@@ -159,56 +159,52 @@
 <body>
 <!-- SweetAlert 라이브러리 로드 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<!-- SweetAlert 라이브러리 로드 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<!-- SweetAlert 라이브러리 로드 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-<!-- SweetAlert 라이브러리 로드 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    // 메시지 내용이 있을 경우 SweetAlert로 알림 표시
+    // 작성 완료 후 메시지를 SweetAlert로 바로 표시
     <c:if test="${not empty mesg}">
-        if (!sessionStorage.getItem('mesgDisplayed')) {
-            Swal.fire({
-                title: '알림',
-                text: '${mesg}',
-                icon: 'info',
-                confirmButtonText: '확인'
-            }).then(() => {
-                // 메시지가 표시된 후에 세션 스토리지에 상태 저장
-                sessionStorage.setItem('mesgDisplayed', 'true');
-                // 히스토리 상태 변경
-                history.replaceState(null, null, location.href);
-            });
-        }
+        Swal.fire({
+            title: '알림',
+            text: '${mesg}',
+            icon: 'info',
+            confirmButtonText: '확인'
+        }).then(() => {
+            // 알림이 표시된 후 세션 스토리지에 상태 저장
+            sessionStorage.setItem('mesgDisplayed', 'true');
+            // URL의 히스토리 상태 변경 (새로고침 시 메시지가 다시 뜨지 않도록 방지)
+            history.replaceState(null, null, location.href);
+        });
     </c:if>
 
     <c:if test="${not empty error}">
-        if (!sessionStorage.getItem('errorDisplayed')) {
-            Swal.fire({
-                title: '오류',
-                text: '${error}',
-                icon: 'error',
-                confirmButtonText: '확인'
-            }).then(() => {
-                // 오류 메시지가 표시된 후에 세션 스토리지에 상태 저장
-                sessionStorage.setItem('errorDisplayed', 'true');
-                // 히스토리 상태 변경
-                history.replaceState(null, null, location.href);
-            });
-        }
+        Swal.fire({
+            title: '오류',
+            text: '${error}',
+            icon: 'error',
+            confirmButtonText: '확인'
+        }).then(() => {
+            sessionStorage.setItem('errorDisplayed', 'true');
+            history.replaceState(null, null, location.href);
+        });
     </c:if>
 
-    // 알림 상태를 초기화하는 함수
+    // 세션 스토리지를 확실히 초기화하는 함수
     function resetAlertFlags() {
-        sessionStorage.removeItem('mesgDisplayed');
-        sessionStorage.removeItem('errorDisplayed');
+        sessionStorage.removeItem('mesgDisplayed');  // 작성 알림 초기화
+        sessionStorage.removeItem('errorDisplayed'); // 오류 알림 초기화
     }
+
+    // 페이지 로드 시 세션 스토리지 초기화
+    window.onload = function() {
+        resetAlertFlags(); // 새로고침 시 알림 상태 초기화
+    };
 </script>
+
+
+
+
 
 
     <div id="boardList">
@@ -263,7 +259,6 @@
 
             <div id="write-btn">
                 <button type="button" onclick="resetAlertFlags(); location.href='<c:url value='/sicdan/form' />'">글쓰기</button>
-
             </div>
         </div>
     </div>

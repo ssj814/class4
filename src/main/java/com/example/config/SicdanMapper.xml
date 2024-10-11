@@ -62,12 +62,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
 
     <!-- 총 게시글 개수 조회 -->
-    <select id="getTotalCount" parameterType="map" resultType="int">
-        SELECT count(*)
-        FROM sicdan
-        <if test="searchName != null and searchValue != null and searchValue != ''">
-            WHERE LOWER(sic_title) LIKE '%' || LOWER(#{searchValue}) || '%'
-        </if>
-    </select>
+<select id="getTotalCount" parameterType="map" resultType="int">
+    SELECT count(*)
+    FROM sicdan
+    WHERE is_del = 'N'
+    <if test="searchName != null and searchValue != null and searchValue != ''">
+        AND <choose>
+            <when test="searchName == 'title'">
+                LOWER(sic_title) LIKE '%' || LOWER(#{searchValue}) || '%'
+            </when>
+            <when test="searchName == 'user_id'">
+                LOWER(user_id) LIKE '%' || LOWER(#{searchValue}) || '%'
+            </when>
+        </choose>
+    </if>
+</select>
+
 
 </mapper>

@@ -104,14 +104,34 @@
 	</select>
 	
 	<!-- 트레이너 개인 정보 업데이트 -->
-	<update id="updateTrainer" parameterType="TrainerDTO">
-		update trainer_profile 
-		set name=#{name}, nickname = #{nickname}, field = #{field}, center_name = #{center_name}, center_postcode= #{center_postcode},
-		center_address1 = #{center_address1}, center_address2 =#{center_address2}, intro = #{intro}, 
-		content = #{content}, img_url = #{img_url}, img_name = #{img_name}, certificate_type = #{certificate_type},
-		certificate = #{certificate}, lesson_area1 = #{lesson_area1}, lesson_area2 = #{lesson_area2}, lesson_program = #{lesson_program}
-		where trainer_id = #{trainer_id}
-	</update>
+<update id="updateTrainer" parameterType="TrainerDTO">
+    update trainer_profile 
+    <set>
+        name = #{name},
+        nickname = #{nickname}, 
+        field = #{field}, 
+        center_name = #{center_name}, 
+        center_postcode = #{center_postcode},
+        center_address1 = #{center_address1}, 
+        center_address2 = #{center_address2}, 
+        intro = #{intro}, 
+        content = #{content}, 
+        <if test="img_url != null and img_url != ''">
+            img_url = #{img_url, jdbcType=VARCHAR},
+        </if>
+        <if test="img_name != null and img_name != ''">
+            img_name = #{img_name, jdbcType=VARCHAR},
+        </if>
+        certificate_type = #{certificate_type}, 
+        certificate = #{certificate}, 
+        lesson_area1 = #{lesson_area1}, 
+        lesson_area2 = #{lesson_area2}, 
+        lesson_program = #{lesson_program}
+    </set>
+    where trainer_id = #{trainer_id}
+</update>
+
+
 	
 	<!-- 트레이너 개인 정보 삭제 -->
 	<delete id="deleteTrainer" parameterType="int">

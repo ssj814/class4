@@ -109,23 +109,6 @@ table#listForm td {
     font-size: 16px; /* 글자 크기 */
 }
 
-
-
-/* 버튼 스타일링 */
-.button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
 form#writeForm {
   width: 80%;
   margin: 20px auto;

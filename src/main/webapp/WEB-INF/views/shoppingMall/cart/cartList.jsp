@@ -92,8 +92,6 @@
 	<button id="btn-order" style="margin: 20px 0">결제화면으로 넘어가는 버튼</button>
 </form>
 
-
-
 <script>
 	$(document).ready(
 			function() {

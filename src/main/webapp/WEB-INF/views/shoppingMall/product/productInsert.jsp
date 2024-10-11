@@ -56,7 +56,6 @@
 		
 		<label for="product_image">대표 이미지</label>
         <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')" required/>
-        
         <img id="preview1" class="image-preview" style="display: none;" />
 
         <label for="product_description">상세 정보</label>
@@ -68,11 +67,21 @@
         </div>
     </form>
 </div>
+
 <script>
 	
+	//이미지 미리보기
     function showPreview(input, previewId) {
         const file = input.files[0];
         if (file) {
+        	//이미지 사이즈 제한
+        	const maxSize = 2 * 1024 * 1024;
+        	if (file.size > maxSize) {
+                alert('파일 크기는 2MB를 초과할 수 없습니다.');
+                input.value = '';
+                return;
+            }
+        	//이미지 미리보기
             const reader = new FileReader();
             reader.onload = function (e) {
                 const preview = document.getElementById(previewId);

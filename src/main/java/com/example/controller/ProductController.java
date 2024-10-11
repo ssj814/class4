@@ -184,15 +184,21 @@ public class ProductController {
 	@DeleteMapping(value="/product/productId/{productId}")
 	@ResponseBody
 	public Map<String,String> productDelete(@PathVariable("productId") int productId, Model m) {
-		//삭제되면 추가하기 귀찮아서 일단 막아둠.
-		//int n = service.productDelete(productId);
-		Map<String,String> map = new HashMap<String, String>();
-		map.put("mesg","삭제완료");
-		/*
-		if(n!=1) {
-			map.put("mesg","오류");
+		//저장된 외부 이미지 삭제
+		ProductDTO productDTO = service.selectDetailproduct(productId);
+		String imgName = productDTO.getProduct_imagename();
+		if (imgName != null) {
+			String uploadDir = "C:/images/shoppingMall_product/";
+			File file = new File(uploadDir + imgName);
+			file.delete(); // 파일이미지 삭제
 		}
-		*/
+		//상품 삭제 
+		int n = service.productDelete(productId);
+		Map<String,String> map = new HashMap<String, String>();
+		map.put("mesg","상품이 삭제 되었습니다.");
+		if(n!=1) {
+			map.put("mesg","상품 삭제 실패");
+		}
 		return map;
 	}
 	
@@ -215,11 +221,20 @@ public class ProductController {
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		UUID uuid = UUID.randomUUID();
+		String imgName = null;
 		InputStream inputStream = null;
 		try {
 			if(!product_image.isEmpty()) {
+				//기존 이미지 삭제
+				ProductDTO productDTO = service.selectDetailproduct(ProductDTO.getProduct_id());
+				imgName = productDTO.getProduct_imagename();
+				if (imgName != null) {
+					File file = new File(uploadDir + imgName);
+					file.delete(); // 이미지 삭제
+				}
+				//새로운 이미지 등록
 				inputStream = product_image.getInputStream();
-				String imgName = uuid + product_image.getOriginalFilename();
+				imgName = uuid + product_image.getOriginalFilename();
 				ProductDTO.setProduct_imagename(imgName);
 				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			} 

@@ -1,7 +1,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <link rel="stylesheet" href="resources/css/shoppingMall/shopList.css">
 
 <div class="main-container">
@@ -23,7 +22,7 @@
 	<nav class="navbar bg-body-tertiary mb-4">
 		<div class="container-fluid">
 		<!-- 현재 카테고리 -->
-			<a class="navbar-brand fw-bold fs-2"> 
+			<div class="navbar-brand fw-bold fs-2"> 
 				<c:choose>
 					<c:when test="${not empty category}">
 						<c:forEach var="cat" items="${CategoryList}">
@@ -36,7 +35,7 @@
 						Shop
 					</c:otherwise>
 				</c:choose>
-			</a>
+			</div>
 
 			<div class="d-flex ms-auto">
 				<!-- 상품 정렬 폼 -->

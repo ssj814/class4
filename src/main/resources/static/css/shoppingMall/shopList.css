@@ -30,6 +30,9 @@ a {
     color: black;
 }
 
+.list-group-item a{
+	display: block;
+}
 
 /* 검색 및 정렬 폼 스타일링 */
 .main-Search-OrderBy {
@@ -146,4 +149,3 @@ a {
 .main-paging button:hover {
     background-color: #555;
 }
-

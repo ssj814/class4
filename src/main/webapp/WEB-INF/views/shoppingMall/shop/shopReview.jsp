@@ -6,7 +6,7 @@
 <div class="container mt-5 mb-5">
 	<input type="hidden" class="ProductId"
 		value="${product.getProduct_id()}">
-		
+
 	<div class="d-flex justify-content-between align-items-center">
 		<h3 class="align-items-center fw-bold">상품 리뷰</h3>
 		<button id="Product-Review-openWindow"
@@ -84,7 +84,7 @@
 			</c:forEach>
 		</div>
 	</div>
-	
+	<div id="tag"></div>
 	<div class="btn-container text-center mt-3">
 		<c:if test="${empty reviewPage || reviewPage<totalPage}">
 			<button type="button" class="btn btn-dark" id="review-paging">
@@ -96,6 +96,7 @@
 </div>
 
 <script>
+
 	$(function() {
 		
 		//리뷰 별점 표시
@@ -156,9 +157,11 @@
         
         // 리뷰 페이징시 스크롤 위치 조정
         var reviewPage = parseInt(`${reviewPage}`);
-        console.log(reviewPage);
         if (reviewPage > 1) {
-	        $(window).scrollTop($(document).height());
+        	window.scrollTo({
+        		  top: document.body.scrollHeight,
+        		  behavior: 'instant'
+        		});
 	    }
         
 		//review 새창열기 - 등록
@@ -249,9 +252,12 @@
 		$("#review-paging").on("click", function() {
 		    var productId = `${product.getProduct_id()}`; 
 		    var nextPage = parseInt(`${reviewPage}`) + 1; 
-			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage;	
+			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage + "#tag";	
 		});
+		
+		
 
 	})
+
 </script>
 

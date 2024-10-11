@@ -34,7 +34,7 @@
 						<span class="star" data-value="5">&#9733;</span>
 					</div>
 					<p class="mt-1">( <span class="selected-rating">3</span>점 )</p>
-					<input type="hidden" name="rating" class="selected-rating" value="1">
+					<input type="hidden" name="rating" class="selected-rating" value="3">
 				</div>
 			</div>
 		</div>

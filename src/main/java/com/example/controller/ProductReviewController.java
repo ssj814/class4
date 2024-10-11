@@ -38,7 +38,7 @@ public class ProductReviewController {
 	@Autowired
 	ProductReviewService productReviewService;
 
-	@GetMapping("/shop_productReview/{productId}") // 리뷰 등록페이지 이동
+	@GetMapping("/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
 	public String getProductReview(@PathVariable int productId, Model m) {
 		ProductDTO productDTO = productService.selectDetailproduct(productId);
 		m.addAttribute("productDTO", productDTO);
@@ -104,7 +104,7 @@ public class ProductReviewController {
 		productReviewService.deleteReview(reviewId);
 	}
 	
-	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 수정페이지 이동
+	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
 	public String getProductReview_update(@PathVariable int reviewid, Model m) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewid);
 		ProductDTO productDTO = productService.selectDetailproduct(productReviewDTO.getProduct_id());
@@ -168,7 +168,7 @@ public class ProductReviewController {
 	
 	@Transactional
 	@ResponseBody
-	@PatchMapping("/shop_productReview_Feedback") //후기 평가
+	@PatchMapping("/shop_productReview_Feedback") //후기 평가 update
 	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
 		int user_id = 1; // 임시 유저
 		Map<String, Object> map = new HashMap<>();
@@ -189,7 +189,7 @@ public class ProductReviewController {
 	}
 	
 	@ResponseBody
-    @GetMapping("/shop_Detail_productReviewFeedback")
+    @GetMapping("/shop_Detail_productReviewFeedback") //유저별 리뷰 정보 select
     public List<ProductReviewFeedbackDTO> getProductReviewFeedback(@RequestParam List<Integer> review_id) {
         int user_id = 1; //임시유저
     	Map<String, Object> map = new HashMap<>();

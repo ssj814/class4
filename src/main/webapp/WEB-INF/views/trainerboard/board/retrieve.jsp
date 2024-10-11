@@ -72,7 +72,7 @@
         <hr>
 
         <div class="comments">
-            <h4>댓글</h4>
+            <h6>댓글</h6>
             <form action="${pageContext.request.contextPath}/commentwrite" method="post">
                 <input type="hidden" id="postid" name="postid" value="${dto.postid}">
                  <input type="hidden" id="userid" name="userid" value="${dto.userid}">

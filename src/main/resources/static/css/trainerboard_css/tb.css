@@ -47,12 +47,13 @@ form#search {
   width: 80%;
   margin: 20px auto;
   margin-bottom: 1rem;
+  
    
 }
 
 form#search select, 
 form#search input[type="text"] {
-  padding: 0.5rem;
+  padding: 0.3rem 0.5rem;
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -65,7 +66,7 @@ form#search input[type="submit"] {
   cursor: pointer;
   border: none;
   font-weight: bold;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 0.5rem;
   border-radius: 5px;
 }
 
@@ -136,7 +137,7 @@ form#writeForm button {
     cursor: pointer;
     border: none;
     font-weight: bold;
-    padding: 0.5rem 1rem;
+   padding: 0.3rem 0.5rem;
     border-radius: 5px;
 }
 
@@ -171,7 +172,7 @@ form#updateForm button {
     cursor: pointer;
     border: none;
     font-weight: bold;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     border-radius: 5px;
 }
 
@@ -182,11 +183,10 @@ form#updateForm button:hover {
 button.buttonmulti {
 	
 	margin: 20px auto;
-	padding: 20px;
-	/*패딩값적용이 안됨	*/
+	/*boxsizing 해도 패딩값적용이 안됨	*/
     background-color: #000000;
     color: #ffffff;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
@@ -200,7 +200,7 @@ button.buttonmulti {
 	    background-color: rgb(0, 0, 0);
     color: #ffffff;
     padding: 0.1rem 0.5rem;
-    border-radius: 3px;
+    border-radius: 5px;
     text-decoration: none;
     /* font-weight: bold; */
 }

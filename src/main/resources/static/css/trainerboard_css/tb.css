@@ -163,6 +163,9 @@ form#updateForm textarea {
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-bottom: 1rem;
+    
+    
+    
 }
 
 
@@ -196,6 +199,12 @@ button.buttonmulti {
     background-color: #0056b3;
 }
 
+div.comments{
+	 width: 80%;
+   margin:auto;
+	
+}
+
 #commentbutton{
 	    background-color: rgb(0, 0, 0);
     color: #ffffff;
@@ -223,7 +232,7 @@ div.commentbox { /* commentbox textarea 설정*/
 /* 페이지 네비게이션 스타일 */
 .tbpagination {
     text-align: center; /* 가운데 정렬 */
-    margin: 20px 0; /* 위와 아래에 여백 추가 */
+    margin: 5px 0; /* 위와 아래에 여백 추가 */
 }
 
 .page-link {
@@ -242,3 +251,18 @@ div.commentbox { /* commentbox textarea 설정*/
     color: white; /* 호버 시 텍스트 색상 변경 */
     border-color: #007bff; /* 호버 시 테두리 색상 변경 */
 }
+
+div.button{
+   width: 80%;
+   margin:auto;
+	
+}
+
+/*div.container{
+	margin:20px auto;
+}
+
+jsp전체에 class로 container 잡혀있는데 왜 container자체로는 css가 안 먹히는지
+그래서 따로따로 div class="button"만듦
+
+*/

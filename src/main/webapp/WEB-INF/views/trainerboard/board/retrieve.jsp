@@ -64,10 +64,11 @@
             
         </table>
         <br>
+        <div class="button">
       <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
 	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
-
+</div>
         <hr>
 
         <div class="comments">
@@ -76,7 +77,7 @@
                 <input type="hidden" id="postid" name="postid" value="${dto.postid}">
                  <input type="hidden" id="userid" name="userid" value="${dto.userid}">
                 <div id="commentbox">
-                <textarea name="commentbox" class="commentbox" rows="5" required style="width:80%; box-sizing: border-box;"></textarea>
+                <textarea name="commentbox" class="commentbox" rows="5" required style="width:100%; box-sizing: border-box;"></textarea>
                     <button type="submit" id="commentbutton">등록</button>
                    
                 </div>

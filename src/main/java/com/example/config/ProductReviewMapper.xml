@@ -61,18 +61,26 @@
 	<update id="updateReviewFeedback" parameterType="hashmap">
 		UPDATE product_review 
 		SET 
-		<if test="feedback == 'up'">
-            feedback_up = feedback_up + 1
-            <if test="feedbackType == 'update'">
-            	, feedback_down = feedback_down - 1
-            </if>
-        </if>
-        <if test="feedback == 'down'">
-            feedback_down = feedback_down + 1
-            <if test="feedbackType == 'update'">
-            	, feedback_up = feedback_up - 1
-            </if>
-        </if>
+		<if test="cancel == 'true'">
+	        <if test="feedback == 'up'">
+	            feedback_up = feedback_up - 1
+	        </if>
+	        <if test="feedback == 'down'">
+	            feedback_down = feedback_down - 1
+	        </if>
+	    </if>
+	    <if test="feedback == 'up' and cancel == 'false'">
+	        feedback_up = feedback_up + 1
+	        <if test="feedbackType == 'update'">
+	            , feedback_down = feedback_down - 1
+	        </if>
+	    </if>
+	    <if test="feedback == 'down' and cancel == 'false'">
+	        feedback_down = feedback_down + 1
+	        <if test="feedbackType == 'update'">
+	            , feedback_up = feedback_up - 1
+	        </if>
+	    </if>
 		WHERE review_id=#{review_id}
 	</update>
 	
@@ -107,6 +115,11 @@
 		insert INTO product_review_feedback 
 		VALUES (#{user_id},#{review_id},#{feedback})
 	</insert>
+	
+	<delete id="deleteUserFeedback" parameterType="hashmap">
+		DELETE FROM product_review_feedback 
+		WHERE user_id=#{user_id} AND review_id=#{review_id}
+	</delete>
 	
 	
 </mapper>

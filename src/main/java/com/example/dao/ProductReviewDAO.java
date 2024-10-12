@@ -57,5 +57,9 @@ public class ProductReviewDAO {
 		return session.insert("ProductReviewMapper.insertUserFeedback",map);
 	}
 
+	public int deleteUserFeedback(Map<String, Object> map) {
+		return session.delete("ProductReviewMapper.deleteUserFeedback",map);
+	}
+
 
 }

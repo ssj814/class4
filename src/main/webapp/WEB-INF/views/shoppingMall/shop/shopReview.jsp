@@ -65,6 +65,7 @@
 	    </c:if>
 	</div>
 	
+	<!-- 상품 리뷰 리스트 -->
 	<div class="card">
 		<div class="list-group list-group-flush">
 			<c:forEach var="productReview" items="${productReview}">
@@ -122,7 +123,8 @@
 			</c:forEach>
 		</div>
 	</div>
-
+	
+	<!-- 리뷰 더보기 페이징 버튼 -->
 	<div class="btn-container text-center mt-3">
 		<c:if test="${empty reviewPage || reviewPage<totalPage}">
 			<button type="button" class="btn btn-dark" id="review-paging">
@@ -136,22 +138,6 @@
 <script>
 
 	$(function() {
-		
-		//리뷰 별점 표시
-		var totalRating = 0;
-		$('.rating-stars').each(function() {
-           var rating = $(this).data('rating');
-           totalRating += rating;
-
-           var stars = ''; // 별을 저장할 변수
-           for (var i = 0; i < rating; i++) {
-               stars += '<i class="fa-solid fa-star text-warning"></i>'; // 가득 찬 별
-           }
-           for (var i = rating; i < 5; i++) {
-               stars += '<i class="fa-regular fa-star text-warning"></i>'; // 빈 별
-           }
-           $(this).html(stars);
-       	});
 		
 		//총 별점 표시
 		totalRating = `${averageRating}`;
@@ -168,8 +154,24 @@
         } else {
         	$(".total-rating").text(0);
         }
-        
-        //등록된 추천 비추천 표시
+		
+		//리뷰리스트 별점 표시
+		var totalRating = 0;
+		$('.rating-stars').each(function() {
+           var rating = $(this).data('rating');
+           totalRating += rating;
+
+           var stars = ''; // 별을 저장할 변수
+           for (var i = 0; i < rating; i++) {
+               stars += '<i class="fa-solid fa-star text-warning"></i>'; // 가득 찬 별
+           }
+           for (var i = rating; i < 5; i++) {
+               stars += '<i class="fa-regular fa-star text-warning"></i>'; // 빈 별
+           }
+           $(this).html(stars);
+       	});
+		
+        //DB에 등록된 추천 비추천 표시
         var review_id = $(".review_id").map(function(){return $(this).val()}).get();
         if(review_id.length > 0){
 	        $.ajax({
@@ -181,9 +183,9 @@
 		        success: function(resData) {
 		        	resData.forEach((data)=>{
 						if(data.feedback=="up"){
-							$("#up-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+							$("#up-"+data.review_id).removeClass('btn-outline-dark').addClass('btn-dark');
 						} else {
-							$("#down-"+data.review_id).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
+							$("#down-"+data.review_id).removeClass('btn-outline-dark').addClass('btn-dark');
 						}
 		        	})
 		        },
@@ -229,7 +231,7 @@
             }
 		});
      
-		//review 새창열기 - 등록
+		//review 새창열기 - 등록하기
 		$('#Product-Review-openWindow').on(
 				'click',
 				function() {
@@ -244,7 +246,7 @@
 									+ "scrollbars=yes");
 				});
 
-		//review 새창열기 - 수정
+		//review 새창열기 - 수정하기
 		$('.update-productReview').on(
 				'click',
 				function() {
@@ -259,7 +261,7 @@
 									+ "scrollbars=yes");
 				});
 
-		//리뷰 삭제 버튼 
+		//리뷰 - 삭제하기 
 		$(".del-productReview").on("click", function() {
 			var delCheck = confirm("정말 삭제하시겠습니까?");
 			var reviewId = $(this).data("reviewid");
@@ -282,20 +284,31 @@
 		
 		//추천 비추천
 		$(".btn-feedback").on("click",function(){
+			//버튼 종류 - up,down
 			var feedback = $(this).hasClass('up') ? 'up' : 'down';
 			var otherFeedback = $(this).hasClass('up') ? 'down' : 'up';
 			var reviewId = $(this).data('reviewid');
+			
+			//버튼별 Count
 			var thisCount = $("."+feedback+"-feedback-"+reviewId);
 			var otherCount = $("."+otherFeedback+"-feedback-"+reviewId);
 			
-			$(this).attr('disabled', true).removeClass('btn-outline-dark').addClass('btn-dark');
-			$("#"+otherFeedback+"-"+reviewId).attr('disabled', false).removeClass('btn-dark').addClass('btn-outline-dark');
+			//이미 선택한 버튼을 중복선택시 피드백 취소
+			var cancel = "false";
+			if ($(this).hasClass('btn-dark')) {
+		        $(this).removeClass('btn-dark').addClass('btn-outline-dark');
+		        cancel = "true";
+		    } else {
+		    	$(this).removeClass('btn-outline-dark').addClass('btn-dark');
+		    	$("#" + otherFeedback + "-" + reviewId).removeClass('btn-dark').addClass('btn-outline-dark');
+		    }
 			
 			$.ajax({
 				type : "patch",
 				url : "shop_productReview_Feedback",
 				data : {
 					feedback : feedback,
+					cancel : cancel,
 					reviewid : reviewId
 				},
 				success : function(resData, status, xhr) {
@@ -304,6 +317,8 @@
 					} else if(resData=="update"){
 						thisCount.text(parseInt(thisCount.text())+1);
 						otherCount.text(parseInt(otherCount.text())-1);
+					} else if(resData=="delete"){
+						thisCount.text(parseInt(thisCount.text())-1);
 					}
 				},
 				error : function(xhr, status, error) {

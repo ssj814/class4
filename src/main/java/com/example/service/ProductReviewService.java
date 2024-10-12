@@ -57,6 +57,10 @@ public class ProductReviewService {
 		return dao.insertUserFeedback(map); 
 	}
 
+	public int deleteUserFeedback(Map<String, Object> map) {
+		return dao.deleteUserFeedback(map); 
+	}
+
 
 
 

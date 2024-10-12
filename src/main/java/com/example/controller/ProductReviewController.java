@@ -171,22 +171,27 @@ public class ProductReviewController {
 	@Transactional
 	@ResponseBody
 	@PatchMapping("/shop_productReview_Feedback") //후기 평가 update
-	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
+	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid, @RequestParam String cancel) {
 		int user_id = 1; // 임시 유저
 		Map<String, Object> map = new HashMap<>();
 		map.put("feedback", feedback);
+		map.put("cancel", cancel);
 		map.put("review_id", reviewid);
 		map.put("user_id", user_id);
 		String res = "";
-		if(productReviewService.checkUserFeedback(map) == 0) { // 없으면 추가
+		if ("true".equals(cancel)) { //피드백 삭제
+			productReviewService.deleteUserFeedback(map);
+			res = "delete";
+		} else if(productReviewService.checkUserFeedback(map) == 0) { // 피드백 추가
 			productReviewService.insertUserFeedback(map);
 			res = "insert";
-		} else { // 있으면 수정
+		} else { // 피드백 수정
 			productReviewService.updateUserFeedback(map);
 			res = "update";
 		}
 		map.put("feedbackType", res);
 		productReviewService.updateReviewFeedback(map);
+		System.out.println(res);
 		return res;
 	}
 	

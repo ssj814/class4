@@ -91,6 +91,10 @@ public class ProductDAO {
 		return session.selectList("ProductMapper.getRecentProducts", user_id);
 	}
 
+	public void deleteRecentView(int user_id) {
+		session.delete("ProductMapper.deleteRecentView", user_id);
+	}
+
 
 
 }

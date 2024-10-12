@@ -354,6 +354,12 @@ public class ProductController {
 	    } else {
 	        service.insertRecentView(data);
 	    }
+	    
+	    // 최근 본 상품이 20개를 초과하면 가장 오래된 항목을 삭제
+	    List<ProductRecentDTO> recentProducts = service.getRecentProducts(userId);
+	    if (recentProducts.size() > 20) {
+	        service.deleteRecentView(userId); // 가장 오래된 항목 삭제
+	    }
 	}
 
 	private List<Map<String, Object>> getRecentImages(int userId) {

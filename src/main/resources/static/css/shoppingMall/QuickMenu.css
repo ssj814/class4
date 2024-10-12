@@ -2,9 +2,8 @@
 
 .quick-menu {
     position: fixed;
-    right: 50px;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 5%;
+    top: 50%; 
     width: 70px;
     background-color: white;
     border: 1px solid #ccc;
@@ -13,6 +12,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    transition: top 0.3s ease;  /* 위치 변화에 대한 부드러운 이동 효과 */
 }
 
 .quick-menu button {

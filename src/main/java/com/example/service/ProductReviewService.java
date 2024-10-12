@@ -21,8 +21,8 @@ public class ProductReviewService {
 		return dao.insertReview(productReviewDTO); 
 	}
 
-	public List<ProductReviewDTO> selectReviewList(int productId, RowBounds bounds) {
-		return dao.selectReviewList(productId,bounds); 
+	public List<ProductReviewDTO> selectReviewList(Map<String, Object> map, RowBounds bounds) {
+		return dao.selectReviewList(map,bounds); 
 	}
 
 	public int deleteReview(int reviewId) {

@@ -27,6 +27,15 @@
 	    </div>
 	</div>
 	
+	<c:if test="${not empty productReview}">
+		<div class="container fst-italic d-flex">
+			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="newest">최신순</button>
+			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="oldest">오래된순</button>
+			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="useful">유용한순</button>
+			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="rating">평점순</button>
+		</div>
+	</c:if>
+	
 	<div class="card">
 		<div class="list-group list-group-flush">
 			<c:forEach var="productReview" items="${productReview}">
@@ -58,6 +67,7 @@
 							</c:if>
 							<p class="mb-3" style="white-space: pre-wrap;">${productReview.content}</p>
 						</div>
+						<!-- 버튼 부분 -->
 						<div class="ms-auto">
 							<button
 								class="update-productReview btn btn-outline-dark me-2 btn-sm"
@@ -84,7 +94,7 @@
 			</c:forEach>
 		</div>
 	</div>
-	<div id="tag"></div>
+
 	<div class="btn-container text-center mt-3">
 		<c:if test="${empty reviewPage || reviewPage<totalPage}">
 			<button type="button" class="btn btn-dark" id="review-paging">
@@ -135,7 +145,7 @@
         var review_id = $(".review_id").map(function(){return $(this).val()}).get();
         if(review_id.length > 0){
 	        $.ajax({
-		        url: 'shop_Detail_productReviewFeedback',
+		        url: 'shop_Detail_productReview_Feedback',
 		        type: 'GET',
 		        data: {
 		        	review_id: review_id
@@ -155,13 +165,13 @@
 	    	});
         }
         
-        // 리뷰 페이징시 스크롤 위치 조정
-        var reviewPage = parseInt(`${reviewPage}`);
-        if (reviewPage > 1) {
-        	window.scrollTo({
-        		  top: document.body.scrollHeight,
-        		  behavior: 'instant'
-        		});
+        //정렬 기준 bold 처리
+        if (`${sortType}`) {
+	        $(".btn-up").each(function() {
+	            if ($(this).data('sort') === `${sortType}`) {
+	                $(this).addClass("fw-bold");
+	            }
+	        });
 	    }
         
 		//review 새창열기 - 등록
@@ -248,13 +258,41 @@
 			});
 		});
 		
-		//페이징
+		//리뷰 페이징 버튼
 		$("#review-paging").on("click", function() {
 		    var productId = `${product.getProduct_id()}`; 
-		    var nextPage = parseInt(`${reviewPage}`) + 1; 
-			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage + "#tag";
+		    var nextPage = parseInt(`${reviewPage}`) + 1;
+		    var sortType = $(".btn-up.fw-bold").data('sort') || '';
+		    rememberScrollPosition();
+			location.href = 'shopDetail?productId=' + productId + '&reviewPage=' + nextPage + '&sortType=' + sortType;
 		});
 		
+	
+		//리뷰 정렬 버튼
+ 		$(".btn-up").on("click",function(){
+ 			rememberScrollPosition();
+	        var productId = `${product.getProduct_id()}`; 
+	        var sortType = $(this).data('sort');
+	        location.href = 'shopDetail?productId=' + productId + '&sortType=' + sortType;
+		});
+		
+		
+		//이전 스크롤 위치로 이동
+		const savedScrollPosition = localStorage.getItem('scrollPosition');
+		if (savedScrollPosition) {
+		    window.scrollTo({
+		        top: savedScrollPosition,
+		        behavior: 'instant'
+		    });
+		    localStorage.removeItem('scrollPosition'); // 저장된 위치 삭제
+		}
+		
+		//현재 스크롤 위치 기억 함수
+		function rememberScrollPosition() {
+			const scrollPosition = window.scrollY;
+ 			localStorage.setItem('scrollPosition', scrollPosition);
+		}
+	
 
 	})
 

@@ -109,21 +109,28 @@ public class ProductController {
 	}
 	
 	@GetMapping(value="/shopDetail")
-	public String shopDetail(int productId, Integer reviewPage, Model m) {
-		//페이징
-		int perPage = 5;
-		if(reviewPage == null) reviewPage = 1;
-		int totalReviews = productReviewService.selectReviewList(productId, new RowBounds(0, Integer.MAX_VALUE)).size();
-		int totalPage = (int) Math.ceil((double) totalReviews / perPage);
-		RowBounds bounds = new RowBounds(0 , perPage*reviewPage);
+	public String shopDetail(int productId, Model m,
+			@RequestParam(value="reviewPage", required = false, defaultValue = "1") Integer reviewPage,
+			@RequestParam(value="sortType", required = false, defaultValue = "newest") String sortType) {
 
+		//selectReviewList용 map 생성
+		Map<String, Object> map = new HashMap<>();
+		map.put("productId", productId);
+		map.put("sortType", sortType);
+		
+		//리뷰 페이징
+		int perPage = 5;
+		int totalReviews = productReviewService.selectReviewList(map, new RowBounds(0, Integer.MAX_VALUE)).size();
+		int totalPage = (int) Math.ceil((double) totalReviews / perPage);
+		RowBounds bounds = new RowBounds(0, perPage*reviewPage);
+		
 		ProductDTO productDTO = service.selectDetailproduct(productId);
-		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(productId,bounds);
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(map,bounds);
 		List<ProductOptionDTO> options = service.selectProductOptions(productId);
 		service.addViewCount(productId); //조회수++
-		
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+	    m.addAttribute("sortType",sortType);
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("reviewPage", reviewPage);
 		m.addAttribute("totalPage", totalPage);

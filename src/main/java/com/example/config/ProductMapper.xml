@@ -99,4 +99,29 @@
 		SELECT * FROM PRODUCT_CATEGORY		
 	</select>
 
+	<select id="checkRecentView" parameterType="map" resultType="ProductRecentDTO">
+		SELECT * FROM PRODUCT_RECENT WHERE PRODUCT_ID = #{product_id} AND USER_ID = #{user_id}
+	</select>
+	
+	<insert id="insertRecentView" parameterType="map">
+	    INSERT INTO PRODUCT_RECENT (PRODUCT_ID, USER_ID, VIEWDATE)
+	    VALUES (#{product_id}, #{user_id}, SYSDATE)
+	</insert>
+	
+	<update id="updateRecentView" parameterType="map">
+	    UPDATE PRODUCT_RECENT SET VIEWDATE = SYSDATE 
+	    WHERE PRODUCT_ID = #{product_id} AND USER_ID = #{user_id}
+	</update>
+	
+	<select id="getRecentProducts" parameterType="int" resultType="ProductRecentDTO">
+	    SELECT * FROM PRODUCT_RECENT 
+	    WHERE USER_ID = #{user_id}
+	    ORDER BY VIEWDATE DESC
+	</select>
+	
+	<delete id="deleteRecentView" parameterType="int">
+	    DELETE FROM PRODUCT_RECENT 
+	    WHERE USER_ID = #{user_id}
+	    AND VIEWDATE = (SELECT MIN(VIEWDATE) FROM PRODUCT_RECENT WHERE USER_ID = #{user_id})
+	</delete>
 </mapper>

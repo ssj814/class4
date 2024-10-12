@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,59 +15,56 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.service.TrainerService;
 import com.example.dto.TrainerDTO;
+import com.example.service.TrainerDBOracleService;
 
 @Controller
 @RequestMapping
 public class TrainerController {
 
-	@Autowired
-	TrainerService service;
-	
-	@GetMapping("/test")
-	public String test() {
-		return "/trainer/trainerAdd";
-	}
-	
-	@RequestMapping("/trainer_list")
-	public String trainerList(
-			@RequestParam(required = false) String field,
-			@RequestParam(required = false) String searchType,
-			@RequestParam(required = false) String searchVal,
-			@RequestParam(required = false) Integer page,
-			Model m
-			) {
-		/////////////////////////////페이징////////////////////////////////
-		int listPerPage = 5; //한 페이지에 표시할 게시물 수
-		int currentPage = 1; //현재 페이지 기본 세팅
-		 
-		if(page != null) currentPage = page;
-		
-		int startRow = (currentPage-1) * listPerPage + 1; //시작할 행 no.
-		int endRow = currentPage * listPerPage; //마지막 뽑아올 행 no.
-		
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("startRow", startRow);
-		params.put("endRow", endRow);
-		//
-		params.put("field", field);
-		params.put("searchType", searchType);
-		params.put("searchVal", searchVal);
-		
-		System.out.println(startRow + " " + endRow);
-		List<TrainerDTO> posts = service.getlistsByPage(params);//해당 페이지에 나올 리스트
-		
-		int totalLists = service.getTotalLists(params); //총 데이터 갯수
-		System.out.println(totalLists);
-		int totalPages = totalLists / listPerPage;
-		if (totalLists % listPerPage != 0) { // 나머지 남을 때 페이지수 +
-			totalPages++;
-		}
-		
-		int pageBlock = 5;  // 한 번에 표시할 페이지 번호의 개수
+    @Autowired
+    TrainerDBOracleService service;
+    
+    @GetMapping("/test")
+    public String test() {
+        return "/trainer/trainerAdd";
+    }
+    
+    @RequestMapping("/trainer_list")
+    public String trainerList(
+            @RequestParam(required = false) String field,
+            @RequestParam(required = false) String searchType,
+            @RequestParam(required = false) String searchVal,
+            @RequestParam(required = false) Integer page,
+            Model m
+            ) {
+        int listPerPage = 5;
+        int currentPage = 1;
+         
+        if(page != null) currentPage = page;
+        
+        int startRow = (currentPage-1) * listPerPage + 1;
+        int endRow = currentPage * listPerPage;
+        
+        Map<String, Object> params = new HashMap<>();
+        params.put("startRow", startRow);
+        params.put("endRow", endRow);
+        params.put("field", field);
+        params.put("searchType", searchType);
+        params.put("searchVal", searchVal);
+        
+        List<TrainerDTO> posts = service.getlistsByPage(params);
+        
+        int totalLists = service.getTotalLists(params);
+        int totalPages = totalLists / listPerPage;
+        if (totalLists % listPerPage != 0) {
+            totalPages++;
+        }
+        
+        int pageBlock = 5;
         int startPage = ((currentPage - 1) / pageBlock) * pageBlock + 1;
         int endPage = startPage + pageBlock - 1;
         if (endPage > totalPages) {
@@ -75,100 +75,121 @@ public class TrainerController {
         m.addAttribute("totalPages", totalPages);
         m.addAttribute("startPage", startPage);
         m.addAttribute("endPage", endPage);
-        
         m.addAttribute("field", field);
         m.addAttribute("searchType", searchType);
         m.addAttribute("searchVal", searchVal);
-        
         m.addAttribute("list", posts);
-				
-		return "/trainer/trainerList";
-	}
-	
-	@GetMapping("/trainer_join")
-	public String trainerJoin1() {
-		return "/trainer/trainerAdd";
-	}
-	@PostMapping("/trainer_join")
-	public String trainerJoin2(@ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
-		//파일 저장////////////////////////////////////////
-//		String savePath = "upload";
-//		int uploadFileSizeLimit = 5 * 1024 * 1024;
-//		String encType = "UTF-8";
-//		ServletContext ctx = getServletContext();
-//		String uploadFilePath = ctx.getRealPath(savePath);
-//		
-//		MultipartRequest multi = new MultipartRequest(request, uploadFilePath, 
-//				uploadFileSizeLimit, encType, new DefaultFileRenamePolicy());
-//		
-//		String fileName = multi.getFilesystemName("trainer_img_url");
-//		if (fileName == null) {
-//			System.out.println("파일 업로드 없음");
-//		}
-		//////////////////////////////////////////
-		//로그인 시 트레이너 등록 가능하도록 -> 세션에서 로그인아이디 존재여부 검사, 존재하면 트레이너아이디 존재유무 확인
-		//session.getAttribute("user_id");
-		//TrainerProfileDTO dto = service.checkIfTrainer(user_id);
-		
-		//if (userid != null && dto == null) {//로그인되어있고 트레이너 아이디없으면
-			System.out.println(trainer);
-			trainer.setImg_name("");
-			trainer.setImg_url("");
-			
-			int n = service.insertTrainer(trainer);
-			String mesg = "트레이너 등록 완료";
-			if (n == 1) {
-				ra.addFlashAttribute("mesg", mesg);
-			} else {
-				mesg = "트레이너 등록 실패";
-				ra.addFlashAttribute("mesg", mesg);
-			}
-		return "redirect:/trainer_list";
-	}
-	
-	@GetMapping("/trainer_info")
-	public String info(@RequestParam Integer idx, Model m) {
-		TrainerDTO dto = service.selectTrainer(idx);
-		m.addAttribute("info", dto);
-		return "/trainer/trainerInfo";
-	}
-	
-	@GetMapping("/trainer_modify")
-	public String modify(@RequestParam Integer idx, Model m) {
-		TrainerDTO dto = service.selectTrainer(idx);
-		m.addAttribute("info", dto);
-		return "/trainer/trainerEdit";
-	}
-	
-	@PostMapping("/trainer_modify")
-	public String modify2(@ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
-		System.out.println(trainer);
-		trainer.setImg_name("");
-		trainer.setImg_url("");
-		
-		int n = service.updateTrainer(trainer);
-		
-		String mesg = "트레이너 정보 수정 완료";
-		if (n != 1) mesg = "트레이너 정보 수정 실패";
-		
-//		TrainerDTO newdto = service.selectTrainer(trainer.getTrainer_id());
-		ra.addAttribute("idx", trainer.getTrainer_id());
-		ra.addAttribute("mesg", mesg);
-		return "redirect:/trainer_info";
-	}
-	
-	@RequestMapping("/trainer_deletion")
-	public String delete(@RequestParam Integer idx, RedirectAttributes ra) {
-		int n = service.deleteTrainer(idx);
-		
-		String mesg = "트레이너 정보 삭제 완료";
-		if (n == 1) {
-			ra.addFlashAttribute("mesg", mesg);
-		} else {
-			mesg = "트레이너 정보 삭제 실패";
-			ra.addFlashAttribute("mesg", mesg);
-		}
-		return "redirect:/trainer_list";
-	}
-	
+                
+        return "/trainer/trainerList";
+    }
+    
+    @GetMapping("/trainer_join")
+    public String trainerJoin1() {
+        return "/trainer/trainerAdd";
+    }
+
+    @PostMapping("/trainer_join")
+    public String trainerJoin2(@RequestParam("trainer_img_url") MultipartFile trainer_img_url, @ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
+        String uploadDir = "C:/images/trainer_images/"; // 이미지 저장 경로
+        InputStream inputStream = null;
+        
+        try {
+            inputStream = trainer_img_url.getInputStream();
+            String fileName = trainer_img_url.getOriginalFilename();
+            trainer.setImg_name(fileName);
+            trainer.setImg_url(uploadDir + fileName);
+            service.insertTrainer(trainer); // 데이터베이스에 트레이너 정보 저장
+            trainer_img_url.transferTo(new File(uploadDir + fileName)); // 이미지 파일 저장
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        ra.addFlashAttribute("mesg", "트레이너 등록 완료");
+        return "redirect:/trainer_list";
+    }
+    
+    @GetMapping("/trainer_info")
+    public String info(@RequestParam Integer idx, Model m) {
+        TrainerDTO dto = service.selectTrainer(idx);
+        m.addAttribute("info", dto);
+        return "/trainer/trainerInfo";
+    }
+    
+    @GetMapping("/trainer_modify")
+    public String modify(@RequestParam Integer idx, Model m) {
+        TrainerDTO dto = service.selectTrainer(idx);
+        m.addAttribute("info", dto);
+        return "/trainer/trainerEdit";
+    }
+    
+    @PostMapping("/trainer_modify")
+    public String modify2(@RequestParam("trainer_img_url") MultipartFile trainer_img_url, 
+                          @ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
+        String uploadDir = "C:/images/trainer_images/";
+
+        // 트레이너의 기존 이미지 정보를 가져옴
+        TrainerDTO existingTrainer = service.selectTrainer(trainer.getTrainer_id());
+
+        try {
+            // 이미지 파일이 업로드된 경우에만 이미지 변경
+            if (!trainer_img_url.isEmpty()) {
+                String fileName = trainer_img_url.getOriginalFilename();
+                trainer.setImg_name(fileName); // DTO에 파일 이름을 설정
+                trainer.setImg_url(uploadDir + fileName); // DTO에 파일 경로 설정
+                trainer_img_url.transferTo(new File(uploadDir + fileName)); // 파일 저장
+            } else {
+                // 이미지 파일이 없으면 기존 이미지를 유지
+                trainer.setImg_name(existingTrainer.getImg_name());
+                trainer.setImg_url(existingTrainer.getImg_url());
+            }
+
+            // 트레이너 정보 업데이트
+            service.updateTrainer(trainer);
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ra.addAttribute("idx", trainer.getTrainer_id());
+        ra.addFlashAttribute("mesg", "트레이너 정보 수정 완료");
+        return "redirect:/trainer_info";
+    }
+
+
+    
+    @RequestMapping("/trainer_deletion")
+    public String delete(@RequestParam Integer idx, RedirectAttributes ra) {
+        // 먼저 트레이너 정보를 가져옴
+        TrainerDTO dto = service.selectTrainer(idx);
+
+        // 트레이너 정보가 없으면 삭제 실패 메시지를 전송하고 반환
+        if (dto == null) {
+            ra.addFlashAttribute("mesg", "트레이너 정보를 찾을 수 없습니다.");
+            return "redirect:/trainer_list";
+        }
+
+        // 트레이너 정보 삭제 처리
+        int n = service.deleteTrainer(idx);
+
+        // 트레이너 정보가 삭제되면 이미지 파일도 삭제
+        String imgName = dto.getImg_name();
+        if (imgName != null) {
+            String uploadDir = "C:/images/trainer_images/";
+            File file = new File(uploadDir + imgName);
+            if (file.exists()) {
+                file.delete(); // 파일 삭제
+            }
+        }
+
+        String mesg = (n == 1) ? "트레이너 정보 삭제 완료" : "트레이너 정보 삭제 실패";
+        ra.addFlashAttribute("mesg", mesg);
+
+        return "redirect:/trainer_list";
+    }
 }

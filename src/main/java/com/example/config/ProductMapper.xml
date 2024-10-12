@@ -118,4 +118,10 @@
 	    WHERE USER_ID = #{user_id}
 	    ORDER BY VIEWDATE DESC
 	</select>
+	
+	<delete id="deleteRecentView" parameterType="int">
+	    DELETE FROM PRODUCT_RECENT 
+	    WHERE USER_ID = #{user_id}
+	    AND VIEWDATE = (SELECT MIN(VIEWDATE) FROM PRODUCT_RECENT WHERE USER_ID = #{user_id})
+	</delete>
 </mapper>

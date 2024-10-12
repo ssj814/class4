@@ -24,19 +24,42 @@
 </div>
 
 <script>
-	document.getElementById('scrollTopBtn').addEventListener('click',
-			function() {
-				window.scrollTo({
-					top : 0,
-					behavior : 'smooth'
-				});
-			});
+	// 페이지 로드 시 초기 설정
+	window.onload = function() {
+	    var quickMenu = document.querySelector('.quick-menu');
+	    var initialTop = window.innerHeight * 0.2;  // 초기 위치 (상단으로부터 20%)
+	    var maxOffset = window.innerHeight * 0.3;   // 최대 상단으로부터 50% 위치까지 이동 (0.5 - 0.2)
 
-	document.getElementById('scrollBottomBtn').addEventListener('click',
-			function() {
-				window.scrollTo({
-					top : document.body.scrollHeight,
-					behavior : 'smooth'
-				});
-			});
+	    // 메뉴의 초기 위치 설정
+	    quickMenu.style.top = initialTop + 'px';
+
+	    window.addEventListener('scroll', function() {
+	        var scrollY = window.scrollY || document.documentElement.scrollTop;  // 현재 스크롤 위치
+	        var newTop = scrollY * 0.3;  // 스크롤 비율에 따라 이동
+	        
+	        // 상단에서 최대 50%까지 이동 제한
+	        if (newTop > maxOffset) {
+	            newTop = maxOffset;  // 하단 50% 제한
+	        }
+
+	        // 메뉴의 Y 위치 조정
+	        quickMenu.style.top = (initialTop + newTop) + 'px';
+	    });
+	};
+
+	// 상단으로 스크롤
+	document.getElementById('scrollTopBtn').addEventListener('click', function() {
+	    window.scrollTo({
+	        top: 0,
+	        behavior: 'smooth'
+	    });
+	});
+
+	// 하단으로 스크롤
+	document.getElementById('scrollBottomBtn').addEventListener('click', function() {
+	    window.scrollTo({
+	        top: document.body.scrollHeight,
+	        behavior: 'smooth'
+	    });
+	});
 </script>

@@ -90,5 +90,9 @@ public class ProductService {
 	public List<ProductRecentDTO> getRecentProducts(int user_id) {
 		return dao.getRecentProducts(user_id);
 	}
+
+	public void deleteRecentView(int user_id) {
+		dao.deleteRecentView(user_id);
+	}
 	
 }

@@ -118,9 +118,17 @@ public class ProductController {
 		map.put("productId", productId);
 		map.put("sortType", sortType);
 		
+		//총 평점
+		List<ProductReviewDTO> allProductReview = productReviewService.selectReviewList(map, new RowBounds(0, Integer.MAX_VALUE));
+		double averageRating = allProductReview.stream()
+			    .mapToDouble(ProductReviewDTO::getRating) // 각 리뷰의 평점을 DoubleStream으로 변환
+			    .average() // 평균 계산
+			    .orElse(0.0); // 값이 없을 경우 기본값 설정
+		long roundedAverageRating = Math.round(averageRating);
+		
 		//리뷰 페이징
 		int perPage = 5;
-		int totalReviews = productReviewService.selectReviewList(map, new RowBounds(0, Integer.MAX_VALUE)).size();
+		int totalReviews = allProductReview.size();
 		int totalPage = (int) Math.ceil((double) totalReviews / perPage);
 		RowBounds bounds = new RowBounds(0, perPage*reviewPage);
 		
@@ -130,6 +138,7 @@ public class ProductController {
 		service.addViewCount(productId); //조회수++
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+		m.addAttribute("averageRating",roundedAverageRating);
 	    m.addAttribute("sortType",sortType);
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("reviewPage", reviewPage);

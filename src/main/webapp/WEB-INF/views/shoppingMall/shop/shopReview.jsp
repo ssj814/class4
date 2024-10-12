@@ -3,6 +3,30 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
+
+<!-- 상품 리뷰사진용 모달 -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body p-0 d-flex justify-content-center align-items-center">
+        <div id="carouselImages" class="carousel slide">
+		    <div class="carousel-inner">
+		        <!-- 이미지 항목들 -->
+		    </div>
+		    <button class="carousel-control-prev" type="button" data-bs-target="#carouselImages" data-bs-slide="prev">
+		        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+		        <span class="visually-hidden">이전</span>
+		    </button>
+		    <button class="carousel-control-next" type="button" data-bs-target="#carouselImages" data-bs-slide="next">
+		        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+		        <span class="visually-hidden">다음</span>
+		    </button>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container mt-5 mb-5">
 	<input type="hidden" class="ProductId"
 		value="${product.getProduct_id()}">
@@ -27,14 +51,19 @@
 	    </div>
 	</div>
 	
-	<c:if test="${not empty productReview}">
-		<div class="container fst-italic d-flex">
-			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="newest">최신순</button>
-			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="oldest">오래된순</button>
-			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="useful">유용한순</button>
-			<button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="rating">평점순</button>
-		</div>
-	</c:if>
+	<div>
+	    <c:if test="${not empty productReview}">
+	        <div class="d-flex fst-italic">
+	            <button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="newest">최신순</button>
+	            <button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="oldest">오래된순</button>
+	            <button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="useful">유용한순</button>
+	            <button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="rating">평점순</button>
+	            <button class="btn btn-link text-decoration-none text-dark mb-0 btn-up" data-sort="onlyPhoto">
+	            	<i class="fa-regular fa-image"></i> 포토리뷰
+	           	</button>
+	        </div>
+	    </c:if>
+	</div>
 	
 	<div class="card">
 		<div class="list-group list-group-flush">
@@ -54,14 +83,13 @@
 					</div>
 					<hr>
 					<div class="d-flex">
-						<div>
+						<div class="review-content" data-photos="${productReview.photos}">
 							<c:if test="${not empty productReview.photos}">
-								<c:set var="photoList"
-									value="${fn:split(productReview.photos, ',')}" />
+								<c:set var="photoList" value="${fn:split(productReview.photos, ',')}" />
 								<c:forEach var="photo" items="${photoList}">
 									<img
 										src="<c:url value='/images/shoppingMall_review/${photo}'/>"
-										alt="사용자 사진" class="img-thumbnail me-2 mb-2"
+										alt="사용자 사진" class="img-thumbnail me-2 mb-2 review-img"
 										style="width: 100px; height: 100px; object-fit: cover;" />
 								</c:forEach>
 							</c:if>
@@ -126,7 +154,7 @@
        	});
 		
 		//총 별점 표시
-		totalRating = Math.round(totalRating/$('.rating-stars').length);
+		totalRating = `${averageRating}`;
 		var totalStars = '';
 		for (var i = 0; i < totalRating; i++) {
 			totalStars += '<i class="fa-solid fa-star text-warning"></i>'; // 가득 찬 별
@@ -174,6 +202,33 @@
 	        });
 	    }
         
+ 
+        // 이미지 모달창 
+        $('.review-img').on('click', function() { // review-img 클래스 클릭 시
+            const reviewPhotos = $(this).closest('.review-content').data('photos');
+            console.log(reviewPhotos);
+            if (reviewPhotos) {
+                const carouselInner = $('#carouselImages .carousel-inner');
+                carouselInner.empty(); // 기존 이미지 제거
+
+                // 사진 URL을 배열로 변환
+                const photosArray = reviewPhotos.split(','); 
+                photosArray.forEach((photo, index) => {
+                    const isActive = index === 0 ? 'active' : ''; // 첫 번째 이미지를 활성화
+                    const photoUrl = '<c:url value="/images/shoppingMall_review/' + photo + '"/>'; // URL 처리
+                    const carouselItem = 
+                        '<div class="carousel-item ' + isActive + '">' +
+                            '<img src="' + photoUrl + '" class="d-block fixed-size" alt="이미지" style="width: 500px; height: 500px; object-fit: cover;">' +
+                        '</div>';
+                    carouselInner.append(carouselItem);
+                });
+
+                $('#imageModal').modal('show'); // 모달 열기
+            } else {
+                console.error('리뷰 이미지가 존재하지 않습니다.');
+            }
+		});
+     
 		//review 새창열기 - 등록
 		$('#Product-Review-openWindow').on(
 				'click',
@@ -297,4 +352,3 @@
 	})
 
 </script>
-

@@ -13,8 +13,11 @@
 		SELECT review_id,product_id,user_id,to_char(create_date,'yyyy-mm-dd') create_date,content,rating,photos,feedback_up,feedback_down
 		FROM product_review 
 		WHERE product_id=#{productId}
+		<if test="sortType == 'onlyPhoto'">
+		 AND photos IS NOT NULL
+		</if>
 		<if test="sortType != null">
-        ORDER BY 
+         ORDER BY 
 	        <choose>
 	            <when test="sortType == 'newest'">
 	                review_id DESC

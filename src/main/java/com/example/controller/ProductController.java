@@ -3,6 +3,7 @@ package com.example.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
+import com.example.dto.ProductRecentDTO;
 import com.example.dto.ProductReviewDTO;
 import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
@@ -96,8 +98,14 @@ public class ProductController {
 			totalPage++;
 		}
 		
+		//임시유저
+		int user_id = 1;
+		// 최근 본 상품 목록 조회 및 이미지 정보 추가
+	    List<Map<String, Object>> recentProductWithImages = getRecentImages(user_id);
+	    
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+		m.addAttribute("recentProducts", recentProductWithImages);
 		m.addAttribute("ProductList", ProductList);
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("category", category);
@@ -110,6 +118,15 @@ public class ProductController {
 	
 	@GetMapping(value="/shopDetail")
 	public String shopDetail(int productId, Integer reviewPage, Model m) {
+		//임시유저
+		int user_id = 1;
+		
+		// 최근 본 상품 추가 또는 업데이트 처리
+	    manageRecentProduct(productId, user_id);
+
+	    // 최근 본 상품 목록 조회 및 이미지 정보 추가
+	    List<Map<String, Object>> recentProductWithImages = getRecentImages(user_id);
+		
 		//페이징
 		int perPage = 5;
 		if(reviewPage == null) reviewPage = 1;
@@ -124,6 +141,7 @@ public class ProductController {
 		
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+		m.addAttribute("recentProducts", recentProductWithImages);
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("reviewPage", reviewPage);
 		m.addAttribute("totalPage", totalPage);
@@ -323,6 +341,35 @@ public class ProductController {
 		
 		return "redirect:/shopList";
 	}
-		
 	
+	private void manageRecentProduct(int productId, int userId) {
+	    Map<String, Object> data = new HashMap<>();
+	    data.put("product_id", productId);
+	    data.put("user_id", userId);
+
+	    // 최근 본 상품 추가 또는 업데이트
+	    ProductRecentDTO existingRecentView = service.checkRecentView(data);
+	    if (existingRecentView != null) {
+	        service.updateRecentView(data);
+	    } else {
+	        service.insertRecentView(data);
+	    }
+	}
+
+	private List<Map<String, Object>> getRecentImages(int userId) {
+	    // 최근 본 상품 목록 조회
+	    List<ProductRecentDTO> recentProducts = service.getRecentProducts(userId);
+
+	    // 각 productId에 맞는 이미지 정보 조회 및 추가
+	    List<Map<String, Object>> recentProductWithImages = new ArrayList<>();
+	    for (ProductRecentDTO recentProduct : recentProducts) {
+	        ProductDTO product = service.selectDetailproduct(recentProduct.getProduct_id());
+	        Map<String, Object> productData = new HashMap<>();
+	        productData.put("productId", product.getProduct_id());
+	        productData.put("productImage", product.getProduct_imagename());
+	        recentProductWithImages.add(productData);
+	    }
+	    
+	    return recentProductWithImages;
+	}
 }

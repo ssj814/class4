@@ -11,6 +11,7 @@ import com.example.dao.ProductDAO;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
+import com.example.dto.ProductRecentDTO;
 
 @Service
 public class ProductService {
@@ -72,6 +73,22 @@ public class ProductService {
 
 	public List<ProductCategoryDTO> selectCategoryList() {
 		return dao.selectCategoryList();
+	}
+
+	public ProductRecentDTO checkRecentView(Map<String, Object> data) {
+		return dao.checkRecentView(data);
+	}
+
+	public void insertRecentView(Map<String, Object> data) {
+		dao.insertRecentView(data);
+	}
+
+	public void updateRecentView(Map<String, Object> data) {
+		dao.updateRecentView(data);
+	}
+
+	public List<ProductRecentDTO> getRecentProducts(int user_id) {
+		return dao.getRecentProducts(user_id);
 	}
 	
 }

@@ -91,6 +91,7 @@ public class TrainerBoardController {
 	//update.jsp로 - 수정폼으로
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String showUpdateForm(@RequestParam("postid") int postid, Model m) {
+		System.out.println("수정클릭");
 		TrainerBoardDTO dto = service.retrieve(postid); // postid받아와서 상세내용 불러오고 
 		m.addAttribute("dto", dto);
 		return "trainerboard/update"; // update.jsp로

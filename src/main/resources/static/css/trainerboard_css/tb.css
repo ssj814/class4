@@ -1,18 +1,7 @@
 @charset "UTF-8";
 
-#content {
-  width: 80%; /* 전체 폭을 사용 */
-  height: 200px; /* 높이 지정 */
-  padding: 10px; /* 내용과 경계 사이에 여백 추가 */
-  border: 1px solid #ccc; /* 테두리 스타일 */
-  border-radius: 5px; /* 둥근 모서리 */
-  box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기 지정 */
-  font-size: 16px; /* 글자 크기 */
-  white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
-}
-
 #title{
-  width: 80%; /* 전체 폭을 사용 */
+	 width: 100%; /* 전체 폭을 사용 */
   height: 20px; /* 높이 지정 */
   padding: 10px; /* 내용과 경계 사이에 여백 추가 */
   border: 1px solid #ccc; /* 테두리 스타일 */
@@ -22,11 +11,27 @@
   white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
 }
 
+ #content {
+  width: 80%; /* 전체 폭을 사용 */
+ height: 200px; /* 높이 지정 */
+ padding: 10px; /* 내용과 경계 사이에 여백 추가 */
+ border: 1px solid #ccc; /* 테두리 스타일 */
+ border-radius: 5px; /* 둥근 모서리 */
+box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기 지정 */
+ font-size: 16px; /* 글자 크기 */
+ white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
+} 
+
+
+
 table#retrieveForm {
-  width: 80%;
-  border-collapse: collapse; /* 테두리 겹침 방지 */
+ width: 80%;
   margin: 20px auto;
-  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
 }
  
 table#retrieveForm th, table#retrieveForm td {
@@ -56,12 +61,13 @@ form#search {
   width: 80%;
   margin: 20px auto;
   margin-bottom: 1rem;
+  
    
 }
 
 form#search select, 
 form#search input[type="text"] {
-  padding: 0.5rem;
+  padding: 0.3rem 0.5rem;
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -69,17 +75,17 @@ form#search input[type="text"] {
 }
 
 form#search input[type="submit"] {
-  background-color: #000000;
+  background-color: #333;
   color: #fff;
   cursor: pointer;
   border: none;
   font-weight: bold;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 0.5rem;
   border-radius: 5px;
 }
 
 form#search input[type="submit"]:hover {
-  background-color: #0056b3;
+  background-color: #555;
 }
 
 /* 테이블 스타일링 */
@@ -109,25 +115,11 @@ table#listForm td {
     font-size: 16px; /* 글자 크기 */
 }
 
-
-
-/* 버튼 스타일링 */
-.button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    
-}
-
-.button:hover {
-    background-color: #0056b3;
-}
-
 form#writeForm {
-    margin-bottom: 1rem;
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  text-align:center;
 }
 
 form#writeForm label {
@@ -138,12 +130,14 @@ form#writeForm label {
 
 form#writeForm input[type="text"],
 form#writeForm textarea {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-bottom: 1rem;
+   width: 80%; /* 전체 폭을 사용 */
+  height: 20px; /* 높이 지정 */
+  padding: 10px; /* 내용과 경계 사이에 여백 추가 */
+  border: 1px solid #ccc; /* 테두리 스타일 */
+  border-radius: 5px; /* 둥근 모서리 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함한 전체 크기 지정 */
+  font-size: 16px; /* 글자 크기 */
+  white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
 }
 
 form#writeForm textarea {
@@ -153,127 +147,99 @@ form#writeForm textarea {
 }
 
 form#writeForm button {
-    background-color: #000000;
+    background-color: #333;
     color: #ffffff;
     cursor: pointer;
     border: none;
     font-weight: bold;
-    padding: 0.5rem 1rem;
+   padding: 0.3rem 0.5rem;
     border-radius: 5px;
 }
 
 form#writeForm button:hover {
-    background-color: #0056b3;
-}
-
-/* 버튼 스타일링 */
-.button {
-    background-color: #000000;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-    
-}
-
-.button:hover {
-    background-color: #0056b3;
+    background-color: #555;
 }
 
 form#updateForm {
-    margin-bottom: 1rem;
+    width: 100%;
+    margin: 20px auto;
+    padding: 20px;
+    text-align:center;
+
 }
 
 form#updateForm label {
     font-weight: bold;
     display: block;
-    margin-bottom: 0.5rem;
+   /* margin-bottom: 0.5rem;*/
 }
 
 form#updateForm input[type="text"],
 form#updateForm textarea {
-    width: 80%;
-   	margin: 20px auto;
-   	border: 1px ;
-    padding: 20px;
+     width: 80%;
+    padding: 0.5rem;
     font-size: 1rem;
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-bottom: 1rem;
-    white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
-     height: 200px;
-    resize: vertical;
+    
+    
+    
 }
 
 
 form#updateForm button {
-    background-color: #000000;
+    background-color: #333;
     color: #ffffff;
     cursor: pointer;
     border: none;
     font-weight: bold;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     border-radius: 5px;
 }
 
 form#updateForm button:hover {
-    background-color: #0056b3;
-}
-
-/* 버튼 스타일링 */
-.button {
-    background-color: #007bff;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
-      width:80%;
-    margin: 20px auto;
-   
-   
-}
-
-.button:hover {
-    background-color: #0056b3;
+    background-color: #555;
 }
 
 button.buttonmulti {
 	
 	margin: 20px auto;
-	padding: 20px auto;
-	/*패딩값적용이 안됨	*/
-    background-color: #000000;
+    background-color: #333;
     color: #ffffff;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
 }
 
 .buttonmulti:hover {
-    background-color: #0056b3;
+    background-color: #555;
+}
+
+div.comments{
+	 width: 80%;
+   margin:auto;
+	
 }
 
 #commentbutton{
-	    background-color: rgb(0, 0, 0);
+	background-color: #333;
     color: #ffffff;
-    padding: 0.1rem 0.5rem;
-    border-radius: 3px;
+    padding: 0.05rem 0.3rem;
+    border-radius: 5px;
     text-decoration: none;
     /* font-weight: bold; */
 }
 
 #commentbutton:hover{
-	background-color:#0056b3;
+	background-color:#555;
 }
 
 div.commentbox { /* commentbox textarea 설정*/
     
-	padding: 20px auto;
+	padding: 10px auto;
     margin-bottom: 1rem;
-     width: 80%;
    border-collapse: collapse; /* 테두리 겹침 방지 */
      margin: 20px auto;
 	
@@ -284,7 +250,7 @@ div.commentbox { /* commentbox textarea 설정*/
 /* 페이지 네비게이션 스타일 */
 .tbpagination {
     text-align: center; /* 가운데 정렬 */
-    margin: 20px 0; /* 위와 아래에 여백 추가 */
+    margin: 5px 0; /* 위와 아래에 여백 추가 */
 }
 
 .page-link {
@@ -299,7 +265,33 @@ div.commentbox { /* commentbox textarea 설정*/
 }
 
 .page-link:hover {
-    background-color: #007bff; /* 호버 시 배경 색상 변경 */
+    background-color: #555; /* 호버 시 배경 색상 변경 */
     color: white; /* 호버 시 텍스트 색상 변경 */
     border-color: #007bff; /* 호버 시 테두리 색상 변경 */
 }
+
+div.button{
+   width: 80%;
+   margin:auto;
+	
+}
+div.writebutton{
+   width: 62%;
+   margin:auto;
+}
+
+
+div.label{
+	width:80%;
+	margin:auto;
+	text-align:left;
+}
+
+/*div.container{
+	margin:20px auto;
+}
+
+jsp전체에 class로 container 잡혀있는데 왜 container자체로는 css가 안 먹히는지
+그래서 따로따로 div class="button"만듦
+
+*/

@@ -14,20 +14,23 @@
         
            <form action="${pageContext.request.contextPath}/write"  method="post" id="writeForm">
                 <!-- 글제목 입력란 -->
-                <label for="title">글제목</label><br>
-    			<input type="text" id="title" name="title" placeholder="글제목" maxlength="50" required /><br>
+                <div class="label">
+                <label for="title">글제목</label></div>
+    			<input type="text" id="title" name="title" placeholder="글제목" maxlength="50" required /><br><br>
 
 
                 <!-- 내용 입력란 -->
-                <label for="content">내용</label><br>
+                 <div class="label">
+                <label for="content">내용</label></div>
                 <textarea id="content" name="content" placeholder="내용을 적어주세요" maxlength="1000" required></textarea><br>
-
+				</form>
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
-                <button type="submit">저장</button>&nbsp;
-               <button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>
-
-            </form>
+                <div class="writebutton">
+                <button class="buttonmulti" type="submit">저장</button>&nbsp;
+               <button class="buttonmulti"  onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>
+				</div>
+          
         </main>
     </div>
 

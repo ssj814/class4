@@ -119,6 +119,7 @@ form#writeForm {
   width: 80%;
   margin: 20px auto;
   padding: 20px;
+  text-align:center;
 }
 
 form#writeForm label {
@@ -160,9 +161,10 @@ form#writeForm button:hover {
 }
 
 form#updateForm {
-    width: 80%;
+    width: 100%;
     margin: 20px auto;
     padding: 20px;
+    text-align:center;
 
 }
 
@@ -272,6 +274,17 @@ div.button{
    width: 80%;
    margin:auto;
 	
+}
+div.writebutton{
+   width: 62%;
+   margin:auto;
+}
+
+
+div.label{
+	width:80%;
+	margin:auto;
+	text-align:left;
 }
 
 /*div.container{

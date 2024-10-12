@@ -10,7 +10,7 @@
     <title>게시글 조회</title>
  	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/app/retrieve/resources/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
  	
      <script>
         function confirmDelete(postid) {
@@ -65,7 +65,7 @@
         </table>
         <br>
         <div class="button">
-      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}'">수정</button>&nbsp;
+      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
 	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 </div>

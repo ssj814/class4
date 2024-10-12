@@ -16,9 +16,11 @@
     
 		   <form action="${pageContext.request.contextPath}/update" method="post" id="updateForm">
 		    	<input type="hidden" name="postid" value="${dto.postid}">
-		    	<label for="title">글제목</label><br>
-		    	<input type="text" id="title" name="title"  maxlength="50" required value="${dto.title}"><br>
-		    	<label for="content">내용</label><br>
+		    	<div class="label">
+		    	<label for="title">글제목</label></div>
+		    	<input type="text" id="title" name="title"  maxlength="50" required value="${dto.title}"><br><br>
+		    	<div class="label">
+		    	<label for="content">내용</label></div>
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
 			</form>		   
 	

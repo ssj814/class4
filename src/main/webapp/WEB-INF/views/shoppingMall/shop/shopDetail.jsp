@@ -45,7 +45,7 @@
 					    </strong>
 					</p>
 					<p class="product-price">
-						Price: <strong>$${product.getProduct_price()}</strong>
+						Price: <strong>₩ ${product.getProduct_price()}</strong>
 					</p>
 					<p class="product-inventory">
 						In Stock: <strong>${product.getProduct_inventory()}</strong>

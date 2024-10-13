@@ -42,7 +42,7 @@
 		<div class="mb-3">
 			<label for="exampleFormControlTextarea1" class="form-label">상세 리뷰</label>
 			<textarea name="content" class="form-control"
-				id="exampleFormControlTextarea1" rows="8" required>${productReviewDTO.content}</textarea>
+				id="exampleFormControlTextarea1" rows="7" required>${productReviewDTO.content}</textarea>
 		</div>
 		<hr>
 		<div class="mb-2">

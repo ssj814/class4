@@ -155,7 +155,7 @@ ContestReplyService service3;
 	@RequestMapping(value = "Write")
 	public String insert() {
 		
-		return "insert";
+		return "contest/insert";
 	}
 	
 }

@@ -20,6 +20,10 @@
 </div>
 
 <div class="container">
+
+	<input type="hidden" class="ProductId" value="${product.getProduct_id()}">
+
+	<!-- product -->
 	<div class="row productDetail-container">
 		<div class="col-7 productDetail-middle">
 			<img src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>"  alt="Image"
@@ -31,10 +35,17 @@
 			<div class="card mb-1">
 				<div class="card-body d-flex flex-column">
 					<p class="product-category">
-						Category: <strong>${product.getProduct_category_id()}</strong>
+					    Category: 
+					    <strong>
+					        <c:forEach var="category" items="${CategoryList}">
+					            <c:if test="${category.product_category_id == product.getProduct_category_id()}">
+					                ${category.product_category_eng_name}
+					            </c:if>
+					        </c:forEach>
+					    </strong>
 					</p>
 					<p class="product-price">
-						Price: <strong>$${product.getProduct_price()}</strong>
+						Price: <strong>₩ ${product.getProduct_price()}</strong>
 					</p>
 					<p class="product-inventory">
 						In Stock: <strong>${product.getProduct_inventory()}</strong>
@@ -54,37 +65,48 @@
 						View: <strong>${product.getProduct_view()}</strong>
 					</p>
 					<hr class="container pb-0">
+					<!-- product_option 출력 -->
+					<c:forEach var="option" items="${options}">
+					    <div class="product-option-container">
+					        <label>${option.option_type}</label>
+					        <select class="form-select">
+					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
+					                <option value="${name}">${name}</option>
+					            </c:forEach>
+					        </select>
+					    </div>
+					</c:forEach>
+					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
 			</div>
 
-			<span class="btn-wish fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요"
-                style="cursor: pointer;"><i class="fa-solid fa-heart fs-3"></i></span>
-            <span class="btn-cart fs-1" data-id="${product.getProduct_id()}"
-                data-bs-toggle="tooltip" data-bs-placement="top"
-                data-bs-title="장바구니" style="cursor: pointer;"><i
-                class="fa-solid fa-cart-shopping fs-3 "></i></span>
+			<span class="btn-wish fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
+                <i class="fa-solid fa-heart fs-3"></i>
+            </span>
+            <span class="btn-cart fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+                <i class="fa-solid fa-cart-shopping fs-3 "></i>
+            </span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>
 		<div class="col-1"></div>
 	</div>
+	
 </div>
 
 <script>
 	
 	$(function() {
-		
+
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = $(".ProductId").val();
 		        $.ajax({
 		            type: "GET",
 		            url: "wish",
 		            dataType: "json",
 		            data: { productId: productId },
 		            success: function(resData, status, xhr) {
-		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);
 		            	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
 		                messageModal.show();
@@ -99,12 +121,28 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
-			var productId = $(this).data("id");
+			var productId = parseInt($(".ProductId").val());
+			var options = [];
+			 // 각 옵션의 타입과 선택된 값 가져오기
+             $(".product-option-container").each(function() {
+                var optionType = $(this).find("label").text().trim();  // 옵션 타입
+                var optionName = $(this).find("select").val();  // 옵션 이름
+                if (optionType && optionName) {
+                    options.push({
+                        type: optionType,
+                        name: optionName
+                    });
+                }
+            });
 		        $.ajax({
-		            type: "GET",
+		            type: "POST",
 		            url: "cart",
 		            dataType: "json",
-		            data: { productId: productId },
+		            contentType: "application/json",
+		            data: JSON.stringify({
+	                    productId: productId,
+	                    options: options
+	                }),
 		            success: function(resData, status, xhr) {
 		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);

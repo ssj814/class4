@@ -29,6 +29,7 @@ public class TrainerBoardCommentDAO {
 
 	public List<TrainerBoardCommentDTO> commentSelect(int postid) {
 		List<TrainerBoardCommentDTO> dto = template.selectList("TrainerBoardCommentMapper.commentSelect", postid);
+		System.out.println("dao"+dto); //
 		return dto;
 	}
 

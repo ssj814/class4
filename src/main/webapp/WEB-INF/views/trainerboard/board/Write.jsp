@@ -27,11 +27,10 @@
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
                 <div class="writebutton">
-                <button class="buttonmulti" type="submit">저장</button>&nbsp;
-               <button class="buttonmulti"  onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>
-				</form>
-				</div>
-          
+                	<button class="buttonmulti" type="submit">저장</button>&nbsp;
+                	<button class="buttonmulti"  onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>	
+		</div>
+          </form>
         </main>
     </div>
 

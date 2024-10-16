@@ -25,7 +25,7 @@
 			   
 	
 		    <div class="button">
-		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/retrieve/{postid}'">수정완료</button>
+		    	<button class="buttonmulti">수정완료</button>
 		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
 
 			</div>

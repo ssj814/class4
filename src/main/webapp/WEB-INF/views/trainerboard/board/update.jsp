@@ -22,6 +22,8 @@
 		    	<div class="label">
 		    	<label for="content">내용</label></div>
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
+			   <label for="file"></label>
+				<input type="file" id="weightImage" name="weightImage" accept="image/*">
 			   
 	
 		    <div class="button">

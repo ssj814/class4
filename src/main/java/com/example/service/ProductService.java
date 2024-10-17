@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.ProductDAO;
+import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
+import com.example.dto.ProductRecentDTO;
 
 @Service
 public class ProductService {
@@ -51,5 +54,45 @@ public class ProductService {
 	public int updateProduct(ProductDTO dto) {
 		return dao.updateProduct(dto);
 	}//updateProduct() - 상품정보 update
+
+	public int insertProductOption(ProductOptionDTO option) {
+		 return dao.insertProductOption(option);
+	}
+
+	public List<ProductOptionDTO> selectProductOptions(int productId) {
+		return dao.selectProductOptions(productId);
+	}
+
+	public void updateProductOption(ProductOptionDTO option) {
+		dao.updateProductOption(option);
+	}
+
+	public void deleteProductOption(int optionId) {
+		dao.deleteProductOption(optionId);
+	}
+
+	public List<ProductCategoryDTO> selectCategoryList() {
+		return dao.selectCategoryList();
+	}
+
+	public ProductRecentDTO checkRecentView(Map<String, Object> data) {
+		return dao.checkRecentView(data);
+	}
+
+	public void insertRecentView(Map<String, Object> data) {
+		dao.insertRecentView(data);
+	}
+
+	public void updateRecentView(Map<String, Object> data) {
+		dao.updateRecentView(data);
+	}
+
+	public List<ProductRecentDTO> getRecentProducts(int user_id) {
+		return dao.getRecentProducts(user_id);
+	}
+
+	public void deleteRecentView(int user_id) {
+		dao.deleteRecentView(user_id);
+	}
 	
 }

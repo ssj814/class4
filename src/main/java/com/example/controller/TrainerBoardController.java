@@ -61,7 +61,9 @@ public class TrainerBoardController {
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
+		System.out.println("1"+dto);
 		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
+		System.out.println(comments);
 		m.addAttribute("comments", comments);
 
 		
@@ -69,6 +71,7 @@ public class TrainerBoardController {
 	}
 	
 	//Write.jsp로 이동 - 글쓰기폼
+
 	@RequestMapping(value = "/trainerboardWrite", method = RequestMethod.GET)
 	public String writeForm(Model m, MultipartFile weightimage) {
 		

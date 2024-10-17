@@ -35,11 +35,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		insert into TRAINERBOARD_BOARD
 		( categoryid,userid,trainerid, title,
 		content,
-		crdate,updatedate, viewcount)
+		crdate,updatedate, viewcount, imagename)
 		values (
 		1, 1000, 9999, #{title},
 		#{content},
-		sysdate, sysdate, #{viewcount})
+		sysdate, sysdate, #{viewcount}, #{imagename})
 
 	</insert>
 	

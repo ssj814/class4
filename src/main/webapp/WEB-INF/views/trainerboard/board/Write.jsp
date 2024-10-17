@@ -12,7 +12,7 @@
     <div class="container" style="margin-top:40px;">
         <main>
         
-           <form action="${pageContext.request.contextPath}/write"  method="post" id="writeForm">
+           <form action="${pageContext.request.contextPath}/write"  method="post" id="writeForm" enctype="multipart/form-data">
                 <!-- 글제목 입력란 -->
                 <div class="label">
                 <label for="title">글제목</label></div>
@@ -23,6 +23,8 @@
                  <div class="label">
                 <label for="content">내용</label></div>
                 <textarea id="content" name="content" placeholder="내용을 적어주세요" maxlength="1000" required></textarea><br>
+				<label for="file"></label>
+				<input type="file" id="weightImage" name="weightImage" accept="image/*">
 				
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
@@ -33,6 +35,10 @@
           </form>
         </main>
     </div>
+<script>
+	
 
+ 
+</script>
 </body>
 </html>

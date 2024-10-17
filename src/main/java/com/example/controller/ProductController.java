@@ -142,9 +142,9 @@ public class ProductController {
 		InputStream inputStream = null;
 		try {
 			inputStream = product_image.getInputStream();
-			ProductDTO.setProduct_imagename(product_image.getOriginalFilename());
+			ProductDTO.setProduct_imagename(product_image.getOriginalFilename()); //이미지이름 dto에 추가
 			service.insertProduct(ProductDTO);
-			product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //이미지 저장
+			product_image.transferTo(new File(uploadDir + product_image.getOriginalFilename())); //실제 이미지 저장 경로
 		} catch (IOException e) {
 			e.printStackTrace();
 		}finally {

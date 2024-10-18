@@ -14,7 +14,7 @@
         <main>
       	
     
-		   <form action="${pageContext.request.contextPath}/update" method="post" id="updateForm">
+		   <form action="${pageContext.request.contextPath}/update" method="post" id="updateForm" enctype="multipart/form-data">
 		    	<input type="hidden" name="postid" value="${dto.postid}">
 		    	<div class="label">
 		    	<label for="title">글제목</label></div>
@@ -22,8 +22,9 @@
 		    	<div class="label">
 		    	<label for="content">내용</label></div>
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
+			   <!-- 파일추가 -->
 			   <label for="file"></label>
-				<input type="file" id="weightImage" name="weightImage" accept="image/*">
+				<input type="file" id="weightImage" name="weightImage" accept="image/*"><%-- ${dto.weightimage } --%>
 			   
 	
 		    <div class="button">

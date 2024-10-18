@@ -129,13 +129,36 @@ public class TrainerBoardController {
 	//수정 후 세션에 저장
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String update(@RequestParam("postid") int postid, @RequestParam("title") String title,
-			@RequestParam("content") String content, HttpSession session) {
-		content = content.replace("\r\n", "<br>");
+			@RequestParam("content") String content, HttpSession session,Model m, MultipartFile weightImage ) {
+		
+		String uploadDir = "C:/images/trainerboard_image/";
+		InputStream inputStream = null;
 		TrainerBoardDTO dto = new TrainerBoardDTO();
+
+		
+		try {
+			if(!weightImage.isEmpty()) {		
+		content = content.replace("\r\n", "<br>");
+		dto.setImagename(weightImage.getOriginalFilename());
 		dto.setPostid(postid);
 		dto.setTitle(title);
+		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
+		
 		dto.setContent(content);
-		service.update(dto);
+		}
+			
+			service.update(dto);
+		
+		}catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(inputStream!=null)inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		session.setAttribute("update", dto);
 		return "redirect:retrieve/" + postid; // 수정 후 수정된 게시글 보게
 	}

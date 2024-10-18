@@ -62,7 +62,8 @@
                  <td>${dto.content}
                  <c:if test="${not empty dto.imagename}">
                  <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
-				class="img-fluid" style="object-fit: contain; max-height: 500px;"></c:if>
+				class="img-fluid" style="object-fit: contain; max-height: 500px;">
+				</c:if>
 				</td>
             </tr>
             

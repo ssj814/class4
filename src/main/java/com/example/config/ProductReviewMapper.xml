@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductReviewMapper"> <!-- 구별용 이름 -->
+
+	<insert id="insertReview" parameterType="ProductReviewDTO">
+		INSERT INTO product_review 
+		VALUES (product_review_seq.NEXTVAL,#{product_id},#{user_id},SYSDATE,#{content},#{rating},#{photos, jdbcType=VARCHAR},0,0)
+	</insert>
+	
+	<select id="selectReviewList" parameterType="hashmap" resultType="ProductReviewDTO">
+		SELECT review_id,product_id,user_id,to_char(create_date,'yyyy-mm-dd') create_date,content,rating,photos,feedback_up,feedback_down
+		FROM product_review 
+		WHERE product_id=#{productId}
+		<if test="sortType == 'onlyPhoto'">
+		 AND photos IS NOT NULL
+		</if>
+		<if test="sortType != null">
+         ORDER BY 
+	        <choose>
+	            <when test="sortType == 'newest'">
+	                review_id DESC
+	            </when>
+	            <when test="sortType == 'oldest'">
+	                review_id ASC
+	            </when>
+	            <when test="sortType == 'useful'">
+	                feedback_up DESC, feedback_down ASC
+	            </when>
+	            <when test="sortType == 'rating'">
+	                rating DESC
+	            </when>
+	            <otherwise>
+	                review_id DESC <!-- 기본값 설정 -->
+	            </otherwise>
+	        </choose>
+    	</if>
+	</select>
+	
+	<select id="selectReview" parameterType="Integer" resultType="ProductReviewDTO">
+		SELECT *
+		FROM product_review 
+		WHERE review_id=#{review_id}
+	</select>
+	
+	<delete id="deleteReview" parameterType="Integer">
+		DELETE FROM product_review WHERE review_id=#{review_id}
+	</delete>
+	
+	<update id="updateReview" parameterType="ProductReviewDTO">
+		UPDATE product_review 
+		SET content=#{content},
+		<if test="photos!=null">
+  			photos=#{photos},
+  		</if>
+  		rating=#{rating} 
+		WHERE review_id=#{review_id}
+	</update>
+	
+	<update id="updateReviewFeedback" parameterType="hashmap">
+		UPDATE product_review 
+		SET 
+		<if test="cancel == 'true'">
+	        <if test="feedback == 'up'">
+	            feedback_up = feedback_up - 1
+	        </if>
+	        <if test="feedback == 'down'">
+	            feedback_down = feedback_down - 1
+	        </if>
+	    </if>
+	    <if test="feedback == 'up' and cancel == 'false'">
+	        feedback_up = feedback_up + 1
+	        <if test="feedbackType == 'update'">
+	            , feedback_down = feedback_down - 1
+	        </if>
+	    </if>
+	    <if test="feedback == 'down' and cancel == 'false'">
+	        feedback_down = feedback_down + 1
+	        <if test="feedbackType == 'update'">
+	            , feedback_up = feedback_up - 1
+	        </if>
+	    </if>
+		WHERE review_id=#{review_id}
+	</update>
+	
+	<select id="selectUserFeedback" parameterType="hashmap" resultType="ProductReviewFeedbackDTO">
+		SELECT *
+		FROM product_review_feedback 
+		where user_id=#{user_id} AND review_id IN
+	    <foreach item="id" collection="review_id" open="(" separator="," close=")">
+	        #{id}
+	    </foreach>
+	</select>
+	
+	<select id="checkUserFeedback" parameterType="hashmap" resultType="Integer">
+		SELECT count(*)
+		FROM product_review_feedback 
+		where user_id=#{user_id} AND review_id=#{review_id}
+	</select>
+	
+	<update id="updateUserFeedback" parameterType="hashmap">
+		UPDATE product_review_feedback 
+		SET
+		<if test="feedback == 'up'">
+            feedback='up'
+        </if>
+        <if test="feedback == 'down'">
+            feedback='down'
+        </if>
+		where user_id=#{user_id} AND review_id=#{review_id}
+	</update>
+	
+	<insert id="insertUserFeedback">
+		insert INTO product_review_feedback 
+		VALUES (#{user_id},#{review_id},#{feedback})
+	</insert>
+	
+	<delete id="deleteUserFeedback" parameterType="hashmap">
+		DELETE FROM product_review_feedback 
+		WHERE user_id=#{user_id} AND review_id=#{review_id}
+	</delete>
+	
+	
+</mapper>

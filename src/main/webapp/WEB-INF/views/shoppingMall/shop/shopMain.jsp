@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<link rel="stylesheet" href="resources/css/shoppingMall/shopMain.css">
 
 <!-- top -->
 <div id="carouselExampleFade" class="carousel slide carousel-fade">
@@ -51,19 +52,24 @@
 					<li class="list-group-item fst-italic"><a href="shopList"
 						class="text-dark" style="text-decoration: none">View All
 							Products</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=1'/>"
-						class="text-dark" style="text-decoration: none">Athletic Gear</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=2'/>"
-						class="text-dark" style="text-decoration: none">Active wear</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=3'/>"
-						class="text-dark" style="text-decoration: none">Protein
-							Supplements</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=4'/>"
-						class="text-dark" style="text-decoration: none">Health &
-							Fitness Foods</a></li>
-					<li class="list-group-item fst-italic"
-						style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);"><a href="<c:url value='/shopList?category=0'/>"
-						class="text-dark" style="text-decoration: none">Others</a></li>
+					<c:forEach var="category" items="${CategoryList}">
+				        <c:if test="${category.product_category_id != 0}">
+				            <li class="list-group-item fst-italic">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                    ${category.product_category_eng_name}
+				                </a>
+				            </li>
+				        </c:if>
+				    </c:forEach>
+				    <c:forEach var="category" items="${CategoryList}">
+				        <c:if test="${category.product_category_id == 0}">
+				            <li class="list-group-item fst-italic" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                    ${category.product_category_eng_name}
+				                </a>
+				            </li>
+				        </c:if>
+				    </c:forEach>
 				</ul>
 				<li class="list-group-item list-group-item-action fw-bolder"
 					data-bs-toggle="collapse" data-bs-target="#extra-items2">For
@@ -122,6 +128,21 @@
 
 <div class="container pt-0">
 
+<div class="countdown">
+    <div class="time">
+        <span id="days">00</span> Days
+    </div>
+    <div class="time">
+        <span id="hours">00</span> Hours
+    </div>
+    <div class="time">
+        <span id="minutes">00</span> Minutes
+    </div>
+    <div class="time">
+        <span id="seconds">00</span> Seconds
+    </div>
+</div>
+
 	<div class="row g-4 mx-5">
 		<div class="pb-2">
 			<h2>Popular products</h2>
@@ -160,5 +181,37 @@
 		var target = $(this).data('bs-target');
 		$('.collapse').not(target).collapse('hide');
 	});
+	
+	document.addEventListener("DOMContentLoaded", function () {
+	    // 설정된 종료 시간을 설정 (일 * 시 * 분 * 초 * 밀리초)
+	    // 밀리초(ms) => Date 객체가 밀리초 단위로 표현하기 때문 
+	    var countdownDate = new Date().getTime() + (1 * 01 * 01 * 15 * 1000); 
+
+	    // 1초마다 남은 시간을 계산하고 화면에 표시
+	    var interval = setInterval(function () {
+	        var now = new Date().getTime();
+	        var distance = countdownDate - now;
+
+	        // 남은 일, 시, 분, 초 계산
+	        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+	        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+	        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+	        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+	        // 계산한 값을 HTML에 삽입
+	        document.getElementById("days").innerText = String(days).padStart(2, '0');
+	        document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+	        document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+	        document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+
+	        // 카운트다운이 끝났을 때
+	        if (distance < 0) {
+	            clearInterval(interval);
+	         // 카운트다운 div 숨김
+	            document.querySelector(".countdown").style.display = "none";
+	        }
+	    }, 1000);
+	});
+
 </script>
 

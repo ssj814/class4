@@ -1,36 +1,41 @@
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <link rel="stylesheet" href="resources/css/shoppingMall/shopList.css">
 
 <div class="main-container">
 
+	<!-- Modal -->
+	<div class="modal fade" id="messageModal" tabindex="-1"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div id="mesg" class="modal-body"></div>
+				<div class="modal-footer border-top-0">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<nav class="navbar bg-body-tertiary mb-4">
 		<div class="container-fluid">
-		<!-- 현재 카페고리 -->
-			<a class="navbar-brand fw-bold fs-2"> 
-				<c:choose> 
-					<c:when test="${category == 1}">
-            			Athletic Gear
-        			</c:when>
-					<c:when test="${category == 2}">
-           				Active wear
-        			</c:when>
-					<c:when test="${category == 3}">
-            			Protein Supplements
-       				 </c:when>
-					<c:when test="${category == 4}">
-            			Health & Fitness Foods
-        			</c:when>
-					<c:when test="${category == 0}">
-            			Others
-        			</c:when>
+		<!-- 현재 카테고리 -->
+			<div class="navbar-brand fw-bold fs-2"> 
+				<c:choose>
+					<c:when test="${not empty category}">
+						<c:forEach var="cat" items="${CategoryList}">
+							<c:if test="${cat.product_category_id == category}">
+								${cat.product_category_eng_name}
+							</c:if>
+						</c:forEach>
+					</c:when>
 					<c:otherwise>
-            			${not empty category ? category : 'Shop'}
-       				</c:otherwise>
+						Shop
+					</c:otherwise>
 				</c:choose>
-			</a>
+			</div>
 
 			<div class="d-flex ms-auto">
 				<!-- 상품 정렬 폼 -->
@@ -72,22 +77,29 @@
 		<div class="row">
 			<div class="col-2 d-flex flex-column justify-content-between">
 				<div>
-					<p
-						style="font-size: 18px; font-weight: bold; letter-spacing: 1px; background-color: pink; border-radius: 10px">CATEGORY</p>
-					<ul class="list-group list-group-flush mt-2 flex-grow-1"
-						style="cursor: pointer;">
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=1'/>">Athletic Gear</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=2'/>">Active wear</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=3'/>">Protein
-								Supplements</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=4'/>">Health & Fitness
-								Foods</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=0'/>">Others</a></li>
+					<p style="font-size: 18px; font-weight: bold; letter-spacing: 1px; background-color: pink; border-radius: 10px">CATEGORY</p>
+					<ul class="list-group list-group-flush mt-2 flex-grow-1" style="cursor: pointer;">
+						<li class="list-group-item list-group-item-action">
+							<a href="shopList">View All Products</a>
+						</li>
+					    <c:forEach var="category" items="${CategoryList}">
+					        <c:if test="${category.product_category_id != 0}">
+					            <li class="list-group-item list-group-item-action">
+					                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>">
+					                    ${category.product_category_eng_name}
+					                </a>
+					            </li>
+					        </c:if>
+					    </c:forEach>
+					    <c:forEach var="category" items="${CategoryList}">
+					        <c:if test="${category.product_category_id == 0}">
+					            <li class="list-group-item list-group-item-action">
+					                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>">
+					                    ${category.product_category_eng_name}
+					                </a>
+					            </li>
+					        </c:if>
+					    </c:forEach>
 					</ul>
 				</div>
 				<!-- 관리자 영역-->
@@ -114,7 +126,7 @@
 							<!-- 관리자 영역-->
 							<c:if test="true">
 								<button
-									onclick="location.href='productUpdate?productId=${product.getProduct_id()}'">수정하기</button>
+									onclick="location.href='<c:url value="/productUpdate?productId=${product.getProduct_id()}&page=${currentPage}" />'">수정하기</button>
 								<button class="del-product" data-id="${product.getProduct_id()}">삭제</button>
 							</c:if>
 						</div>
@@ -144,25 +156,38 @@
 </div>
 
 <script type="text/javascript">
-	// 상품 삭제 버튼 
-	$(".del-product").on("click", function() {
-		var delCheck = confirm("정말 삭제하시겠습니까?");
-		var dataId = $(this).data("id");
-		var parent = $(this).parent();
-		if (delCheck) {
-			$.ajax({
-				type : "DELETE",
-				url : "product/productId/"+dataId,
-				dataType : "json",
-				success : function(resData, status, xhr) {
-					alert(resData.mesg);
-					parent.remove();
-				},
-				error : function(xhr, status, error) {
-					alert("실패");
-					console.log(error);
-				}
-			});
-		}
-	});
+	
+	$(function() {
+		
+		// 모달창
+        var message = '${mesg}';
+        if (message) {
+            $("#mesg").html(message);
+            var messageModal = new bootstrap.Modal($('#messageModal')[0]);
+            messageModal.show();
+        }
+
+		// 상품 삭제 버튼 
+		$(".del-product").on("click", function() {
+			var delCheck = confirm("정말 삭제하시겠습니까?");
+			var dataId = $(this).data("id");
+			var parent = $(this).parent();
+			if (delCheck) {
+				$.ajax({
+					type : "DELETE",
+					url : "product/productId/"+dataId,
+					dataType : "json",
+					success : function(resData, status, xhr) {
+						alert(resData.mesg);
+						parent.remove();
+					},
+					error : function(xhr, status, error) {
+						alert("실패");
+						console.log(error);
+					}
+				});
+			}
+		});
+
+	})
 </script>

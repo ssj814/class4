@@ -8,7 +8,10 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css"> <!-- 수정 -->
+ 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
+ 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
+ 	
      <script>
         function confirmDelete(postid) {
             if (confirm("삭제하시겠습니까?")) {
@@ -24,7 +27,7 @@
 </head>
 <body>
 
-<div class="container" style="margin-top:40px;">
+<div class="container" style="margin-top:20px; ">
     <main>
         
       
@@ -36,6 +39,7 @@
             String content = dto.getContent();
             int userid = dto.getUserid();
         -->
+<br>
 
         <table border="1" id="retrieveForm">
             <colgroup>
@@ -55,23 +59,29 @@
             </tr>
             <tr>
                 <th>글내용</th>
-                 <td>${dto.content}</td>
+                 <td>${dto.content}
+                 <c:if test="${not empty dto.imagename}">
+                 <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
+				class="img-fluid" style="object-fit: contain; max-height: 500px;"></c:if>
+				</td>
             </tr>
             
         </table>
         <br>
-        <a class="buttonmulti" href="/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}">수정</a> &nbsp;
-        <a class="buttonmulti" href="javascript:confirmDelete(${dto.postid})">삭제</a>&nbsp;
-        <a class="buttonmulti" href="/app/TrainerBoard?curPage=${curPage}">목록보기</a>
+        <div class="button">
+      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
+	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
+	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
+</div>
         <hr>
 
         <div class="comments">
-            <h4>댓글</h4>
+            <h6>댓글</h6>
             <form action="${pageContext.request.contextPath}/commentwrite" method="post">
                 <input type="hidden" id="postid" name="postid" value="${dto.postid}">
                  <input type="hidden" id="userid" name="userid" value="${dto.userid}">
                 <div id="commentbox">
-                   <textarea name="commentbox" class="commentbox" cols="220" rows="5" required></textarea>
+                <textarea name="commentbox" class="commentbox" rows="5" required style="width:100%; box-sizing: border-box;"></textarea>
                     <button type="submit" id="commentbutton">등록</button>
                    
                 </div>

@@ -3,7 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<h1 class="text-center mt-2">장바구니</h1>
+<h1 class="text-center mt-2">장바구니 엔터금지</h1>
 
 <form method="post" class="container text-center d-block p-0">
 	<c:forEach var="product" items="${ProductList}">
@@ -120,9 +120,16 @@
 						    var quantity = $(this).val();
 						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, ''));
 							var total = quantity * price;
-
+							
+						
 							// 개별 상품 총액 업데이트
 							$("#total-" + cartId).val(total);
+							
+							if(quantity<1){
+								quantity = 1;
+								$(this).val(1);
+								$("#total-" + cartId).val(price);
+							}
 
 							// 서버에 수량 업데이트 요청
 							$.ajax({

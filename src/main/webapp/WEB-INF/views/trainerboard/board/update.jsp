@@ -22,14 +22,16 @@
 		    	<div class="label">
 		    	<label for="content">내용</label></div>
 		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
-			</form>		   
+			   <label for="file"></label>
+				<input type="file" id="weightImage" name="weightImage" accept="image/*">
+			   
 	
 		    <div class="button">
-		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard/retrieve/${dto.postid}'">수정완료</button>
+		    	<button class="buttonmulti">수정완료</button>
 		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
 
 			</div>
-	
+	</form>		
         </main>
        </div>
         

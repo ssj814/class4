@@ -267,11 +267,13 @@ public class ProductController {
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames,
-			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes ra) {	
+			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes redirectAttributes) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
 		UUID uuid = UUID.randomUUID();
 		String imgName = null;
 		InputStream inputStream = null;
+		int num = 0;
+		int n = 0;
 		try {
 			if(!product_image.isEmpty()) {
 				//기존 이미지 삭제
@@ -287,7 +289,7 @@ public class ProductController {
 				ProductDTO.setProduct_imagename(imgName);
 				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			} 
-			int n = service.updateProduct(ProductDTO);
+			 n = service.updateProduct(ProductDTO);
 			/*
 			if(n==1) {
 				m.addAttribute("mesg","상품을 수정했습니다.");
@@ -354,7 +356,15 @@ public class ProductController {
 				e.printStackTrace();
 			}
 		}
-		ra.addAttribute("page", page);
+		String mesg = "";
+		
+		if(n==1) {
+			mesg = "수정 완료 되었습니다.";
+		} else {
+			mesg = "수정 실패 되었습니다.";
+		}
+		redirectAttributes.addFlashAttribute("mesg", mesg);
+	//	ra.addAttribute("page", page);
 		
 		return "redirect:/shopList";
 	}

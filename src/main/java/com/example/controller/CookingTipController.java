@@ -14,18 +14,25 @@ import com.example.service.CookingTipDBService;
 public class CookingTipController {
 	@Autowired
 	CookingTipDBService service;
+	
+	
+	@RequestMapping("/cookingTip_list")  
+	public String list(Model m) {
+		List<CookingTipListupDTO> allData = service.list();
+		m.addAttribute("allData", allData);
+		return "cookingTip/list";
+	}
+	
+	
+	
+	
 
 	@RequestMapping("/cookingTip")
 	public String list2(Model m) {
 		return "cookingTip/list2";
 	}
 
-	@RequestMapping("/cookingTip_list")
-	public String list(Model m) {
-		List<CookingTipListupDTO> allData = service.list();
-		m.addAttribute("allData", allData);
-		return "cookingTip/list";
-	}
+	
 
 	@RequestMapping("/cookingTip_cooking")
 	public String list1(Model m) {

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,8 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.dto.ProductReviewFeedbackDTO;
 import com.example.service.ProductReviewService;
 import com.example.service.ProductService;
 
@@ -37,8 +41,8 @@ public class ProductReviewController {
 	@Autowired
 	ProductReviewService productReviewService;
 
-	@GetMapping("/shop_productReview/{productId}") // 리뷰 등록페이지 이동
-	public String getProductReview(@PathVariable int productId, Model m) {
+	@GetMapping("/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
+	public String getProductReviewPage(@PathVariable int productId, Model m) {
 		ProductDTO productDTO = productService.selectDetailproduct(productId);
 		m.addAttribute("productDTO", productDTO);
 		return "shoppingMall/shopReviewForm";
@@ -48,11 +52,9 @@ public class ProductReviewController {
 	@PostMapping("/shop_productReview") // 리뷰 insert
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
-		System.out.println(productReviewDTO.getContent());
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
-		List<String> imgs = new ArrayList<String>();
 		String imgNames = "";
 		int num = 0;
 		int user_id = 1; // 임시 유저
@@ -62,7 +64,6 @@ public class ProductReviewController {
 					inputStream = img.getInputStream();
 					String imgName = uuid + img.getOriginalFilename();
 					imgNames += imgName + ","; // DB저장용
-					imgs.add(imgName); // 파일저장용
 					img.transferTo(new File(uploadDir + imgName));
 				}
 				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
@@ -90,8 +91,8 @@ public class ProductReviewController {
 	}
 
 	@Transactional
-	@DeleteMapping("/shop_productReview/{reviewId}") // 리뷰 삭제
 	@ResponseBody
+	@DeleteMapping("/shop_productReview/{reviewId}") // 리뷰 delete
 	public void delProductReview(@PathVariable int reviewId) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewId);
 		if (productReviewDTO.getPhotos() != null) {
@@ -105,7 +106,7 @@ public class ProductReviewController {
 		productReviewService.deleteReview(reviewId);
 	}
 	
-	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 수정페이지 이동
+	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
 	public String getProductReview_update(@PathVariable int reviewid, Model m) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewid);
 		ProductDTO productDTO = productService.selectDetailproduct(productReviewDTO.getProduct_id());
@@ -121,7 +122,6 @@ public class ProductReviewController {
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
-		List<String> imgs = new ArrayList<String>();
 		String imgNames = "";
 		int num = 0;
 		int user_id = 1; // 임시 유저
@@ -142,7 +142,6 @@ public class ProductReviewController {
 					inputStream = img.getInputStream();
 					String imgName = uuid + img.getOriginalFilename();
 					imgNames += imgName + ","; // DB저장용
-					imgs.add(imgName); // 파일저장용
 					img.transferTo(new File(uploadDir + imgName));
 				}
 				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
@@ -169,14 +168,42 @@ public class ProductReviewController {
 		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
-	@PatchMapping("/shop_productReview_Feedback")
+	@Transactional
 	@ResponseBody
-	public void patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid) {
+	@PatchMapping("/shop_productReview_Feedback") //후기 평가 update
+	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid, @RequestParam String cancel) {
+		int user_id = 1; // 임시 유저
 		Map<String, Object> map = new HashMap<>();
 		map.put("feedback", feedback);
+		map.put("cancel", cancel);
 		map.put("review_id", reviewid);
+		map.put("user_id", user_id);
+		String res = "";
+		if ("true".equals(cancel)) { //피드백 삭제
+			productReviewService.deleteUserFeedback(map);
+			res = "delete";
+		} else if(productReviewService.checkUserFeedback(map) == 0) { // 피드백 추가
+			productReviewService.insertUserFeedback(map);
+			res = "insert";
+		} else { // 피드백 수정
+			productReviewService.updateUserFeedback(map);
+			res = "update";
+		}
+		map.put("feedbackType", res);
 		productReviewService.updateReviewFeedback(map);
+		System.out.println(res);
+		return res;
 	}
 	
+	@ResponseBody
+    @GetMapping("/shop_Detail_productReview_Feedback") //유저별 리뷰 정보 select
+    public List<ProductReviewFeedbackDTO> getProductReview_Feedback(@RequestParam List<Integer> review_id) {
+        int user_id = 1; //임시유저
+    	Map<String, Object> map = new HashMap<>();
+        map.put("user_id", user_id);
+        map.put("review_id", review_id);
+        List<ProductReviewFeedbackDTO> productReviewFeedbackDTO = productReviewService.selectUserFeedback(map);
+        return productReviewFeedbackDTO; 
+    }
 
 }

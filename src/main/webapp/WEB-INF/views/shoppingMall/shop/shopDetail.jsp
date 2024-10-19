@@ -35,10 +35,17 @@
 			<div class="card mb-1">
 				<div class="card-body d-flex flex-column">
 					<p class="product-category">
-						Category: <strong>${product.getProduct_category_id()}</strong>
+					    Category: 
+					    <strong>
+					        <c:forEach var="category" items="${CategoryList}">
+					            <c:if test="${category.product_category_id == product.getProduct_category_id()}">
+					                ${category.product_category_eng_name}
+					            </c:if>
+					        </c:forEach>
+					    </strong>
 					</p>
 					<p class="product-price">
-						Price: <strong>$${product.getProduct_price()}</strong>
+						Price: <strong>₩ ${product.getProduct_price()}</strong>
 					</p>
 					<p class="product-inventory">
 						In Stock: <strong>${product.getProduct_inventory()}</strong>
@@ -57,6 +64,18 @@
 					<p class="product_like pb-1">
 						View: <strong>${product.getProduct_view()}</strong>
 					</p>
+					<hr class="container pb-0">
+					<!-- product_option 출력 -->
+					<c:forEach var="option" items="${options}">
+					    <div class="product-option-container">
+					        <label>${option.option_type}</label>
+					        <select class="form-select">
+					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
+					                <option value="${name}">${name}</option>
+					            </c:forEach>
+					        </select>
+					    </div>
+					</c:forEach>
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
@@ -102,12 +121,28 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
-			var productId = $(".ProductId").val();
+			var productId = parseInt($(".ProductId").val());
+			var options = [];
+			 // 각 옵션의 타입과 선택된 값 가져오기
+             $(".product-option-container").each(function() {
+                var optionType = $(this).find("label").text().trim();  // 옵션 타입
+                var optionName = $(this).find("select").val();  // 옵션 이름
+                if (optionType && optionName) {
+                    options.push({
+                        type: optionType,
+                        name: optionName
+                    });
+                }
+            });
 		        $.ajax({
-		            type: "GET",
+		            type: "POST",
 		            url: "cart",
 		            dataType: "json",
-		            data: { productId: productId },
+		            contentType: "application/json",
+		            data: JSON.stringify({
+	                    productId: productId,
+	                    options: options
+	                }),
 		            success: function(resData, status, xhr) {
 		            	console.log(resData);
 		            	$("#mesg").html(resData.mesg);

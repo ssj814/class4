@@ -34,7 +34,7 @@
 						<span class="star" data-value="5">&#9733;</span>
 					</div>
 					<p class="mt-1">( <span class="selected-rating">3</span>점 )</p>
-					<input type="hidden" name="rating" class="selected-rating" value="1">
+					<input type="hidden" name="rating" class="selected-rating" value="3">
 				</div>
 			</div>
 		</div>
@@ -42,7 +42,7 @@
 		<div class="mb-3">
 			<label for="exampleFormControlTextarea1" class="form-label">상세 리뷰</label>
 			<textarea name="content" class="form-control"
-				id="exampleFormControlTextarea1" rows="8" required>${productReviewDTO.content}</textarea>
+				id="exampleFormControlTextarea1" rows="7" required>${productReviewDTO.content}</textarea>
 		</div>
 		<hr>
 		<div class="mb-2">

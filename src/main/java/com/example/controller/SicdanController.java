@@ -51,8 +51,9 @@ public class SicdanController {
 
         // 전체 게시물 수 가져오기
         int totalCount = sicdanService.getTotalCount(map);
-        // 전체 페이지 수 계산
+        // 전체 페이지 수 계산, 최소 페이지는 1
         int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+        if (totalPages == 0) totalPages = 1;
 
         // 게시물 목록 가져오기
         List<SicdanDTO> list = sicdanService.listAll(map);
@@ -112,13 +113,12 @@ public class SicdanController {
         return "redirect:/sicdan/list?currentPage=" + currentPage;  // 처리 후 목록으로 이동
     }
 
-
     /**
      * 게시물 삭제 메서드입니다.
      *
      * @param sic_num    게시물 번호
      * @param currentPage 현재 페이지 번호
-     * @param model       모델에 데이터를 저장
+     * @param redirectAttributes 리디렉션 시 메시지 전달
      * @return 게시물 목록으로 리디렉션
      */
     @GetMapping("/delete")
@@ -129,7 +129,7 @@ public class SicdanController {
         if (result == 1) {
             redirectAttributes.addFlashAttribute("mesg", "글을 삭제하였습니다.");
         } else {
-            redirectAttributes.addFlashAttribute("mesg", "글을 삭제하지 못하였습니다.");
+            redirectAttributes.addFlashAttribute("error", "글을 삭제하지 못하였습니다.");
         }
         return "redirect:/sicdan/list?currentPage=" + currentPage;
     }
@@ -145,8 +145,12 @@ public class SicdanController {
     @GetMapping("/retrieve")
     public String retrieveSicdan(@RequestParam("num") int sic_num,
                                  @RequestParam("currentPage") int currentPage,
-                                 Model model) {
+                                 Model model, RedirectAttributes redirectAttributes) {
         SicdanDTO dto = sicdanService.selectByNum(sic_num);
+        if (dto == null) {
+            redirectAttributes.addFlashAttribute("error", "해당 게시물이 존재하지 않습니다.");
+            return "redirect:/sicdan/list?currentPage=" + currentPage;
+        }
         model.addAttribute("retrive", dto);
         model.addAttribute("currentPage", currentPage);
         return "sicdan/sicdanRetrieve"; // sicdanRetrieve.jsp로 이동

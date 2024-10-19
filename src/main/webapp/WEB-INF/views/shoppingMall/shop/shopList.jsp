@@ -1,7 +1,6 @@
 <%@page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
 <link rel="stylesheet" href="resources/css/shoppingMall/shopList.css">
 
 <div class="main-container">
@@ -22,29 +21,21 @@
 
 	<nav class="navbar bg-body-tertiary mb-4">
 		<div class="container-fluid">
-		<!-- 현재 카페고리 -->
-			<a class="navbar-brand fw-bold fs-2"> 
-				<c:choose> 
-					<c:when test="${category == 1}">
-            			Athletic Gear
-        			</c:when>
-					<c:when test="${category == 2}">
-           				Active wear
-        			</c:when>
-					<c:when test="${category == 3}">
-            			Protein Supplements
-       				 </c:when>
-					<c:when test="${category == 4}">
-            			Health & Fitness Foods
-        			</c:when>
-					<c:when test="${category == 0}">
-            			Others
-        			</c:when>
+		<!-- 현재 카테고리 -->
+			<div class="navbar-brand fw-bold fs-2"> 
+				<c:choose>
+					<c:when test="${not empty category}">
+						<c:forEach var="cat" items="${CategoryList}">
+							<c:if test="${cat.product_category_id == category}">
+								${cat.product_category_eng_name}
+							</c:if>
+						</c:forEach>
+					</c:when>
 					<c:otherwise>
-            			${not empty category ? category : 'Shop'}
-       				</c:otherwise>
+						Shop
+					</c:otherwise>
 				</c:choose>
-			</a>
+			</div>
 
 			<div class="d-flex ms-auto">
 				<!-- 상품 정렬 폼 -->
@@ -86,22 +77,29 @@
 		<div class="row">
 			<div class="col-2 d-flex flex-column justify-content-between">
 				<div>
-					<p
-						style="font-size: 18px; font-weight: bold; letter-spacing: 1px; background-color: pink; border-radius: 10px">CATEGORY</p>
-					<ul class="list-group list-group-flush mt-2 flex-grow-1"
-						style="cursor: pointer;">
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=1'/>">Athletic Gear</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=2'/>">Active wear</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=3'/>">Protein
-								Supplements</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=4'/>">Health & Fitness
-								Foods</a></li>
-						<li class="list-group-item list-group-item-action"><a
-							href="<c:url value='/shopList?category=0'/>">Others</a></li>
+					<p style="font-size: 18px; font-weight: bold; letter-spacing: 1px; background-color: pink; border-radius: 10px">CATEGORY</p>
+					<ul class="list-group list-group-flush mt-2 flex-grow-1" style="cursor: pointer;">
+						<li class="list-group-item list-group-item-action">
+							<a href="shopList">View All Products</a>
+						</li>
+					    <c:forEach var="category" items="${CategoryList}">
+					        <c:if test="${category.product_category_id != 0}">
+					            <li class="list-group-item list-group-item-action">
+					                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>">
+					                    ${category.product_category_eng_name}
+					                </a>
+					            </li>
+					        </c:if>
+					    </c:forEach>
+					    <c:forEach var="category" items="${CategoryList}">
+					        <c:if test="${category.product_category_id == 0}">
+					            <li class="list-group-item list-group-item-action">
+					                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>">
+					                    ${category.product_category_eng_name}
+					                </a>
+					            </li>
+					        </c:if>
+					    </c:forEach>
 					</ul>
 				</div>
 				<!-- 관리자 영역-->

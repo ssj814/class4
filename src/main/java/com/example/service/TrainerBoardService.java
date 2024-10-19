@@ -23,8 +23,7 @@ public class TrainerBoardService {
 			HashMap<String, String> map = new HashMap<>();
 			map.put("searchName", searchName);
 			map.put("searchValue", searchValue);
-			PageDTO pDTO=null;
-				pDTO=dao.select( map, curPage);
+			PageDTO pDTO=dao.select( map, curPage);
 			return pDTO;
 		}
 

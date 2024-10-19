@@ -65,7 +65,10 @@
 					</c:if>
 					<input type="text" name="search" placeholder="search"
 						value="${not empty search ? search : ''}">
-					<button type="submit">검색</button>
+					<button type="submit">
+						<!-- 검색 -->
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</button>
 				</form>
 
 			</div>

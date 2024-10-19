@@ -56,18 +56,6 @@
 						href="/app/FitnessContest" style="color: beige;">For Contest</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
-
-
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"
-						style="color: beige;">dropdown test</a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Action</a></li>
-							<li><a class="dropdown-item" href="#">Another action</a></li>
-							<li><a class="dropdown-item" href="#">Something else
-									here</a></li>
-						</ul></li>
 				</ul>
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item"><a class="nav-link active"

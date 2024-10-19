@@ -1,4 +1,4 @@
-package com.user.controller;
+package com.example.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.user.dto.UserDto;
-import com.user.entity.User;
-import com.user.service.UserService;
+import com.example.dto.user.UserDto;
+import com.example.entity.User;
+import com.example.service.user.UserService;
 
 @Controller
 public class UserController {

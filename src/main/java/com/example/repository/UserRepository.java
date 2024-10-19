@@ -1,11 +1,11 @@
-package com.user.repository;
+package com.example.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.user.entity.User;
+import com.example.entity.User;
 
 @Repository // 사용자 데이터를 처리하는 JPA 레포지토리 인터페이스
 public interface UserRepository  extends JpaRepository<User, Integer>{

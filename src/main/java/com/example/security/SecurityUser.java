@@ -1,9 +1,9 @@
-package com.user.security;
+package com.example.security;
 
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
-import com.user.dto.UserDto;
+import com.example.dto.user.UserDto;
 
 public class SecurityUser extends User{
 

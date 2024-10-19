@@ -1,4 +1,4 @@
-package com.user.service;
+package com.example.service.user;
 
 import java.time.LocalDateTime;
 
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.user.dto.UserDto;
-import com.user.entity.User;
-import com.user.repository.UserRepository;
-import com.user.util.JwtUtil;
+import com.example.dto.user.UserDto;
+import com.example.entity.User;
+import com.example.repository.UserRepository;
+import com.example.util.jwt.JwtUtil;
 
 @Service
 public class UserService {

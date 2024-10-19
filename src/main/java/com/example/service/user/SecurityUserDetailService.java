@@ -1,4 +1,4 @@
-package com.user.service;
+package com.example.service.user;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -12,10 +12,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.user.dto.UserDto;
-import com.user.entity.User;
-import com.user.repository.UserRepository;
-import com.user.security.SecurityUser;
+import com.example.dto.user.UserDto;
+import com.example.entity.User;
+import com.example.repository.UserRepository;
+import com.example.security.SecurityUser;
 
 @Service
 public class SecurityUserDetailService  implements UserDetailsService {

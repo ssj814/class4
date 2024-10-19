@@ -1,8 +1,8 @@
-package com.user.dto;
+package com.example.dto.user;
 
 import java.time.LocalDateTime;
 
-import com.user.entity.User.Role;
+import com.example.entity.User.Role;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

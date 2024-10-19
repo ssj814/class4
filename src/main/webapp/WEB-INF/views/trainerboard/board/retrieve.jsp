@@ -72,7 +72,8 @@
         <div class="button">
       <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
-	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
+	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
+<!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
 </div>
         <hr>
 

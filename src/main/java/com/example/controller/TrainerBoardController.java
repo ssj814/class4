@@ -85,6 +85,7 @@ public class TrainerBoardController {
 		String uploadDir = "C:/images/trainerboard_image/";
 		InputStream inputStream = null;
 		TrainerBoardDTO dto=null;
+		
 
 		try {
 			if(!weightImage.isEmpty()) {
@@ -128,23 +129,20 @@ public class TrainerBoardController {
 
 	//수정 후 세션에 저장
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(@RequestParam("postid") int postid, @RequestParam("title") String title,
-			@RequestParam("content") String content, HttpSession session,Model m, MultipartFile weightImage ) {
+	public String update(TrainerBoardDTO dto, HttpSession session,Model m, MultipartFile weightImage ) {
+		System.out.println("확인----"+weightImage);
 		
 		String uploadDir = "C:/images/trainerboard_image/";
 		InputStream inputStream = null;
-		TrainerBoardDTO dto = new TrainerBoardDTO();
+		
 
+		dto.setContent(dto.getContent().replace("\r\n", "<br>"));
 		
 		try {
 			if(!weightImage.isEmpty()) {		
-		content = content.replace("\r\n", "<br>");
-		dto.setImagename(weightImage.getOriginalFilename());
-		dto.setPostid(postid);
-		dto.setTitle(title);
-		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
 		
-		dto.setContent(content);
+		dto.setImagename(weightImage.getOriginalFilename());
+		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
 		}
 			
 			service.update(dto);
@@ -160,7 +158,7 @@ public class TrainerBoardController {
 		}
 
 		session.setAttribute("update", dto);
-		return "redirect:retrieve/" + postid; // 수정 후 수정된 게시글 보게
+		return "redirect:retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보게
 	}
 
 	

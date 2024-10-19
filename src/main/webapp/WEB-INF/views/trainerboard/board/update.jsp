@@ -29,7 +29,7 @@
 	
 		    <div class="button">
 		    	<button class="buttonmulti">수정완료</button>
-		    	<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
+		    	<button class="buttonmulti" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
 
 			</div>
 	</form>		

@@ -14,9 +14,9 @@ public class TrainerBoardDTO {
 	String content; 
 	String crdate; 
 	String updatedate; 
-	
 	int viewcount; //��ȸ��
-
+	String imagename;
+	
 	public TrainerBoardDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -107,6 +107,14 @@ public class TrainerBoardDTO {
 		this.updatedate = updatedate;
 	}
 
+	public String getImagename() {
+		return imagename;
+	}
+
+	public void setImagename(String imagename) {
+		this.imagename = imagename;
+	}
+	
 	public int getViewcount() {
 		return viewcount;
 	}
@@ -114,6 +122,7 @@ public class TrainerBoardDTO {
 	public void setViewcount(int viewcount) {
 		this.viewcount = viewcount;
 	}
+	
 	
 	
 	

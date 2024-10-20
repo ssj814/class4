@@ -195,8 +195,9 @@ public class ProductReviewController {
 		return res;
 	}
 	
+	//유저별 리뷰 정보 select
 	@ResponseBody
-    @GetMapping("/shop_Detail_productReview_Feedback") //유저별 리뷰 정보 select
+    @GetMapping("/shop_Detail_productReview_Feedback") 
     public List<ProductReviewFeedbackDTO> getProductReview_Feedback(@RequestParam List<Integer> review_id) {
         int user_id = 1; //임시유저
     	Map<String, Object> map = new HashMap<>();
@@ -204,6 +205,27 @@ public class ProductReviewController {
         map.put("review_id", review_id);
         List<ProductReviewFeedbackDTO> productReviewFeedbackDTO = productReviewService.selectUserFeedback(map);
         return productReviewFeedbackDTO; 
+    }
+	
+	//리뷰 페이징 
+	@ResponseBody
+    @GetMapping("/shop_productReview_paging")
+    public List<ProductReviewDTO> productReview_paging(
+    		@RequestParam int productId,
+    		@RequestParam(value="reviewPage", required = false, defaultValue = "1") Integer reviewPage,
+			@RequestParam(value="sortType", required = false, defaultValue = "newest") String sortType) {
+				
+		//selectReviewList용 map 생성
+		Map<String, Object> map = new HashMap<>();
+		map.put("productId", productId);
+		map.put("sortType", sortType);
+				
+		//리뷰 페이징
+		int perPage = 5;
+		RowBounds bounds = new RowBounds(0, perPage*reviewPage);
+		
+		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(map,bounds);
+        return productReviewDTO; 
     }
 
 }

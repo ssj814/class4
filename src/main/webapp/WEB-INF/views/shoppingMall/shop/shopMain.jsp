@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="resources/css/shoppingMall/shopMain.css">
 
 <!-- top -->
@@ -163,8 +164,9 @@
 								href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
 								class="list-group-item-action">${product.getProduct_name()}</a>
 						</p>
-						<p class="card-text text-danger">₩
-							${product.getProduct_price()}</p>
+						<p class="card-text text-danger">
+						    <fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
+						</p>
 						<div class="mt-auto"></div>
 					</div>
 				</div>

@@ -1,5 +1,6 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!-- Modal -->
 <div class="modal fade" id="messageModal" tabindex="-1" aria-hidden="true">
@@ -30,7 +31,7 @@
                 	<h2>
                 		<a href="shopDetail?productId=${product.getProduct_id()}" class="text-dark fw-bold text-decoration-none fs-6">${product.getProduct_name()}</a>
                 	</h2>
-                	 <p>₩ ${product.getProduct_price()}</p>
+                	 <p><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></p>
                 </div>
                 <div class="col-1"></div>
                 <div class="col-1"></div>

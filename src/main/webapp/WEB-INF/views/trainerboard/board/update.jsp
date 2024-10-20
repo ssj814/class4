@@ -36,15 +36,15 @@
                     <label>첨부된 이미지:</label>
                
                  <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
-				class="img-fluid" style="object-fit: contain; max-height: 100px; max-weight:100px; ">
-				
+				class="img-fluid" style="object-fit: contain; height: 100px; weight:100px; ">
                 </div>
                 
 			   <br>
 			   <!-- 파일추가 -->
 			   <div class="label">
-			   <label for="file"></label>
-				<input type="file" id="weightImage" name="weightImage" accept="image/*"  required><%-- ${dto.weightimage } --%>
+			   <label for="file">이미지수정</label>
+				<input type="file" id="weightImage" name="weightImage" accept="image/*" onchange="showPreview(this, 'preview')"><%-- ${dto.weightimage } --%>
+				<img id="preview" class="image-preview" style="display: none;  width:100px; height:100px;" />
 				</div>
 
 
@@ -56,7 +56,30 @@
 	</form>		
         </main>
        </div>
-
+<script>
+	
+	//이미지 미리보기
+    function showPreview(input, previewId) {
+        const file = input.files[0];
+        if (file) {
+        	//이미지 사이즈 제한
+        	const maxSize = 2 * 1024 * 1024;
+        	if (file.size > maxSize) {
+                alert('파일 크기는 2MB를 초과할 수 없습니다.');
+                input.value = '';
+                return;
+            }
+        	//이미지 미리보기
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+	</script>
 
 </body>
 </html>

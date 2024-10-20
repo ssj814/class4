@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
+
+
 </head>
 <body>
     <div class="container" style="margin-top:40px;">
@@ -27,10 +29,11 @@
                 <!-- 이미지 첨부 -->
                 <div class="label">
                     <label for="weightImage">이미지첨부</label>
-                </div>
-                <input type="file" id="weightImage" name="weightImage" accept="image/*" onchange="showPreview(this, 'preview1')" required>
-                
+                	<input type="file" id="weightImage" name="weightImage" accept="image/*"  onchange="showPreview(this, 'preview')" required/>
+        			<img id="preview" class="image-preview" style="display: none;  width:100px; height:100px;" />
 
+                <!-- required 없이 저장가능하게  하고싶으나 sql 오류발생 / 부적합한 열 유형 :1111 어쩌라고-->
+                </div>
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
                 <div class="writebutton">

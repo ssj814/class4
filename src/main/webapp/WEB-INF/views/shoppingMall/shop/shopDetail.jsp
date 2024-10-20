@@ -32,7 +32,7 @@
 				class="img-fluid" style="object-fit: contain; max-height: 500px;">
 		</div>
 		<div class="col-1"></div>
-		<div class="col-3 productDetail-right">
+		<div class="col-4 productDetail-right">
 			<h2 class="product-name card-title fw-bold">${product.getProduct_name()}</h2>
 			<div class="card mb-1">
 				<div class="card-body d-flex flex-column">
@@ -91,7 +91,7 @@
             </span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>
-		<div class="col-1"></div>
+		<div class="col-0"></div>
 	</div>
 	
 </div>

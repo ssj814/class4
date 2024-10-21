@@ -59,7 +59,7 @@ public class NoticeController {
 	}
 
 	@RequestMapping("/notice_content")
-	public String BoardContent(Model m, HttpServletResponse response,
+	public String BoardContent(Model m,
 			@RequestParam(value = "postid", defaultValue = "0") int postid,
 			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 
@@ -106,7 +106,7 @@ public class NoticeController {
 	@RequestMapping("/notice_save")
 	public String BoardSave(HttpSession session, @RequestParam("title") String title,
 			@RequestParam("content") String content, @RequestParam(value = "postid", required = false) Integer postid,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam(value = "popup", required = false) String popup, RedirectAttributes redirectAttributes) {
 
 		String category = (String) session.getAttribute("category");
 		if (category == null) {
@@ -127,6 +127,11 @@ public class NoticeController {
 		} else {
 			count = service.insertContent(dto);
 			message = "글을 저장하였습니다";
+			
+			// 팝업 표시 여부 확인
+	        if ("Y".equals(popup)) {
+	            session.setAttribute("popupNotice", dto); // 세션에 공지사항 저장
+	        }
 		}
 		redirectAttributes.addFlashAttribute("mesg", message);
 		return "redirect:/notice";

@@ -31,9 +31,10 @@ th, td {
     text-align: center;
 }
 
-th {
+tr > th {
     background-color: #f1f1f1;
     font-weight: bold;
+    text-align: center;
 }
 
 /* 입력 필드 스타일 */

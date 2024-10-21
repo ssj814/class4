@@ -59,7 +59,7 @@ public class NoticeController {
 	}
 
 	@RequestMapping("/notice_content")
-	public String BoardContent(Model m, HttpServletResponse response,
+	public String BoardContent(Model m,
 			@RequestParam(value = "postid", defaultValue = "0") int postid,
 			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 

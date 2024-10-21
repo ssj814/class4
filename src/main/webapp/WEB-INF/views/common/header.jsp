@@ -62,8 +62,8 @@
 						href="wishList" style="color: pink;">WISH</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="cartList" style="color: pink;">CART</a></li>
-					<li class="nav-item"><a class="nav-link active" href="#"
-						style="color: pink;">LOGIN</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="loginForm" style="color: pink;">LOGIN</a></li>
 				</ul>
 			</div>
 		</div>

@@ -24,6 +24,7 @@ public class SecurityUserDetailService  implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String userid) throws UsernameNotFoundException {
+		//사용자id를 매개변수로 받아서 회원정보조회, 조회후 UserDetail객체로 리턴 시킴
 		System.out.println("UserDetailServie: username==="+ userid);
 		
 		//사용자가 없는 경우

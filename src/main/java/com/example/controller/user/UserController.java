@@ -18,36 +18,37 @@ public class UserController {
     @Autowired
     private UserService userService;
     
-    @RequestMapping("/")
-    public String main() {
-    	return "main";
-    }
+//    @RequestMapping("/")
+//    public String main() {
+//    	return "main";
+//    }
     
     @RequestMapping("/loginForm")
     public String loginForm() {
-    	return "loginForm";
+    	return "user/loginForm";
     }
     
     @RequestMapping("/UserWriteForm")
     public String UserWriteForm() {
-    	return "UserWriteForm";
+    	return "user/UserWriteForm";
     }
     
 
     @GetMapping("/register")
     public String showRegistrationForm() {
-        return "UserWriteForm"; // 회원가입 폼 페이지
+        return "user/UserWriteForm"; // 회원가입 폼 페이지
     }
 
     @PostMapping("/register")
     public String register(UserDto userDto) { // UserDto를 사용
         userService.register(userDto); // DB에 사용자 저장
-        return "redirect:/login"; // 회원가입 후 로그인 페이지로 리다이렉트
+        return "redirect:login"; // 회원가입 후 로그인 페이지로 리다이렉트
     }
 
     @GetMapping("/login")
     public String showLoginForm() {
-        return "loginForm"; // 로그인 폼 페이지
+    	System.out.println("get login 주소접근");
+        return "user/loginForm"; // 로그인 폼 페이지
     }
 
     @PostMapping("/login")
@@ -61,20 +62,20 @@ public class UserController {
             return "main"; // 로그인 성공 후 이동할 페이지
         } else {
             model.addAttribute("mesg", "아이디 또는 비밀번호가 잘못되었습니다."); // 오류 메시지
-            return "loginForm"; // 로그인 실패 시 이동할 페이지
+            return "user/loginForm"; // 로그인 실패 시 이동할 페이지
         }
     }
     
     @RequestMapping("/loginDenied")
 	public String loginDenied() {
 		System.out.println("/loginDenied");
-		return "loginDenied";
+		return "user/loginDenied";
 	}
     
     @RequestMapping("/loginCancel")
 	public String loginCancel() {
 		System.out.println("/loginCancel");
-		return "loginCancel";
+		return "user/loginCancel";
 	}
     
 	////////예외처리
@@ -82,7 +83,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String managerView() { //
 		System.out.println("/admin/view");
-		return "adminView";
+		return "user/adminView";
 	}
 
 }

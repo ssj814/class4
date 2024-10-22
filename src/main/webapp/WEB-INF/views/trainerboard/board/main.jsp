@@ -45,9 +45,9 @@
 			<tbody>
 				<c:choose>
 					<c:when test="${pDTO != null && pDTO.list != null && !pDTO.list.isEmpty()}">
-						<c:forEach var="dto" items="${pDTO.list}">
+						<c:forEach var="dto" items="${pDTO.list}" varStatus="status">
 							<tr>
-								<td>${dto.postid}</td>
+								<td>${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
 								<td><a href="Retrieve/${dto.postid}/${pDTO.curPage}">${dto.title}</a></td>
 								<td>${dto.userid}</td>
 								<td>${dto.crdate}</td>

@@ -29,7 +29,7 @@
                 <!-- 이미지 첨부 -->
                 <div class="label">
                     <label for="weightImage">이미지첨부</label>
-                	<input type="file" id="weightImage" name="weightImage" accept="image/*"  onchange="showPreview(this, 'preview')" required/>
+                	<input type="file" id="weightImage" name="weightImage" accept="image/*"  onchange="showPreview(this, 'preview')" />
         			<img id="preview" class="image-preview" style="display: none;  width:100px; height:100px;" />
 
                 <!-- required 없이 저장가능하게  하고싶으나 sql 오류발생 / 부적합한 열 유형 :1111 어쩌라고-->

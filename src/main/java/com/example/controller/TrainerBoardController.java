@@ -144,7 +144,7 @@ public class TrainerBoardController {
 		dto.setImagename(weightImage.getOriginalFilename());
 		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
 		}
-			
+
 			service.update(dto);
 		
 		}catch (IOException e) {

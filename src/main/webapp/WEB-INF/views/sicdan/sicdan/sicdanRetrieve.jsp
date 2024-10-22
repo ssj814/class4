@@ -9,100 +9,8 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
-    <style>
-        main {
-            margin-top: 70px; /* 헤더 높이만큼 여백 추가 */
-        }
-
-        /* 게시물 테이블 스타일 */
-        .boardHeader {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .boardHeader th, .boardHeader td {
-            padding: 12px;
-            text-align: center;
-            border: 1px solid #ddd;
-        }
-
-        .boardHeader th {
-            background-color: #f7f7f7;
-            font-weight: bold;
-            width: 15%; /* 각 항목의 균형을 위해 넓이를 조정 */
-        }
-
-        .boardHeader td {
-            font-size: 1rem;
-            width: 25%; /* 각 항목의 균형을 위해 넓이를 조정 */
-        }
-
-        /* 제목 스타일 */
-        .post-header {
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            padding: 15px;
-            border-radius: 5px 5px 0 0;
-            margin-bottom: 20px;
-        }
-
-        /* 본문 텍스트 스타일 */
-        #boardArticle_content {
-            padding: 20px;
-            margin-top: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* 푸터 버튼 스타일 */
-        #boardArticle_footer {
-            margin-top: 20px;
-            text-align: center; /* 가운데 정렬 */
-        }
-
-        #boardArticle_footer button {
-            margin-right: 10px;
-            padding: 10px 20px;
-            border-radius: 4px;
-            background-color: #333;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        #boardArticle_footer button:hover {
-            background-color: #555;
-        }
-        html, body {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-#boardList {
-    flex: 1;
-    width: 80%;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    padding: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-    </style>
+		<link rel="stylesheet" href="resources/css/sicdan/sicdanRetrieve.css">
+    
 </head>
 <body>
 <!-- SweetAlert 라이브러리 로드 -->
@@ -153,9 +61,9 @@
     </div>
 
     <div id="boardArticle_footer">
-        <button onclick="location.href='<c:url value='/sicdan/form?num=${retrive.sic_num}&currentPage=${currentPage}' />'">수정</button>
-        <button onclick="location.href='<c:url value='/sicdan/delete?num=${retrive.sic_num}&currentPage=${currentPage}' />'">삭제</button>
-        <button onclick="location.href='<c:url value='/sicdan/list?currentPage=${currentPage}' />'">목록</button>
+        <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.sic_num}&currentPage=${currentPage}' />'">수정</button>
+        <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.sic_num}&currentPage=${currentPage}' />'">삭제</button>
+        <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
     </div>
 </div>
 

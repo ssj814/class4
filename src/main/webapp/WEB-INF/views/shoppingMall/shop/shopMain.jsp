@@ -52,19 +52,24 @@
 					<li class="list-group-item fst-italic"><a href="shopList"
 						class="text-dark" style="text-decoration: none">View All
 							Products</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=1'/>"
-						class="text-dark" style="text-decoration: none">Athletic Gear</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=2'/>"
-						class="text-dark" style="text-decoration: none">Active wear</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=3'/>"
-						class="text-dark" style="text-decoration: none">Protein
-							Supplements</a></li>
-					<li class="list-group-item fst-italic"><a href="<c:url value='/shopList?category=4'/>"
-						class="text-dark" style="text-decoration: none">Health &
-							Fitness Foods</a></li>
-					<li class="list-group-item fst-italic"
-						style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);"><a href="<c:url value='/shopList?category=0'/>"
-						class="text-dark" style="text-decoration: none">Others</a></li>
+					<c:forEach var="category" items="${CategoryList}">
+				        <c:if test="${category.product_category_id != 0}">
+				            <li class="list-group-item fst-italic">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                    ${category.product_category_eng_name}
+				                </a>
+				            </li>
+				        </c:if>
+				    </c:forEach>
+				    <c:forEach var="category" items="${CategoryList}">
+				        <c:if test="${category.product_category_id == 0}">
+				            <li class="list-group-item fst-italic" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                    ${category.product_category_eng_name}
+				                </a>
+				            </li>
+				        </c:if>
+				    </c:forEach>
 				</ul>
 				<li class="list-group-item list-group-item-action fw-bolder"
 					data-bs-toggle="collapse" data-bs-target="#extra-items2">For

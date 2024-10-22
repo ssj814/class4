@@ -1,5 +1,8 @@
 package com.example.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.PageDTO;
@@ -57,7 +61,9 @@ public class TrainerBoardController {
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
+		System.out.println("1"+dto);
 		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
+		System.out.println(comments);
 		m.addAttribute("comments", comments);
 
 		
@@ -65,25 +71,49 @@ public class TrainerBoardController {
 	}
 	
 	//Write.jsp로 이동 - 글쓰기폼
-	@RequestMapping(value = "/trainerboardWrite", method = RequestMethod.GET)
-	public String writeForm(Model m) {
 
+	@RequestMapping(value = "/trainerboardWrite", method = RequestMethod.GET)
+	public String writeForm(Model m, MultipartFile weightimage) {
+		
 		return "trainerboard/Write"; //
 	}
 
-	//글쓰고나면 제목, 내용을 세션에 저장시킴
+	//글쓰고나면 제목, 내용을 세션에 저장시킴 이미지 여기에 저장하기
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String write(@RequestParam("title") String title, @RequestParam("content") String content,
-			HttpSession session) {
+			HttpSession session,Model m, MultipartFile weightImage) {
+		String uploadDir = "C:/images/trainerboard_image/";
+		InputStream inputStream = null;
+		TrainerBoardDTO dto=null;
+		
 
-		// DTO 객체 생성 및 데이터 설정
-		TrainerBoardDTO dto = new TrainerBoardDTO();
-		dto.setTitle(title);
-		dto.setContent(content);
-
-		// 서비스 호출
-		service.insert(dto);
-
+		try {
+			if(!weightImage.isEmpty()) {
+				inputStream = weightImage.getInputStream();
+				dto = new TrainerBoardDTO();
+				dto.setImagename(weightImage.getOriginalFilename());
+				// DTO 객체 생성 및 데이터 설정
+				
+				dto.setTitle(title);
+				dto.setContent(content);
+				
+				// 서비스 호출
+				
+				weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
+			}
+			
+			// 서비스 호출
+			service.insert(dto);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(inputStream!=null)inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		// 메인 페이지로 리다이렉트
 		return "redirect:TrainerBoard"; //저장되고나면 main페이지로 다시 이동
 	}
@@ -91,6 +121,7 @@ public class TrainerBoardController {
 	//update.jsp로 - 수정폼으로
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String showUpdateForm(@RequestParam("postid") int postid, Model m) {
+		System.out.println("수정클릭");
 		TrainerBoardDTO dto = service.retrieve(postid); // postid받아와서 상세내용 불러오고 
 		m.addAttribute("dto", dto);
 		return "trainerboard/update"; // update.jsp로
@@ -98,16 +129,36 @@ public class TrainerBoardController {
 
 	//수정 후 세션에 저장
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(@RequestParam("postid") int postid, @RequestParam("title") String title,
-			@RequestParam("content") String content, HttpSession session) {
-		content = content.replace("\r\n", "<br>");
-		TrainerBoardDTO dto = new TrainerBoardDTO();
-		dto.setPostid(postid);
-		dto.setTitle(title);
-		dto.setContent(content);
-		service.update(dto);
+	public String update(TrainerBoardDTO dto, HttpSession session,Model m, MultipartFile weightImage ) {
+		System.out.println("확인----"+weightImage);
+		
+		String uploadDir = "C:/images/trainerboard_image/";
+		InputStream inputStream = null;
+		
+
+		dto.setContent(dto.getContent().replace("\r\n", "<br>"));
+		
+		try {
+			if(!weightImage.isEmpty()) {		
+		
+		dto.setImagename(weightImage.getOriginalFilename());
+		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
+		}
+			
+			service.update(dto);
+		
+		}catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(inputStream!=null)inputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
 		session.setAttribute("update", dto);
-		return "redirect:retrieve/" + postid; // 수정 후 수정된 게시글 보게
+		return "redirect:retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보게
 	}
 
 	

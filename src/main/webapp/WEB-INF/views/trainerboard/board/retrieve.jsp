@@ -10,7 +10,7 @@
     <title>게시글 조회</title>
  	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
-	<link rel="stylesheet" href="${pageContext.request.contextPath}/app/retrieve/resources/css/main.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
  	
      <script>
         function confirmDelete(postid) {
@@ -59,24 +59,31 @@
             </tr>
             <tr>
                 <th>글내용</th>
-                 <td>${dto.content}</td>
+                 <td>${dto.content}
+                 <c:if test="${not empty dto.imagename}">
+                 <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
+				class="img-fluid" style="object-fit: contain; max-height: 500px;">
+				</c:if>
+				</td>
             </tr>
             
         </table>
         <br>
-      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}&title=${dto.title}&content=${dto.content}'">수정</button>&nbsp;
+        <div class="button">
+      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
-	<button class="buttonmulti" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
-
+	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
+<!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
+</div>
         <hr>
 
         <div class="comments">
-            <h4>댓글</h4>
+            <h6>댓글</h6>
             <form action="${pageContext.request.contextPath}/commentwrite" method="post">
                 <input type="hidden" id="postid" name="postid" value="${dto.postid}">
                  <input type="hidden" id="userid" name="userid" value="${dto.userid}">
                 <div id="commentbox">
-                <textarea name="commentbox" class="commentbox" rows="5" required style="width:80%; box-sizing: border-box;"></textarea>
+                <textarea name="commentbox" class="commentbox" rows="5" required style="width:100%; box-sizing: border-box;"></textarea>
                     <button type="submit" id="commentbutton">등록</button>
                    
                 </div>

@@ -16,12 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.SicdanDTO;
 import com.example.service.SicdanService;
 
-/**
- * 게시판 컨트롤러 클래스입니다.
- * '/sicdan' 경로로 들어오는 요청을 처리합니다.
- */
+
 @Controller
-@RequestMapping("/sicdan")  // '/sicdan' 경로에 매핑
 public class SicdanController {
 
     @Autowired
@@ -36,7 +32,7 @@ public class SicdanController {
      * @param model       모델에 데이터를 저장
      * @return 게시물 목록을 보여줄 JSP 페이지 이름
      */
-    @GetMapping("/list")
+    @RequestMapping("/sicdan_list")
     public String listSicdan(@RequestParam(value = "searchName", required = false) String searchName,
                              @RequestParam(value = "searchValue", required = false) String searchValue,
                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
@@ -74,7 +70,7 @@ public class SicdanController {
      * @param model       모델에 데이터를 저장
      * @return 게시물 작성/수정 폼을 보여줄 JSP 페이지 이름
      */
-    @GetMapping("/form")
+    @GetMapping("/sicdan_form")
     public String sicdanForm(@RequestParam(value = "num", required = false) Integer sic_num,
                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              Model model) {
@@ -98,7 +94,7 @@ public class SicdanController {
      * @param currentPage 현재 페이지 번호
      * @return 게시물 목록으로 리디렉션
      */
-    @PostMapping("/submit")
+    @PostMapping("/sicdan_submit")
     public String submitSicdan(@ModelAttribute SicdanDTO dto,
                                @RequestParam(value = "isUpdate", defaultValue = "false") boolean isUpdate,
                                @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
@@ -110,7 +106,7 @@ public class SicdanController {
             sicdanService.write(dto);  // 작성 처리
             redirectAttributes.addFlashAttribute("mesg", "글이 작성되었습니다.");
         }
-        return "redirect:/sicdan/list?currentPage=" + currentPage;  // 처리 후 목록으로 이동
+        return "redirect:sicdan_list?currentPage=" + currentPage;  // 처리 후 목록으로 이동
     }
 
     /**
@@ -121,7 +117,7 @@ public class SicdanController {
      * @param redirectAttributes 리디렉션 시 메시지 전달
      * @return 게시물 목록으로 리디렉션
      */
-    @GetMapping("/delete")
+    @GetMapping("/sicdan_delete")
     public String deleteSicdan(@RequestParam("num") int sic_num,
                                @RequestParam("currentPage") int currentPage,
                                RedirectAttributes redirectAttributes) {
@@ -131,7 +127,7 @@ public class SicdanController {
         } else {
             redirectAttributes.addFlashAttribute("error", "글을 삭제하지 못하였습니다.");
         }
-        return "redirect:/sicdan/list?currentPage=" + currentPage;
+        return "redirect:sicdan_list?currentPage=" + currentPage;
     }
 
     /**
@@ -142,17 +138,18 @@ public class SicdanController {
      * @param model       모델에 데이터를 저장
      * @return 게시물 상세보기 페이지로 이동
      */
-    @GetMapping("/retrieve")
+    @GetMapping("/sicdan_retrieve")
     public String retrieveSicdan(@RequestParam("num") int sic_num,
                                  @RequestParam("currentPage") int currentPage,
                                  Model model, RedirectAttributes redirectAttributes) {
         SicdanDTO dto = sicdanService.selectByNum(sic_num);
         if (dto == null) {
             redirectAttributes.addFlashAttribute("error", "해당 게시물이 존재하지 않습니다.");
-            return "redirect:/sicdan/list?currentPage=" + currentPage;
+            return "redirect:sicdan_list?currentPage=" + currentPage;
         }
         model.addAttribute("retrive", dto);
         model.addAttribute("currentPage", currentPage);
         return "sicdan/sicdanRetrieve"; // sicdanRetrieve.jsp로 이동
     }
+    
 }

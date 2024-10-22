@@ -23,14 +23,14 @@
                  <div class="label">
                 <label for="content">내용</label></div>
                 <textarea id="content" name="content" placeholder="내용을 적어주세요" maxlength="1000" required></textarea><br>
-				<label for="file"></label>
-				<input type="file" id="weightImage" name="weightImage" accept="image/*">
+				<label for="file">이미지첨부</label>
+				<input type="file" id="weightImage" name="weightImage" accept="image/*" required>
 				
 
                 <!-- 저장 버튼과 목록 보기 링크 -->
                 <div class="writebutton">
                 	<button class="buttonmulti" type="submit">저장</button>&nbsp;
-                	<button class="buttonmulti"  onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>	
+                	<button class="buttonmulti" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>	
 		</div>
           </form>
         </main>

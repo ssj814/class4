@@ -81,7 +81,7 @@ public class UserController {
 	////////예외처리
 	@RequestMapping("/admin/view")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String managerView() { //
+	public String managerView() { 
 		System.out.println("/admin/view");
 		return "user/adminView";
 	}

@@ -62,6 +62,8 @@
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
+							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name } 님 환영합니다.</a></li>
+						<li class="nav-item"><a class="nav-link active"
 							href="logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"
 							href="wishList" style="color: pink;">WISH</a></li>

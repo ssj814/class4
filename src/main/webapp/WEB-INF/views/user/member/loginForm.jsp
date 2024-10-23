@@ -24,16 +24,27 @@
 		})
 	})
 </script>
-  <div class="login-container">
-        <h2>로그인</h2>
-        <form action="<c:url value="/login"/>" method="post">
-            <label for="userid">사용자 이름:</label>
-            <input type="text" id="userid" name="userid">
-            
-            <label for="userpw">비밀번호:</label>
-            <input type="password" id="userpw" name="userpw">
-            
-            <button type="submit">로그인</button>
-        </form>
-        	<button id="member">회원가입</button>
-    </div>
+	<div class="logo">
+	    <a href="/app/"><img src="<c:url value='/images/logo.png'/>" alt="로고"></a>
+	</div>
+	<div class="login-container">
+	    <h2>로그인</h2>
+	    <form action="<c:url value="/login"/>" method="post">
+	        <label for="userid">아이디:</label>
+	        <input type="text" id="userid" name="userid">
+	        
+	        <label for="userpw">비밀번호:</label>
+	        <input type="password" id="userpw" name="userpw">
+	        
+	        <button type="submit">로그인</button>
+	    </form>
+	    <button id="member">회원가입</button>
+	</div>
+	<div class="social-login">
+		<div>---간편 소셜 로그인---</div>
+	    <div>
+	    	<button class="social-button">구글 로그인</button>
+	    	<button class="social-button">카카오 로그인</button>
+	    	<button class="social-button">네이버 로그인</button>
+	    </div>
+	</div>

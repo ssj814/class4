@@ -22,6 +22,8 @@ public class CustomSecurityConfig {
     	.requestMatchers("/admin/**").hasRole("ADMIN")
     	//.requestMatchers("/trainer/**").hasRole("TRAINER")
     	//추후 트레이너 페이지 추가 시
+    	//.requestMatchers("/user/**").hasRole("USER")
+    	//추후 유저 페이지 추가 시
     	.anyRequest().permitAll() // 나머지 요청 허용
     	 )
         .formLogin(form -> form

@@ -4,6 +4,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.dao.BoardMapper">
 
+<!-- 상위 5개 게시글 조회 -->
+<select id="selectTopPosts" resultType="BoardDTO">
+SELECT postid, title, userid,
+          Crdate,
+           viewcount
+FROM (
+    SELECT postid, title, userid,
+           TO_CHAR(crdate, 'YYYY-MM-DD')Crdate,
+           viewcount
+    FROM TRAINERBOARD_BOARD
+    ORDER BY viewcount DESC
+)
+WHERE ROWNUM &lt;= 5
+</select>
+
 <select id="selectAll" resultType="BoardDTO" parameterType="hashmap">
 
 		select postid, title, userid,

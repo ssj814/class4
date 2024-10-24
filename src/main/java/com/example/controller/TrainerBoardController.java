@@ -33,6 +33,7 @@ public class TrainerBoardController {
 
 	//메인화면출력
 	
+	//PageDTO 따로 있음
 	@RequestMapping("/TrainerBoard")
 	public String main(Model m, @RequestParam(value = "curPage", defaultValue = "1") int curPage,
 			@RequestParam(value = "searchName", required = false) String searchName,
@@ -41,8 +42,13 @@ public class TrainerBoardController {
 		//검색필드 전달값으로 작성자, 제목, 내용 으로 검색할 수 있게 함
 		PageDTO pDTO = service.select(searchName, searchValue, curPage);
 		System.out.println(pDTO);
+		
+		// 상위 5개 게시글 조회
+	    List<TrainerBoardDTO> topPosts = service.selectTopPosts();
+		
 		List<TrainerBoardDTO> list = pDTO.getList(); //
 		System.out.println("list출력" + list);
+		m.addAttribute("topPosts", topPosts);
 		m.addAttribute("pDTO", pDTO);
 		m.addAttribute("searchName", searchName);
 		m.addAttribute("searchValue", searchValue);

@@ -43,8 +43,22 @@
 				</tr>
 			</thead>
 			<tbody>
+			
+			<!-- 조회수 순 -->
+				<c:if test="${not empty topPosts}">
+    					<c:forEach var="post" items="${topPosts}">
+       					 <tr>
+       					 	<td>Hit</td>
+            				<td><a href="Retrieve/${post.postid}/${pDTO.curPage}">${post.title}</a></td>
+           					 <td>${post.userid}</td>
+            				<td>${post.crdate}</td>
+            				<td>${post.viewcount}</td>
+       					 </tr>
+   						 </c:forEach>
+				</c:if>
+			
 				<c:choose>
-					<c:when test="${pDTO != null && pDTO.list != null && !pDTO.list.isEmpty()}">
+				<c:when test="${pDTO != null && pDTO.list != null && !pDTO.list.isEmpty()}">
 						<c:forEach var="dto" items="${pDTO.list}" varStatus="status">
 							<tr>
 								<td>${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
@@ -55,6 +69,7 @@
 							</tr>
 						</c:forEach>
 					</c:when>
+					
 					<c:otherwise>
 						<tr>
 							<td colspan="5">게시글이 없습니다.</td>

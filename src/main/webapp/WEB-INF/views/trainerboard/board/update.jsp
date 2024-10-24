@@ -36,7 +36,7 @@
                     <label>첨부된 이미지:</label>
                
                  <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
-				class="img-fluid" style="object-fit: contain; height: 100px; weight:100px; ">
+				class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
                 </div>
                 
 			   <br>

@@ -52,10 +52,12 @@ public class CartController {
 	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
 		int user_Id = 1; //임시 유저
 		int productId = (int) requestMap.get("productId");
+		int productQuantity = (int) requestMap.get("productQuantity");
 		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
 		Map<String,Object> map = createCartMap(user_Id, productId, -1, options);
 		int check = service.cartCheck(map); //cart에 존재여부
 		
+		map.put("quantity", productQuantity);
 		Map<String,String> responseMap = new HashMap<String,String>();
 		if (check == 1) {
 	        // 이미 장바구니에 존재하는 경우 수량 증가

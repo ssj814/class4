@@ -78,6 +78,9 @@
 					        </select>
 					    </div>
 					</c:forEach>
+					<!-- 수량 선택 -->
+					<label>quantity</label>
+					<input type="number" min="1" class="product-quantity form-control" value="1">
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
@@ -136,6 +139,12 @@
                     });
                 }
             });
+			//상품 수량 
+			var productQuantity = parseInt($(".product-quantity").val());
+			if(productQuantity<1){
+				productQuantity = 1;
+				$(".product-quantity").val(1);
+			}
 		        $.ajax({
 		            type: "POST",
 		            url: "cart",
@@ -143,7 +152,8 @@
 		            contentType: "application/json",
 		            data: JSON.stringify({
 	                    productId: productId,
-	                    options: options
+	                    options: options,
+	                    productQuantity: productQuantity
 	                }),
 		            success: function(resData, status, xhr) {
 		            	console.log(resData);

@@ -130,7 +130,6 @@
 						    var quantity = $(this).val();
 						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, '').replace(/₩/g, ''));
 							var total = quantity * price;
-							
 						
 							// 개별 상품 총액 업데이트
 							$("#total-" + cartId).val(total.toLocaleString());

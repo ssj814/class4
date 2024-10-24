@@ -308,14 +308,27 @@ div.label{
 	text-align: center;
 }
 
+.trainerboard_postno{
+	text-align:center;
+	background-color:white;
+}
+
+.trainerboard_tbody {
+	background-color:white;
+}
+
+.trainerboard_content {
+    background-color: white;
+}
+
 .trainerboard_content a {
     color: black; 
     text-decoration: none;
 }
 
 .trainerboard_content:hover{
-   background-color: #eeeeee;
-}
+   text-decoration: underline;
+} 
 
 .trainerboard_topPosts a{
 	color: black;
@@ -324,5 +337,6 @@ div.label{
 
 .trainerboard_topPosts:hover{
 	background-color: #ffeeee;
+	text-decoration: underline;
 }
 

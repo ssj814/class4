@@ -61,11 +61,11 @@
 				<c:when test="${pDTO != null && pDTO.list != null && !pDTO.list.isEmpty()}">
 						<c:forEach var="dto" items="${pDTO.list}" varStatus="status">
 							<tr>
-								<td class="postno">${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
+								<td class="trainerboard_postno">${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
 								<td class="trainerboard_content"><a href="Retrieve/${dto.postid}/${pDTO.curPage}">${dto.title}</a></td>
-								<td>${dto.userid}</td>
-								<td>${dto.crdate}</td>
-								<td>${dto.viewcount}</td>
+								<td class="trainerboard_tbody">${dto.userid}</td>
+								<td class="trainerboard_tbody" >${dto.crdate}</td>
+								<td class="trainerboard_tbody">${dto.viewcount}</td>
 							</tr>
 						</c:forEach>
 					</c:when>

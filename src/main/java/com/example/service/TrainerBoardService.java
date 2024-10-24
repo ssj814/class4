@@ -32,7 +32,6 @@ public class TrainerBoardService {
 			int n=0;
 			n=dao.insert( dto);
 			return n;
-			
 		}
 
 		//데이터조회+글조회수 증가
@@ -67,5 +66,11 @@ public class TrainerBoardService {
 			dto.getPostid();
 			return dto;
 		}
+
+		
+
+		 public List<TrainerBoardDTO> selectTopPosts() {
+		        return dao.selectTopPosts();
+		    }
 
 }

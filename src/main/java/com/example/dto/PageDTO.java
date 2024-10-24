@@ -7,9 +7,9 @@ import org.apache.ibatis.type.Alias;
 @Alias("PageDTO")
 public class PageDTO {
 	private List<TrainerBoardDTO> list;
-	private int curPage;
-	private int perPage=5;
-	private int totalCount;
+	private int curPage; //현재페이지
+	private int perPage=10; //페이징되는 갯수
+	private int totalCount; //총페이지
 	
 	
 	public PageDTO() {

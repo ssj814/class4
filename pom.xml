@@ -137,6 +137,14 @@
         	<artifactId>spring-boot-starter-validation</artifactId>
     	</dependency>
     	<!-- 유효성 검사 -->
+    	
+    	<!-- OAuth2 Client -->
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-starter-oauth2-client</artifactId>
+	    </dependency>
+		<!-- OAuth2 Client -->
+		
 	</dependencies>
 
 	<build>

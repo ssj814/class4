@@ -86,7 +86,7 @@ button:hover {
 .social-button {
     padding: 10px;
     margin: 5px;
-    background-color: #eee; /* 기본 소셜 버튼 색상 */
+    background-color: #333; /* 기본 소셜 버튼 색상 */
     border: 1px solid #ccc; /* 경계선 */
     border-radius: 5px;
     cursor: pointer;
@@ -96,6 +96,6 @@ button:hover {
 }
 
 .social-button:hover {
-    background-color: #ddd; /* 버튼 호버 시 색상 변화 */
+    background-color: #222; /* 버튼 호버 시 색상 변화 */
     border-color: #bbb; /* 경계선 호버 시 색상 변화 */
 }

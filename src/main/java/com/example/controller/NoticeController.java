@@ -107,7 +107,7 @@ public class NoticeController {
 	public String BoardSave(HttpSession session, @RequestParam("title") String title,
 			@RequestParam("content") String content, @RequestParam(value = "postid", required = false) Integer postid,
 			@RequestParam(value = "popup", required = false) String popup, RedirectAttributes redirectAttributes) {
-
+		
 		String category = (String) session.getAttribute("category");
 		if (category == null) {
 			category = ""; // 혹은 적절한 기본 카테고리 설정
@@ -124,15 +124,15 @@ public class NoticeController {
 			dto.setPostid(postid);
 			count = service.updateContent(dto);
 			message = "글을 수정하였습니다";
+			
 		} else {
 			count = service.insertContent(dto);
 			message = "글을 저장하였습니다";
-			
-			// 팝업 표시 여부 확인
-	        if ("Y".equals(popup)) {
-	            session.setAttribute("popupNotice", dto); // 세션에 공지사항 저장
-	        }
 		}
+		// 팝업 표시 여부 확인
+        if ("Y".equals(popup)) {
+            session.setAttribute("popupNotice", dto); // 세션에 공지사항 저장
+        }
 		redirectAttributes.addFlashAttribute("mesg", message);
 		return "redirect:/notice";
 	}
@@ -190,4 +190,12 @@ public class NoticeController {
         
         return "success";
     }
+    
+    @PostMapping("/clearPopupNotice")
+    @ResponseBody
+    public void clearPopupNotice(HttpSession session) {
+        session.removeAttribute("popupNotice");
+    }
+
+
 }

@@ -184,6 +184,10 @@ public class ProductController {
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames) {
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+        File uploadDirectory = new File(uploadDir);
+        if (!uploadDirectory.exists()) {
+            uploadDirectory.mkdirs(); //폴더없으면 생성
+        }
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
 		int num = 0;
@@ -270,6 +274,10 @@ public class ProductController {
             @RequestParam(value = "option_name", required = false) List<String> optionNames,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes redirectAttributes) {	
 		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
+        File uploadDirectory = new File(uploadDir);
+        if (!uploadDirectory.exists()) {
+            uploadDirectory.mkdirs(); //폴더없으면 생성
+        }
 		UUID uuid = UUID.randomUUID();
 		String imgName = null;
 		InputStream inputStream = null;
@@ -291,11 +299,6 @@ public class ProductController {
 				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
 			} 
 			 n = service.updateProduct(ProductDTO);
-			/*
-			if(n==1) {
-				m.addAttribute("mesg","상품을 수정했습니다.");
-			}
-			*/
 			// 기존 옵션 조회
 	        List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
 

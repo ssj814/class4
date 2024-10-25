@@ -53,6 +53,10 @@ public class ProductReviewController {
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
 		String uploadDir = "C:/images/shoppingMall_review/";
+        File uploadDirectory = new File(uploadDir);
+        if (!uploadDirectory.exists()) {
+            uploadDirectory.mkdirs(); //폴더없으면 생성
+        }
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
 		String imgNames = "";

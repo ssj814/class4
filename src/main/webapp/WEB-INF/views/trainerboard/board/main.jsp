@@ -35,11 +35,11 @@
 			</colgroup>
 			<thead>
 				<tr>
-					<th>번호</th>
-					<th>제목</th>
-					<th>작성자</th>
-					<th>작성일</th>
-					<th>조회</th>
+					<td class="tdTopPosts" style="font-weight: bold;">번호</td>
+					<td style="font-weight: bold;">제목</td>
+					<td class="tdTopPosts" style="font-weight: bold;">작성자</td>
+					<td class="tdTopPosts" style="font-weight: bold;">작성일</td>
+					<td class="tdTopPosts" style="font-weight: bold;">조회</td>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,11 +48,11 @@
 				<c:if test="${not empty topPosts}">
     					<c:forEach var="post" items="${topPosts}">
        					 <tr>
-       					 	<td class="postno"><img src="resources/img/trainerboard/recommend.png" alt="recommend" height=25 width=25></td>
+       					 	<td class="tdTopPosts"><img src="resources/img/trainerboard/recommend.png" alt="recommend" height=25 width=25></td>
             				<td class="trainerboard_topPosts"><a href="Retrieve/${post.postid}/${pDTO.curPage}"><strong>${post.title}</strong></a></td>
-           					 <td>${post.userid}</td>
-            				<td>${post.crdate}</td>
-            				<td>${post.viewcount}</td>
+           					 <td class="tdTopPosts">${post.userid}</td>
+            				<td class="tdTopPosts">${post.crdate}</td>
+            				<td class="tdTopPosts">${post.viewcount}</td>
        					 </tr>
    						 </c:forEach>
 				</c:if>

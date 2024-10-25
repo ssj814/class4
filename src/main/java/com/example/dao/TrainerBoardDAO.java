@@ -64,5 +64,10 @@ public class TrainerBoardDAO {
 	public List<TrainerBoardDTO> list() {
 		return template.selectList("BoardMapper.list");
 	}
+
+
+	public List<TrainerBoardDTO> selectTopPosts() {
+       return template.selectList("com.dao.BoardMapper.selectTopPosts");
+   }
 	
 }

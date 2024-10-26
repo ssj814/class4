@@ -28,11 +28,6 @@ public class TrainerController {
     @Autowired
     TrainerDBOracleService service;
     
-    @GetMapping("/test")
-    public String test() {
-        return "/trainer/trainerAdd";
-    }
-    
     @RequestMapping("/trainer_list")
     public String trainerList(
             @RequestParam(required = false) String field,
@@ -80,12 +75,12 @@ public class TrainerController {
         m.addAttribute("searchVal", searchVal);
         m.addAttribute("list", posts);
                 
-        return "/trainer/trainerList";
+        return "trainer/trainerList";
     }
     
     @GetMapping("/trainer_join")
     public String trainerJoin1() {
-        return "/trainer/trainerAdd";
+        return "trainer/trainerAdd";
     }
 
     @PostMapping("/trainer_join")
@@ -118,14 +113,14 @@ public class TrainerController {
     public String info(@RequestParam Integer idx, Model m) {
         TrainerDTO dto = service.selectTrainer(idx);
         m.addAttribute("info", dto);
-        return "/trainer/trainerInfo";
+        return "trainer/trainerInfo";
     }
     
     @GetMapping("/trainer_modify")
     public String modify(@RequestParam Integer idx, Model m) {
         TrainerDTO dto = service.selectTrainer(idx);
         m.addAttribute("info", dto);
-        return "/trainer/trainerEdit";
+        return "trainer/trainerEdit";
     }
     
     @PostMapping("/trainer_modify")
@@ -166,7 +161,7 @@ public class TrainerController {
     @RequestMapping("/trainer_deletion")
     public String delete(@RequestParam Integer idx, RedirectAttributes ra) {
         // 먼저 트레이너 정보를 가져옴
-        TrainerDTO dto = service.selectTrainer(idx);
+        TrainerDTO dto = service.selectTrainer(idx);	
 
         // 트레이너 정보가 없으면 삭제 실패 메시지를 전송하고 반환
         if (dto == null) {

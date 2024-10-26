@@ -1,7 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <h1 class="text-center mt-2">장바구니 엔터금지</h1>
 
@@ -51,7 +52,9 @@
 				        </select>
 				    </div>
 				</c:forEach>
-				₩ <span id="price-${product.getCart_id()}">${product.getProduct_price()}</span>
+					<span id="price-${product.getCart_id()}">
+						<fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
+					</span>
 			</div>
 			<div class="col-2">
 				<p>개수</p>
@@ -95,6 +98,13 @@
 <script>
 	$(document).ready(
 			function() {
+				
+				//개별 상품 total 통화기호 표시
+				$('.total').each(function() {
+		            let value = $(this).val();
+		            $(this).val(value ? Number(value).toLocaleString() : '');
+		        });
+				
 				// 총 구매 상품 개수와 금액 계산 함수
 				function calculateTotal() {
 					var count = 0;
@@ -104,7 +114,7 @@
 						if (data.checked) {
 							var cartId = $(data).val();
 							count += parseInt($("#count-" + cartId).val());
-				            total += parseInt($("#total-" + cartId).val());
+				            total += parseInt($("#total-" + cartId).val().replace(/,/g, ''));
 						}
 					});
 
@@ -118,12 +128,11 @@
 						function() {
 							var cartId = $(this).data("id");
 						    var quantity = $(this).val();
-						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, ''));
+						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, '').replace(/₩/g, ''));
 							var total = quantity * price;
-							
 						
 							// 개별 상품 총액 업데이트
-							$("#total-" + cartId).val(total);
+							$("#total-" + cartId).val(total.toLocaleString());
 							
 							if(quantity<1){
 								quantity = 1;

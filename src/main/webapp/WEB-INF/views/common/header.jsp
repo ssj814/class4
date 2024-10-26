@@ -50,7 +50,7 @@
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="/app/cookingTip">Cooking	Tip</a></li>
-							<li><a class="dropdown-item" href="/app/sicdan/list">Sicdan</a></li>
+							<li><a class="dropdown-item" href="/app/sicdan_list">Sicdan</a></li>
 							<li><a class="dropdown-item" href="/app/Chart">Chart</a></li>
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>

@@ -3,15 +3,19 @@
 <mapper namespace="ProductMapper"> <!-- 구별용 이름 -->
 
 	<select id="selectProductMainList" resultType="ProductDTO">
-		SELECT * FROM product ORDER BY PRODUCT_VIEW DESC
+		SELECT * FROM
+		product ORDER BY PRODUCT_VIEW DESC
 	</select>
 
-	<select id="selectDetailproduct" parameterType="int" resultType="ProductDTO">
+	<select id="selectDetailproduct" parameterType="int"
+		resultType="ProductDTO">
 		SELECT * FROM product WHERE product_id = #{product_id}
 	</select>
 
 	<select id="selectProductList" resultType="ProductDTO"
-		parameterType="hashmap"> SELECT * FROM product <where>
+		parameterType="hashmap">
+		SELECT * FROM product
+		<where>
 			<if test="category!=null">
 				product_category_id=#{category}
 			</if>
@@ -22,16 +26,18 @@
 				product_name LIKE '%'||#{search}||'%'
 			</if>
 		</where>
-		<if
-			test="sortList != null"> ORDER BY <foreach collection="sortList"
-				item="item" separator=" ">
+		<if test="sortList != null">
+			ORDER BY
+			<foreach collection="sortList" item="item" separator=" ">
 				${item}
 			</foreach>
 		</if>
 	</select>
 
-	<select id="selectProductListCount" parameterType="hashmap" resultType="int">
-		SELECT count(*) FROM product <where>
+	<select id="selectProductListCount" parameterType="hashmap"
+		resultType="int">
+		SELECT count(*) FROM product
+		<where>
 			<if test="category!=null">
 				product_category_id=#{category}
 			</if>
@@ -45,17 +51,20 @@
 	</select>
 
 	<update id="addViewCount" parameterType="int">
-		UPDATE product SET product_view = product_view+1 WHERE
+		UPDATE product SET
+		product_view = product_view+1 WHERE
 		product_id=#{product_id}
 	</update>
 
 	<select id="maxProductId" resultType="int">
-		SELECT LAST_NUMBER FROM USER_SEQUENCES WHERE SEQUENCE_NAME =
+		SELECT LAST_NUMBER FROM
+		USER_SEQUENCES WHERE SEQUENCE_NAME =
 		'PRODUCT_ID_SEQ'
 	</select>
 
 	<delete id="productDelete" parameterType="int">
-		DELETE FROM product WHERE product_id = #{product_id}
+		DELETE FROM product
+		WHERE product_id = #{product_id}
 	</delete>
 
 	<insert id="insertProduct" parameterType="ProductDTO">
@@ -65,63 +74,83 @@
 		(#{product_category_id},#{product_name},#{product_price},#{product_description},#{product_imagename},#{product_inventory},sysdate,#{product_isactive})
 	</insert>
 
-	<update id="updateProduct" parameterType="ProductDTO"> UPDATE product SET
+	<update id="updateProduct" parameterType="ProductDTO">
+		UPDATE product SET
 		product_category_id=#{product_category_id},
 		product_name=#{product_name}, product_price=#{product_price},
-		product_description=#{product_description}, <if
-			test="product_imagename!=null">
-		product_imagename=#{product_imagename},
-		</if> product_inventory =
-		#{product_inventory} where product_id = #{product_id} </update>
+		product_description=#{product_description},
+		<if test="product_imagename!=null">
+			product_imagename=#{product_imagename},
+		</if>
+		product_inventory = #{product_inventory} 
+		where product_id = #{product_id}
+	</update>
 
 	<!-- 상품 옵션 삽입 -->
-	<insert id="insertProductOption" parameterType="ProductOptionDTO">
-		INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE, OPTION_NAME)
+	<insert id="insertProductOption"
+		parameterType="ProductOptionDTO">
+		INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE,
+		OPTION_NAME)
 		VALUES (#{product_id}, #{option_type}, #{option_name})
 	</insert>
-	
-	 <!-- 상품 옵션 가져오기 -->
-    <select id="selectProductOptions" parameterType="int" resultType="ProductOptionDTO">
-        SELECT * FROM PRODUCT_OPTION WHERE PRODUCT_ID = #{productId}
-    </select>
-    
-    <update id="updateProductOption" parameterType="ProductOptionDTO">
-	    UPDATE PRODUCT_OPTION
-	    SET OPTION_NAME = #{option_name}
-	    WHERE OPTION_ID = #{option_id}
-	</update>
-	
-	<delete id="deleteProductOption" parameterType="int">
-	    DELETE FROM PRODUCT_OPTION WHERE OPTION_ID = #{optionId}
-	</delete>
-	
-	<select id="selectCategoryList" resultType="ProductCategoryDTO">
-		SELECT * FROM PRODUCT_CATEGORY		
+
+	<!-- 상품 옵션 가져오기 -->
+	<select id="selectProductOptions" parameterType="int"
+		resultType="ProductOptionDTO">
+		SELECT * FROM PRODUCT_OPTION WHERE PRODUCT_ID =
+		#{productId}
 	</select>
 
-	<select id="checkRecentView" parameterType="map" resultType="ProductRecentDTO">
-		SELECT * FROM PRODUCT_RECENT WHERE PRODUCT_ID = #{product_id} AND USER_ID = #{user_id}
-	</select>
-	
-	<insert id="insertRecentView" parameterType="map">
-	    INSERT INTO PRODUCT_RECENT (PRODUCT_ID, USER_ID, VIEWDATE)
-	    VALUES (#{product_id}, #{user_id}, SYSDATE)
-	</insert>
-	
-	<update id="updateRecentView" parameterType="map">
-	    UPDATE PRODUCT_RECENT SET VIEWDATE = SYSDATE 
-	    WHERE PRODUCT_ID = #{product_id} AND USER_ID = #{user_id}
+	<update id="updateProductOption"
+		parameterType="ProductOptionDTO">
+		UPDATE PRODUCT_OPTION
+		SET OPTION_NAME = #{option_name}
+		WHERE OPTION_ID = #{option_id}
 	</update>
-	
-	<select id="getRecentProducts" parameterType="int" resultType="ProductRecentDTO">
-	    SELECT * FROM PRODUCT_RECENT 
-	    WHERE USER_ID = #{user_id}
-	    ORDER BY VIEWDATE DESC
+
+	<delete id="deleteProductOption" parameterType="int">
+		DELETE FROM
+		PRODUCT_OPTION WHERE OPTION_ID = #{optionId}
+	</delete>
+
+	<select id="selectCategoryList" resultType="ProductCategoryDTO">
+		SELECT * FROM
+		PRODUCT_CATEGORY
 	</select>
-	
+
+	<select id="checkRecentView" parameterType="map"
+		resultType="ProductRecentDTO">
+		SELECT * FROM PRODUCT_RECENT WHERE PRODUCT_ID =
+		#{product_id} AND USER_ID = #{user_id}
+	</select>
+
+	<insert id="insertRecentView" parameterType="map">
+		INSERT INTO
+		PRODUCT_RECENT (PRODUCT_ID, USER_ID, VIEWDATE)
+		VALUES (#{product_id},
+		#{user_id}, SYSDATE)
+	</insert>
+
+	<update id="updateRecentView" parameterType="map">
+		UPDATE
+		PRODUCT_RECENT SET VIEWDATE = SYSDATE
+		WHERE PRODUCT_ID = #{product_id}
+		AND USER_ID = #{user_id}
+	</update>
+
+	<select id="getRecentProducts" parameterType="int"
+		resultType="ProductRecentDTO">
+		SELECT * FROM PRODUCT_RECENT
+		WHERE USER_ID = #{user_id}
+		ORDER BY VIEWDATE DESC
+	</select>
+
 	<delete id="deleteRecentView" parameterType="int">
-	    DELETE FROM PRODUCT_RECENT 
-	    WHERE USER_ID = #{user_id}
-	    AND VIEWDATE = (SELECT MIN(VIEWDATE) FROM PRODUCT_RECENT WHERE USER_ID = #{user_id})
+		DELETE FROM
+		PRODUCT_RECENT
+		WHERE USER_ID = #{user_id}
+		AND VIEWDATE = (SELECT
+		MIN(VIEWDATE) FROM PRODUCT_RECENT WHERE USER_ID =
+		#{user_id})
 	</delete>
 </mapper>

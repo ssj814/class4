@@ -1,7 +1,9 @@
-<%@page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 
 <link href="resources/css/shoppingMall/shopDetail.css" rel="stylesheet">
 
@@ -30,7 +32,7 @@
 				class="img-fluid" style="object-fit: contain; max-height: 500px;">
 		</div>
 		<div class="col-1"></div>
-		<div class="col-3 productDetail-right">
+		<div class="col-4 productDetail-right">
 			<h2 class="product-name card-title fw-bold">${product.getProduct_name()}</h2>
 			<div class="card mb-1">
 				<div class="card-body d-flex flex-column">
@@ -45,7 +47,7 @@
 					    </strong>
 					</p>
 					<p class="product-price">
-						Price: <strong>₩ ${product.getProduct_price()}</strong>
+						Price: <strong><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></strong>
 					</p>
 					<p class="product-inventory">
 						In Stock: <strong>${product.getProduct_inventory()}</strong>
@@ -76,6 +78,9 @@
 					        </select>
 					    </div>
 					</c:forEach>
+					<!-- 수량 선택 -->
+					<label>quantity</label>
+					<input type="number" min="1" class="product-quantity form-control" value="1">
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
@@ -89,7 +94,7 @@
             </span>
 			<button class="mt-3" onclick="#">구매하기</button>
 		</div>
-		<div class="col-1"></div>
+		<div class="col-0"></div>
 	</div>
 	
 </div>
@@ -134,6 +139,12 @@
                     });
                 }
             });
+			//상품 수량 
+			var productQuantity = parseInt($(".product-quantity").val());
+			if(productQuantity<1){
+				productQuantity = 1;
+				$(".product-quantity").val(1);
+			}
 		        $.ajax({
 		            type: "POST",
 		            url: "cart",
@@ -141,7 +152,8 @@
 		            contentType: "application/json",
 		            data: JSON.stringify({
 	                    productId: productId,
-	                    options: options
+	                    options: options,
+	                    productQuantity: productQuantity
 	                }),
 		            success: function(resData, status, xhr) {
 		            	console.log(resData);

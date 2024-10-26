@@ -251,7 +251,24 @@ div.commentbox { /* commentbox textarea 설정*/
 .tbpagination {
     text-align: center; /* 가운데 정렬 */
     margin: 5px 0; /* 위와 아래에 여백 추가 */
+	
+
 }
+
+.tbpagination a{
+   color:black;
+   text-decoration: none; 
+   padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+}
+
+.tbpagination a:hover{
+ 	background-color: #ddd;
+    color: #000;
+}
+
+
 
 .page-link {
     display: inline-block; /* 링크를 인라인 블록으로 만들어 가운데 정렬 */
@@ -287,11 +304,45 @@ div.label{
 	text-align:left;
 }
 
-/*div.container{
-	margin:20px auto;
+.postno{
+	text-align: center;
 }
 
-jsp전체에 class로 container 잡혀있는데 왜 container자체로는 css가 안 먹히는지
-그래서 따로따로 div class="button"만듦
+.trainerboard_postno{
+	text-align:center;
+	background-color:white;
+	text-align: center;	
+}
 
-*/
+.trainerboard_tbody {
+	background-color:white;
+	text-align: center;	
+}
+
+.trainerboard_content {
+    background-color: white;
+}
+
+.trainerboard_content a {
+    color: black; 
+    text-decoration: none;
+}
+
+.trainerboard_content:hover{
+   text-decoration: underline;
+} 
+
+.tdTopPosts{
+	text-align:center;
+}
+
+.trainerboard_topPosts a{
+	color: black;
+	text-decoration: none;
+}
+
+.trainerboard_topPosts:hover{
+	 /* background-color: #fff0f5;  */
+	 background-color: beige; 
+}
+

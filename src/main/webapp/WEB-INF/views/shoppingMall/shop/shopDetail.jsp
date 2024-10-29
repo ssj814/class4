@@ -47,7 +47,7 @@
 					    </strong>
 					</p>
 					<p class="product-price">
-						Price: <strong><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></strong>
+						Price: <strong><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩ " /></strong>
 					</p>
 					<p class="product-inventory">
 						In Stock: <strong>${product.getProduct_inventory()}</strong>
@@ -81,18 +81,28 @@
 					<!-- 수량 선택 -->
 					<label>quantity</label>
 					<input type="number" min="1" class="product-quantity form-control" value="1">
+					
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
 			</div>
-
-			<span class="btn-wish fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
-                <i class="fa-solid fa-heart fs-3"></i>
-            </span>
-            <span class="btn-cart fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
-                <i class="fa-solid fa-cart-shopping fs-3 "></i>
-            </span>
-			<button class="mt-3" onclick="#">구매하기</button>
+			
+			<div class="mt-4 mb-0 d-flex justify-content-between">
+				<h2 class="fw-bold">TOTAL</h2>
+				<h2 class="total-price me-3"><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩ " /></h2>
+			</div>
+			
+			<hr class="container pb-0 my-0 opacity-100 border border-dark border-3">
+			
+			<div class="d-flex">
+				<button class="btn-wish mt-3 me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
+	            	<i class="fa-solid fa-heart"></i>
+	            </button>   
+	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+	            	<i class="fa-solid fa-cart-shopping "></i>
+	            </button>			
+	            <button class="mt-3 w-100" onclick="#">구매하기</button>		
+			</div>
 		</div>
 		<div class="col-0"></div>
 	</div>
@@ -102,6 +112,18 @@
 <script>
 	
 	$(function() {
+		
+		// total 계산
+		$(".product-quantity").on("change", function(){
+			var productPrice = `${product.getProduct_price()}`;
+			var productQuantity = $(this).val();
+			var totalPrice = Number(productPrice*productQuantity).toLocaleString();
+			if(productQuantity <= 0){
+				$(".product-quantity").val(1);
+			} else {
+				$(".total-price").html("₩ "+totalPrice);
+			}
+		});
 
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){

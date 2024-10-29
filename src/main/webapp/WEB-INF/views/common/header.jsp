@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -53,18 +55,35 @@
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/FitnessContest" style="color: beige;">For Contest</a></li>
-					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
 				</ul>
-				<ul class="navbar-nav ms-auto">
-					<li class="nav-item"><a class="nav-link active"
-						href="wishList" style="color: pink;">WISH</a></li>
-					<li class="nav-item"><a class="nav-link active"
-						href="cartList" style="color: pink;">CART</a></li>
-					<li class="nav-item"><a class="nav-link active" href="#"
-						style="color: pink;">LOGIN</a></li>
-				</ul>
+				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link active"
+							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name } 님 환영합니다.</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="logout" style="color: pink;">LOGOUT</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="wishList" style="color: pink;">WISH</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="cartList" style="color: pink;">CART</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="#" style="color: pink;">MY</a></li>
+						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+        					<li class="nav-item"><a class="nav-link active"
+								href="admin/view" style="color: pink;">ADMIN</a></li>
+        				</c:if>
+					</ul>
+				</c:if>
+				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link active"
+							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
+							 style="color: pink;">카카오로그아웃</a></li>
+					</ul>
+				</c:if>
 			</div>
 		</div>
 	</nav>

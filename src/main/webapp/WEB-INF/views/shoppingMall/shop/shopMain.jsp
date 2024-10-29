@@ -68,7 +68,7 @@
 					data-bs-toggle="collapse" data-bs-target="#extra-items1">ShoppingMall
 				</li>
 				<!-- toggle list-->
-				<ul class="collapse list-group list-group-flush" id="extra-items1"
+				<ul class="collapse list-group list-group-flush show" id="extra-items1"
 					style="margin-left: 20px;">
 					<li class="list-group-item fst-italic"><a href="shopList"
 						class="text-dark" style="text-decoration: none">View All
@@ -108,9 +108,6 @@
 				<li class="list-group-item list-group-item-action fw-bolder"><a
 					href="#" class="text-dark" style="text-decoration: none">Meal
 						Plan</a></li>
-				<li class="list-group-item list-group-item-action fw-bolder"><a
-					href="#" class="text-dark" style="text-decoration: none">For
-						Contest</a></li>
 				<li class="list-group-item list-group-item-action fw-bolder"><a
 					href="#" class="text-dark" style="text-decoration: none">Notice</a></li>
 			</ul>
@@ -198,6 +195,7 @@
 <hr class="container p-3">
 
 <script>
+
 	// toggle list
 	$('.list-group-item-action').on('click', function() {
 		var target = $(this).data('bs-target');

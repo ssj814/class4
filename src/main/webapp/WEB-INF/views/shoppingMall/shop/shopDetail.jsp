@@ -85,14 +85,15 @@
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
 			</div>
-
-			<span class="btn-wish fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
-                <i class="fa-solid fa-heart fs-3"></i>
-            </span>
-            <span class="btn-cart fs-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
-                <i class="fa-solid fa-cart-shopping fs-3 "></i>
-            </span>
-			<button class="mt-3" onclick="#">구매하기</button>
+			<div class="d-flex">
+				<button class="btn-wish mt-3 me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
+	            	<i class="fa-solid fa-heart"></i>
+	            </button>   
+	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+	            	<i class="fa-solid fa-cart-shopping "></i>
+	            </button>			
+	            <button class="mt-3 w-100" onclick="#">구매하기</button>		
+			</div>
 		</div>
 		<div class="col-0"></div>
 	</div>

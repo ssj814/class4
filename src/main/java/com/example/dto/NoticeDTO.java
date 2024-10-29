@@ -18,5 +18,6 @@ public class NoticeDTO {
 	private String createdate;
 	private int viewcount;
 	private String category;
+	private String popup;
 
 }

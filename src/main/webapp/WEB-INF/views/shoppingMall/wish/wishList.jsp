@@ -31,6 +31,8 @@
                 	<h2>
                 		<a href="shopDetail?productId=${product.getProduct_id()}" class="text-dark fw-bold text-decoration-none fs-6">${product.getProduct_name()}</a>
                 	</h2>
+                	<!-- 옵션 -->
+                	
                 	 <p><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></p>
                 </div>
                 <div class="col-1"></div>

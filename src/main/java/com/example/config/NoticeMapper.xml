@@ -34,8 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		
 	<!-- 글 저장 -->
 	<insert id="insertContent" parameterType="NoticeDTO">
-		insert into notice (title, content,writer, createdate, category) 
-		values (#{title}, #{content},#{writer} , sysdate, #{category})
+		insert into notice (title, content,writer, createdate, category, popup) 
+		values (#{title}, #{content},#{writer} , sysdate, #{category}, #{popup})
 	</insert>
 	
 	<!-- 글 삭제 -->
@@ -57,4 +57,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		</if>
 	</select>
 
+	<select id="selectPopupNotices" resultType="NoticeDTO">
+	    SELECT * FROM notice
+	    WHERE popup = 'Y'
+	    ORDER BY createdate ASC
+	</select>
+	
+	<update id="updatePopupToN">
+	    UPDATE notice
+	    SET popup = 'N'
+	    WHERE postid = #{postid}
+	</update>
 </mapper>

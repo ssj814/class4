@@ -117,6 +117,13 @@ public class NoticeController {
 		dto.setContent(content);
 		dto.setCategory(category);
 		dto.setWriter("임시");
+		
+		// 팝업 표시 여부 확인
+        if ("Y".equals(popup)) {
+        	dto.setPopup("Y");
+        } else {
+        	dto.setPopup("N");
+        }
 
 		String message = "";
 		int count;
@@ -129,10 +136,7 @@ public class NoticeController {
 			count = service.insertContent(dto);
 			message = "글을 저장하였습니다";
 		}
-		// 팝업 표시 여부 확인
-        if ("Y".equals(popup)) {
-            session.setAttribute("popupNotice", dto); // 세션에 공지사항 저장
-        }
+		
 		redirectAttributes.addFlashAttribute("mesg", message);
 		return "redirect:/notice";
 	}

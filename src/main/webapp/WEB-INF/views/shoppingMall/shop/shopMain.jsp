@@ -7,22 +7,32 @@
 <link rel="stylesheet" href="resources/css/shoppingMall/shopMain.css">
 
 <!-- 공지사항 모달 -->
-<div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="noticeModalLabel">새로운 공지사항이 등록되었습니다</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <strong>${sessionScope.popupNotice.title}</strong>
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="closePopup" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+<c:if test="${not empty sessionScope.popupNotices}">
+    <div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noticeModalLabel">새로운 공지사항이 등록되었습니다</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <c:forEach var="notice" items="${sessionScope.popupNotices}">
+                            <li>
+                                <a href="<c:url value='/notice_content?postid=${notice.postid}'/>">
+                                    ${notice.title}
+                                </a>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closePopup" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</c:if>
 
 <!-- top -->
 <div id="carouselExampleFade" class="carousel slide carousel-fade">
@@ -232,25 +242,18 @@
 	        }
 	    }, 1000);
 	});
-	 $(document).ready(function () {
-	        const popupNotice = ${sessionScope.popupNotice != null}; // 공지사항 존재 여부 체크
-	        if (popupNotice) {
-	            const noticeModal = new bootstrap.Modal(document.getElementById('noticeModal'));
-	            noticeModal.show();
-	        }
+
+	$(document).ready(function () {
+		if ($('#noticeModal').length > 0) {
+	        const noticeModal = new bootstrap.Modal(document.getElementById('noticeModal'));
+	        noticeModal.show();
 
 	        $('#closePopup').on('click', function() {
-	        	fetch('/app/clearPopupNotice', { 
-	        		method: 'POST' 
-	        		})
-                .then(response => {
-                    if (response.ok) {
-                        console.log("세션에서 공지 팝업 데이터 삭제 완료");
-                    } else {
-                    	console.log("세션 삭제 실패")
-                    }
-                }).catch(error => console.error("세션 삭제 오류:", error));
-	        });    
-	  });
+	            $.get('/app/clearPopupNotice', function() {
+	                console.log("세션에서 공지 팝업 데이터 삭제 완료");
+	            });
+	        });
+	    }
+	});
 </script>
 

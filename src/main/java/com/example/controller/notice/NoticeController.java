@@ -162,7 +162,6 @@ public class NoticeController {
     @ResponseBody
     public String saveComment(@ModelAttribute CommentDTO commentDTO,
             @RequestParam(value = "postid", required = false) Integer postid) {
-        System.out.println("commentDTO 전: "+commentDTO);
         // 부모 댓글 ID가 없으면 일반 댓글, 있으면 대댓글로 처리
         if (commentDTO.getParentId() == null || commentDTO.getParentId() == 0) {
             // 일반 댓글인 경우
@@ -175,10 +174,8 @@ public class NoticeController {
             }
             // repIndent는 JSP에서 받아온 값을 그대로 사용
         }
-        System.out.println("commentDTO 후: "+commentDTO);
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
         cService.addComment(commentDTO);
-        System.out.println("comment 추가 완료=============");
         // 성공적으로 저장 후 응답
         return "success";
     }
@@ -207,11 +204,4 @@ public class NoticeController {
         return "success";
     }
     
-    @PostMapping("/clearPopupNotice")
-    @ResponseBody
-    public void clearPopupNotice(HttpSession session) {
-        session.removeAttribute("popupNotice");
-    }
-
-
 }

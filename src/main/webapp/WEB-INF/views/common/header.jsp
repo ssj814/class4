@@ -55,8 +55,6 @@
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/FitnessContest" style="color: beige;">For Contest</a></li>
-					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
 				</ul>
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
@@ -81,7 +79,7 @@
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
 							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
-						<li class="nav-item"><a class="nav-link active"
+							<li class="nav-item"><a class="nav-link active"
 							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
 							 style="color: pink;">카카오로그아웃</a></li>
 					</ul>

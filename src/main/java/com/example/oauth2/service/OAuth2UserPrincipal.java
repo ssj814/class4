@@ -1,13 +1,14 @@
 package com.example.oauth2.service;
 
-import com.example.oauth2.user.OAuth2UserInfo;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import com.example.oauth2.user.OAuth2UserInfo;
 
 /**
  * OAuth2User와 UserDetails 인터페이스를 구현한 사용자 프린시펄 클래스
@@ -27,7 +28,7 @@ public class OAuth2UserPrincipal implements OAuth2User, UserDetails {
         this.userInfo = userInfo; // 주입된 사용자 정보를 필드에 저장
     }
 
-    /**
+	/**
      * 비밀번호를 반환하는 메서드
      * OAuth2 사용자 인증에서는 비밀번호가 없으므로 null을 반환
      *
@@ -103,7 +104,7 @@ public class OAuth2UserPrincipal implements OAuth2User, UserDetails {
      *
      * @return 빈 컬렉션 (권한 없음)
      */
-    @Override
+   @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.emptyList(); // 기본적으로 권한이 없음을 나타냄
     }

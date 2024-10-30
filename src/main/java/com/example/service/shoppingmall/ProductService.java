@@ -87,11 +87,11 @@ public class ProductService {
 		dao.updateRecentView(data);
 	}
 
-	public List<ProductRecentDTO> getRecentProducts(int user_id) {
+	public List<ProductRecentDTO> getRecentProducts(String user_id) {
 		return dao.getRecentProducts(user_id);
 	}
 
-	public void deleteRecentView(int user_id) {
+	public void deleteRecentView(String user_id) {
 		dao.deleteRecentView(user_id);
 	}
 	

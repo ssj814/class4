@@ -63,7 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    ORDER BY createdate ASC
 	</select>
 	
-	<update id="updatePopupToN">
+	<update id="updatePopupToN" parameterType="NoticeDTO">
 	    UPDATE notice
 	    SET popup = 'N'
 	    WHERE postid = #{postid}

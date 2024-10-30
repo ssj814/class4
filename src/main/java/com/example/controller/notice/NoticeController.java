@@ -136,6 +136,19 @@ public class NoticeController {
 			message = "글을 저장하였습니다";
 		}
 		
+	    // popup 값이 "Y"일 때, 최대 3개 유지 로직 처리
+	    if ("Y".equals(popup)) {
+	        List<NoticeDTO> popupNotices = service.getPopupNotices();  // "Y"인 공지사항 목록 가져오기
+	        System.out.println("popupNotices : "+popupNotices);
+	        if (popupNotices.size() > 3) {
+	            for (int i = 0; i < popupNotices.size()-3; i++) {
+	                NoticeDTO notice = popupNotices.get(i);
+	                System.out.println("Y인 게시글 : "+notice);
+	                service.updatePopupToN(notice);  // 오래된 공지사항 popup 값을 "N"으로 업데이트
+	            }
+	        }
+	    }
+		
 		redirectAttributes.addFlashAttribute("mesg", message);
 		return "redirect:/notice";
 	}

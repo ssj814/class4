@@ -64,6 +64,10 @@ public class User {
     private LocalDateTime created; // 생성일자
     private LocalDateTime updated; // 수정일자
     private LocalDateTime lastlogin; // 마지막 로그인 시간
+    
+    private String email;
+    private String provider;
+    private String providerid;
 
     @Enumerated(EnumType.STRING) // Enum 타입으로 역할을 정의
     private Role role;

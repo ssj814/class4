@@ -1,6 +1,7 @@
 package com.example.service.user;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,6 +52,9 @@ public class UserService {
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
+        user.setEmail(userDto.getEmailusername()+"@"+userDto.getEmaildomain());
+        user.setProvider(null);
+        user.setProviderid(null);
 
         return userRepository.save(user); // 사용자 저장
     }
@@ -67,4 +71,9 @@ public class UserService {
             throw new RuntimeException("Invalid credentials"); // 비밀번호 불일치 예외 처리
         }
     }
+    
+    //전체 출력
+    public List<User> findAll(){
+		return userRepository.findAll();
+	}
 }

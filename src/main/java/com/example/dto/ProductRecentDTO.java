@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @Alias("ProductRecentDTO")
 public class ProductRecentDTO {
 	private int product_id;
-	private int user_id;
+	private String user_id;
 	private String viewDate;
 }

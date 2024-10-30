@@ -14,7 +14,7 @@ public class ProductReviewDTO {
 	
 	private int review_id;
 	private int product_id;
-	private int user_id;
+	private String user_id;
 	private String create_date;
 	private String content;
 	private int rating;

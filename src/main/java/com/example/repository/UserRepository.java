@@ -14,5 +14,6 @@ public interface UserRepository  extends JpaRepository<User, Integer>{
 //User 클래스를 Entity로 지정하고 , Id/Key의 데이터 타입을 Integer로 정함
 	
 	Optional<User> findByUserid(String userid);// 아이디로 사용자 조회
+	Optional<User> findByEmail(String email);// 이메일로 사용자 조회
 	
 }

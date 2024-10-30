@@ -56,4 +56,12 @@ public class NoticeService {
 		total = dao.getTotalCount(map);
 		return total;
 	}
+
+	public List<NoticeDTO> getPopupNotices() {
+		return dao.selectPopupNotices();
+	}
+
+	public void updatePopupToN(NoticeDTO notice) {
+		dao.updatePopupToN(notice);
+	}
 }

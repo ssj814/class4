@@ -45,6 +45,7 @@ public class SecurityUserDetailService  implements UserDetailsService {
 	    userdto.setRole(user.getRole()); // 필요한 경우
 	    userdto.setUsernumber(user.getUsernumber());
 	    
+	    
 	    //사용자가 있을 때
 		return new SecurityUser(userdto);  //SecurityUser 객체 생성 리턴 
 	}

@@ -1,25 +1,30 @@
 package com.example.oauth2.handler;
 
-import com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.example.oauth2.service.OAuth2UserPrincipal;
-import com.example.oauth2.user.OAuth2Provider;
-import com.example.oauth2.user.OAuth2UserUnlinkManager;
-import com.example.oauth2.util.CookieUtils;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import static com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME;
+import static com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.util.Optional;
+import com.example.entity.User;
+import com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.example.oauth2.service.OAuth2UserPrincipal;
+import com.example.oauth2.user.OAuth2Provider;
+import com.example.oauth2.user.OAuth2UserUnlinkManager;
+import com.example.oauth2.util.CookieUtils;
+import com.example.repository.UserRepository;
 
-import static com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME;
-import static com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 //OAuth2 인증 성공 시의 처리 로직을 구현하는 클래스
 //사용자가 OAuth2 인증에 성공했을 때, 특정 URL로 리다이렉트
@@ -33,6 +38,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     
     // OAuth2 사용자 연결 관리를 위한 매니저
     private final OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
+    
+    private final UserRepository userRepository; // UserRepository 추가
 
     //인증 성공 시 호출되는 메서드
     //@param request HTTP 요청 객체
@@ -94,6 +101,35 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // TODO: DB 저장
             // TODO: 액세스 토큰, 리프레시 토큰 발급
             // TODO: 리프레시 토큰 DB 저장
+        	
+        	 // OAuth2 사용자 정보를 가져옴
+            String email = principal.getUserInfo().getEmail();
+            String name = principal.getUserInfo().getName();
+            String nickname = principal.getUserInfo().getNickname();
+            String accessToken = "test_access_token"; // 실제 액세스 토큰 발급 로직 필요
+            String refreshToken = "test_refresh_token"; // 실제 리프레시 토큰 발급 로직 필요
+
+            // 사용자 정보 저장
+            Optional<User> existingUser = userRepository.findByEmail(email); // 이메일로 사용자 검색
+            if (existingUser.isPresent()) {
+                // 기존 사용자 업데이트 (필요한 필드만 업데이트)
+                User user = existingUser.get();
+                user.setLastlogin(LocalDateTime.now()); // 마지막 로그인 시간 업데이트
+                userRepository.save(user); // 업데이트된 사용자 정보 저장
+            } else {
+                // 새로운 사용자 생성
+                User newUser = User.builder()
+                        .userid(email) // 사용자 ID는 이메일로 설정
+                        .realusername(name)
+                        .nickname(nickname)
+                        .email(email)
+                        .role(User.Role.USER) // 기본 역할 설정
+                        .created(LocalDateTime.now()) // 생성일자 설정
+                        .isactive(1) // 활성화 상태
+                        .build();
+
+                userRepository.save(newUser); // 새 사용자 정보 저장
+            }
             
             // 사용자 정보 로깅
             log.info("email={}, name={}, nickname={}, accessToken={}", principal.getUserInfo().getEmail(),
@@ -102,8 +138,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     principal.getUserInfo().getAccessToken()
             );
 
-            String accessToken = "test_access_token"; // 실제 액세스 토큰 발급 로직 필요
-            String refreshToken = "test_refresh_token"; // 실제 리프레시 토큰 발급 로직 필요
+            // 사용자 정보 로깅
+            log.info("email={}, name={}, nickname={}, accessToken={}", email, name, nickname, accessToken);
 
             // 리다이렉트 URL에 액세스 토큰과 리프레시 토큰을 추가
             return UriComponentsBuilder.fromUriString(targetUrl)

@@ -33,10 +33,12 @@
 
 	<div class="d-flex justify-content-between align-items-center">
 		<h3 class="align-items-center fw-bold">상품 리뷰</h3>
-		<button id="Product-Review-openWindow"
-			class="btn btn-link fst-italic text-dark mb-0">
-			<i class="fa-solid fa-pen"></i>리뷰 등록하기
-		</button>
+		<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
+			<button id="Product-Review-openWindow"
+				class="btn btn-link fst-italic text-dark mb-0">
+				<i class="fa-solid fa-pen"></i>리뷰 등록하기
+			</button>
+		</c:if>
 	</div>
 	
 	<hr class="mt-0">
@@ -312,6 +314,12 @@
 		
 		//유저별 추천 비추천
 		function reviewFeedbackUpdate(){
+			
+			if(!loginUser){
+				//로그인 안되어있으면 피드백 방지
+				return;
+			}
+			
 			//버튼 종류 - up,down
 			var feedback = $(this).hasClass('up') ? 'up' : 'down';
 			var otherFeedback = $(this).hasClass('up') ? 'down' : 'up';

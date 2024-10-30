@@ -88,7 +88,7 @@ public class ProductController {
 		}
 		dataMap.put("sortList", sortList);
 		List<ProductDTO> ProductList = service.selectProductList(dataMap,bounds);
-		System.out.println(ProductList);
+
 		//페이징
 		int totalProductSize = service.selectProductMainList().size(); // 전체 상품 개수
 		if(search!=null || category!=null) { // 조건에 걸린 전체 상품 개수

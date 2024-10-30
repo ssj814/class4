@@ -54,10 +54,10 @@ public class CustomSecurityConfig {
             .permitAll() // 모든 사용자에게 로그인 페이지 허용
     	)
         .logout(logout -> logout
+        		.logoutSuccessHandler(logoutSuccessHandler()) // 커스텀 로그아웃 성공 핸들러
         		.logoutSuccessUrl("/") // 로그아웃 성공 후 이동 url
         		.invalidateHttpSession(true) // 세션 무효화
         		.deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
-        		.logoutSuccessHandler(logoutSuccessHandler()) // 커스텀 로그아웃 성공 핸들러
         )
         .oauth2Login(configure -> // OAuth2 로그인 설정
         configure.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
@@ -99,20 +99,20 @@ public class CustomSecurityConfig {
 
                 // OAuth2 제공자별 로그아웃 처리
                 String provider = oauth2Auth.getAuthorizedClientRegistrationId();
+                String redirectUrl = "/app";
                 if ("google".equals(provider)) {
                     response.sendRedirect("https://accounts.google.com/Logout");
                 } else if ("naver".equals(provider)) {
-                	String redirectUrl = "http://localhost:8090/app/";
-                    response.sendRedirect("https://nid.naver.com/nidlogin.logout");
+                    response.sendRedirect("https://nid.naver.com/nidlogin.logout?redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
                 } else if ("kakao".equals(provider)) {
                     response.sendRedirect("https://kapi.kakao.com/v1/user/logout");
                 } else {
-                    response.sendRedirect("/"); // 기본 리디렉션 URL
+                    response.sendRedirect("/app"); // 기본 리디렉션 URL
                 }
                 return; // 리디렉션 후 메서드 종료
             }
 
-            response.sendRedirect("/"); // OAuth2 인증이 아닐 경우 기본 리디렉션 URL
+            response.sendRedirect("/app"); // OAuth2 인증이 아닐 경우 기본 리디렉션 URL
         };
     }
 }

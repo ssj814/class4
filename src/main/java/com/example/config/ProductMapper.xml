@@ -138,14 +138,14 @@
 		AND USER_ID = #{user_id}
 	</update>
 
-	<select id="getRecentProducts" parameterType="int"
+	<select id="getRecentProducts" parameterType="String"
 		resultType="ProductRecentDTO">
 		SELECT * FROM PRODUCT_RECENT
 		WHERE USER_ID = #{user_id}
 		ORDER BY VIEWDATE DESC
 	</select>
 
-	<delete id="deleteRecentView" parameterType="int">
+	<delete id="deleteRecentView" parameterType="String">
 		DELETE FROM
 		PRODUCT_RECENT
 		WHERE USER_ID = #{user_id}

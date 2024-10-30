@@ -85,6 +85,9 @@
 
 	$(function() {
 		
+		// 로그인 유저 정보
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		
 		//화면 최초 랜더링시 리뷰조회
 		var nowReviewPage = 0;
 		reviewPaging();
@@ -355,7 +358,8 @@
 	
 		//리뷰 HTML 생성 함수
 		function generateReviewHTML(productReview) {
-			//이미지 태그 미리 생성
+			
+			// 이미지 태그 미리 생성
 		    let photosHTML = '';
 		    if (productReview.photos && productReview.photos.length > 0) {
 		        const photoList = productReview.photos.split(',');
@@ -365,6 +369,18 @@
 		            			"' alt='사용자 사진' class='img-thumbnail me-2 mb-2 review-img' style='width: 100px; height: 100px; object-fit: cover;' />";
 		        }
 		    }
+		    
+		    // 작성 유저에게만 수정, 삭제 버튼 노출
+		    let delUpdateHTML = '';
+		    if (productReview.user_id == loginUser){
+		    	delUpdateHTML += '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
+						        '<i class="fa-solid fa-pen-to-square"></i>' +
+						        '</button>' +
+						        '<button class="del-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
+						        '<i class="fa-solid fa-trash"></i>' +
+						        '</button>'
+		    }
+		    
 			// 리뷰 HTML
 		    let reviewHTML = 
 		        '<input type="hidden" class="review_id" value="' + productReview.review_id + '">' +
@@ -383,13 +399,8 @@
 		        '<div class="review-content" data-photos="' + productReview.photos + '">' + photosHTML +
 		        '<p class="mb-3" style="white-space: pre-wrap;">' + productReview.content + '</p>' +
 		        '</div>' +
-		        '<div class="ms-auto">' +
-		        '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-solid fa-pen-to-square"></i>' +
-		        '</button>' +
-		        '<button class="del-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-solid fa-trash"></i>' +
-		        '</button>' +
+		        '<div class="ms-auto">' + 
+		        delUpdateHTML + 
 		        '<button id="up-' + productReview.review_id + '" class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
 		        '<i class="fa-regular fa-thumbs-up"></i>' +
 		        '<span class="up-feedback-' + productReview.review_id + '">' + productReview.feedback_up + '</span>' +

@@ -17,7 +17,7 @@ public class CartService {
 	@Autowired
 	CartDAO dao;
 
-	public List<CartProductDTO> selectCart(int user_id) {
+	public List<CartProductDTO> selectCart(String user_id) {
 		return dao.selectCart(user_id);
 	}
 
@@ -41,7 +41,7 @@ public class CartService {
 		return dao.increaseQuantity(map);
 	}
 
-	public List<CartDTO> selectProductOptions(int product_id, int user_id) {
+	public List<CartDTO> selectProductOptions(int product_id, String user_id) {
 		return dao.selectProductOptions(product_id,user_id);
 	}
 

@@ -6,6 +6,10 @@
 
 <h1 class="text-center mt-2">장바구니 엔터금지</h1>
 
+<%-- ${sessionScope.SPRING_SECURITY_CONTEXT.authentication }
+
+ <sec:authentication property="principal.username"/> --%>
+
 <form method="post" class="container text-center d-block p-0">
 	<c:forEach var="product" items="${ProductList}">
 		<div class="row align-items-center border border-dark rounded"

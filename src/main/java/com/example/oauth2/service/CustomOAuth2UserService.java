@@ -1,11 +1,11 @@
 package com.example.oauth2.service;
 
-import com.example.oauth2.exception.OAuth2AuthenticationProcessingException;
-import com.example.oauth2.user.OAuth2UserInfo;
-import com.example.oauth2.user.OAuth2UserInfoFactory;
-import lombok.RequiredArgsConstructor;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -13,12 +13,18 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.example.oauth2.exception.OAuth2AuthenticationProcessingException;
+import com.example.oauth2.user.OAuth2UserInfo;
+import com.example.oauth2.user.OAuth2UserInfoFactory;
+
+import lombok.RequiredArgsConstructor;
+
 //커스텀 OAuth2 사용자 서비스 클래스
 //기본 OAuth2 사용자 서비스를 확장하여 사용자 정보를 처리
 @RequiredArgsConstructor // final 필드를 가진 생성자를 자동 생성
 @Service // 이 클래스를 Spring의 서비스로 등록
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
-
+	
     //OAuth2 사용자 정보를 로드하는 메서드입니다.
     //@param oAuth2UserRequest OAuth2 사용자 요청 객체
     //@return OAuth2User 객체
@@ -28,7 +34,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 기본 사용자 정보 로드
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
-
+        
         try {
             // 사용자 정보를 추가로 처리
             return processOAuth2User(oAuth2UserRequest, oAuth2User);
@@ -41,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
-
+    
     //OAuth2 사용자 정보를 추가로 처리하는 메서드입니다.
     //@param userRequest OAuth2 사용자 요청 객체
     //@param oAuth2User OAuth2User 객체

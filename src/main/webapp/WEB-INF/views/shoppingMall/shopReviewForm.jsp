@@ -10,6 +10,4 @@
 	crossorigin="anonymous">
 <link rel="stylesheet" href="../resources/css/shoppingMall/shopReviewForm.css">
 
-<!--<jsp:include page="../common/header.jsp" flush="true"></jsp:include>-->
 <jsp:include page="shop/shopReviewForm.jsp" flush="true"></jsp:include>
-<!--<jsp:include page="../common/footer.jsp" flush="true"></jsp:include>-->

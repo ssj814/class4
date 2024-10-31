@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.shoppingmall.WishDAO;
+import com.example.dto.ProductWishDTO;
 
 @Service
 public class WishService {
@@ -14,7 +15,7 @@ public class WishService {
 	@Autowired
 	WishDAO dao;
 
-	public List<Integer> selectWishList(int user_id) {
+	public List<ProductWishDTO> selectWishList(int user_id) {
 		return dao.selectWishList(user_id);
 	}
 

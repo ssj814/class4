@@ -18,7 +18,6 @@ import com.example.dto.NoticeDTO;
 import com.example.service.notice.CommentService;
 import com.example.service.notice.NoticeService;
 
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -117,6 +116,13 @@ public class NoticeController {
 		dto.setContent(content);
 		dto.setCategory(category);
 		dto.setWriter("임시");
+		
+		// 팝업 표시 여부 확인
+        if ("Y".equals(popup)) {
+        	dto.setPopup("Y");
+        } else {
+        	dto.setPopup("N");
+        }
 
 		String message = "";
 		int count;
@@ -129,10 +135,20 @@ public class NoticeController {
 			count = service.insertContent(dto);
 			message = "글을 저장하였습니다";
 		}
-		// 팝업 표시 여부 확인
-        if ("Y".equals(popup)) {
-            session.setAttribute("popupNotice", dto); // 세션에 공지사항 저장
-        }
+		
+	    // popup 값이 "Y"일 때, 최대 3개 유지 로직 처리
+	    if ("Y".equals(popup)) {
+	        List<NoticeDTO> popupNotices = service.getPopupNotices();  // "Y"인 공지사항 목록 가져오기
+	        System.out.println("popupNotices : "+popupNotices);
+	        if (popupNotices.size() > 3) {
+	            for (int i = 0; i < popupNotices.size()-3; i++) {
+	                NoticeDTO notice = popupNotices.get(i);
+	                System.out.println("Y인 게시글 : "+notice);
+	                service.updatePopupToN(notice);  // 오래된 공지사항 popup 값을 "N"으로 업데이트
+	            }
+	        }
+	    }
+		
 		redirectAttributes.addFlashAttribute("mesg", message);
 		return "redirect:/notice";
 	}
@@ -146,7 +162,6 @@ public class NoticeController {
     @ResponseBody
     public String saveComment(@ModelAttribute CommentDTO commentDTO,
             @RequestParam(value = "postid", required = false) Integer postid) {
-        System.out.println("commentDTO 전: "+commentDTO);
         // 부모 댓글 ID가 없으면 일반 댓글, 있으면 대댓글로 처리
         if (commentDTO.getParentId() == null || commentDTO.getParentId() == 0) {
             // 일반 댓글인 경우
@@ -159,10 +174,8 @@ public class NoticeController {
             }
             // repIndent는 JSP에서 받아온 값을 그대로 사용
         }
-        System.out.println("commentDTO 후: "+commentDTO);
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
         cService.addComment(commentDTO);
-        System.out.println("comment 추가 완료=============");
         // 성공적으로 저장 후 응답
         return "success";
     }
@@ -191,11 +204,4 @@ public class NoticeController {
         return "success";
     }
     
-    @PostMapping("/clearPopupNotice")
-    @ResponseBody
-    public void clearPopupNotice(HttpSession session) {
-        session.removeAttribute("popupNotice");
-    }
-
-
 }

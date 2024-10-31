@@ -203,7 +203,6 @@ public class ProductReviewController {
 		}
 		map.put("feedbackType", res);
 		productReviewService.updateReviewFeedback(map);
-		System.out.println(res);
 		return res;
 	}
 	

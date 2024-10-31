@@ -56,7 +56,6 @@ public class ProductController {
 	public String shopMain(Model m, HttpSession session) {
 		List<ProductDTO> ProductList = service.selectProductMainList();
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
-		System.out.println("/주소 접근되는지=======");
 		
 		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
 	    if (noticePopupClosed == null || !noticePopupClosed) {
@@ -66,7 +65,6 @@ public class ProductController {
 		m.addAttribute("ProductList",ProductList);
 		m.addAttribute("CategoryList",CategoryList);
 		return "shoppingMall/shopMain";
-		//return "test";
 	}
 	
 	@RequestMapping(value="/shopList", method=RequestMethod.GET)

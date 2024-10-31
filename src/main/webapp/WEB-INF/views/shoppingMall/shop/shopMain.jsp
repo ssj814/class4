@@ -36,25 +36,50 @@
 </c:if>
 
 <!-- top -->
-<div class="container text-center mt-5">
+<div id="carouselExampleFade" class="carousel slide carousel-fade">
+	<div class="carousel-inner">
+		<div class="carousel-item active">
+			<img src="<c:url value='/images/shoppingMall_main/mainbanner_1.png'/>" class="d-block w-100" alt="..." 
+			style="width: 100%; height:auto; object-fit: contain">
+		</div>
+		<div class="carousel-item">
+			<img src="<c:url value='/images/shoppingMall_main/mainbanner_2.png'/>" class="d-block w-100" alt="..."
+				style="width: 100%; height:auto; object-fit: contain">
+		</div>
+	</div>
+	<button class="carousel-control-prev" type="button"
+		data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+		<span class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+			class="visually-hidden">Previous</span>
+	</button>
+	<button class="carousel-control-next" type="button"
+		data-bs-target="#carouselExampleFade" data-bs-slide="next">
+		<span class="carousel-control-next-icon" aria-hidden="true"></span> <span
+			class="visually-hidden">Next</span>
+	</button>
+</div>
+
+<!-- mid -->
+<div class="container mt-5">
 	<div class="row">
 		<div class="col-3 d-flex flex-column justify-content-start">
-			<p
-				style="font-size: 30px; font-weight: bold; letter-spacing: 1px; background-color: #eee; border-radius: 10px">DISCOVER</p>
+			<p style="font-size: 30px; font-weight: bold; letter-spacing: 1px;  border-radius: 10px">Categories</p>
+			<hr class="container pb-0 my-0 opacity-100 border border-dark border-1">
 			<ul class="list-group list-group-flush mt-2" style="cursor: pointer;">
 				<li class="list-group-item list-group-item-action fw-bolder"
-					data-bs-toggle="collapse" data-bs-target="#extra-items1">ShoppingMall
+					data-bs-toggle="collapse" data-bs-target="#extra-items1">
+					<i class="fa-solid fa-store"></i> ShoppingMall
 				</li>
 				<!-- toggle list-->
 				<ul class="collapse list-group list-group-flush show" id="extra-items1"
 					style="margin-left: 20px;">
 					<li class="list-group-item fst-italic"><a href="shopList"
-						class="text-dark" style="text-decoration: none">View All
+						class="text-secondary" style="text-decoration: none">View All
 							Products</a></li>
 					<c:forEach var="category" items="${CategoryList}">
 				        <c:if test="${category.product_category_id != 0}">
 				            <li class="list-group-item fst-italic">
-				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-secondary" style="text-decoration: none">
 				                    ${category.product_category_eng_name}
 				                </a>
 				            </li>
@@ -63,46 +88,54 @@
 				    <c:forEach var="category" items="${CategoryList}">
 				        <c:if test="${category.product_category_id == 0}">
 				            <li class="list-group-item fst-italic" style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);">
-				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-dark" style="text-decoration: none">
+				                <a href="<c:url value='/shopList?category=${category.product_category_id}'/>" class="text-secondary" style="text-decoration: none">
 				                    ${category.product_category_eng_name}
 				                </a>
 				            </li>
 				        </c:if>
 				    </c:forEach>
 				</ul>
-				<li class="list-group-item list-group-item-action fw-bolder"
-					data-bs-toggle="collapse" data-bs-target="#extra-items2">For
-					Trainer</li>
+				<li class="list-group-item list-group-item-action fw-bolder text-dark"
+					data-bs-toggle="collapse" data-bs-target="#extra-items2">
+					<i class="fa-solid fa-person-running"></i> For Trainer
+				</li>
 				<!-- toggle list-->
 				<ul class="collapse list-group list-group-flush" id="extra-items2"
 					style="margin-left: 20px;">
 					<li class="list-group-item fst-italic"><a href="#"
-						class="text-dark" style="text-decoration: none">Find a Trainer</a></li>
+						class="text-secondary" style="text-decoration: none">Find a Trainer</a></li>
 					<li class="list-group-item fst-italic"
 						style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);"><a
-						href="#" class="text-dark" style="text-decoration: none">Trainer
+						href="#" class="text-secondary" style="text-decoration: none">Trainer
 							Tips</a></li>
 				</ul>
+				<li class="list-group-item list-group-item-action fw-bolder">
+					<a href="#" class="text-dark" style="text-decoration: none">
+						<i class="fa-solid fa-utensils"></i> Meal Plan
+					</a></li>
 				<li class="list-group-item list-group-item-action fw-bolder"><a
-					href="#" class="text-dark" style="text-decoration: none">Meal
-						Plan</a></li>
-				<li class="list-group-item list-group-item-action fw-bolder"><a
-					href="#" class="text-dark" style="text-decoration: none">Notice</a></li>
+					href="#" class="text-dark" style="text-decoration: none">
+					<i class="fa-solid fa-check"></i> Notice</a></li>
 			</ul>
 		</div>
 		
 		<!-- 신상품 -->
 		<div class="col-9">
 			<div class="row g-4 mx-5">
+				<h2 class="mb-4 mt-2">new products</h2>
 				<c:forEach var="product" items="${ProductList}" begin="0" end="7">
 					<div class="col-6 col-md-3">
 						<div class="card" style="height: 230px; border: none;">
 							<a
 								href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
-								class="list-group-item-action"> <img
-								src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>" 
-								class="card-img-top mt-2" alt="loading"
-								style="object-fit: contain; max-height: 150px; width: 100%;">
+								class="list-group-item-action"> 
+								<img
+									src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>" 
+									class="card-img-top mt-2 position-relative" alt="loading"
+									style="object-fit: contain; max-height: 150px; width: 100%;">
+								<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style="left:170px">
+								    NEW
+								 </span>
 							</a>
 							<div class="card-body d-flex flex-column mx-3">
 								<p class="card-title" style="font-size: 15px;">
@@ -118,15 +151,11 @@
 					</div>
 				</c:forEach>
 			</div>
-		</div>
-
-		
+		</div>	
 	</div>
 </div>
 
 <hr class="container p-3">
-
-<!-- mid -->
 
 <div class="container-fluid">
 	<div class="row justify-content-center">
@@ -166,7 +195,7 @@
 
 	<div class="row g-4 mx-5">
 		<div class="pb-2">
-			<h2>Popular products</h2>
+			<h2>popular products</h2>
 		</div>
 		<c:forEach var="product" items="${ProductList}" begin="0" end="7">
 			<div class="col-6 col-md-3">
@@ -175,14 +204,17 @@
 						href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
 						class="list-group-item-action"> <img
 						src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>" 
-						class="card-img-top mt-2" alt="loading"
+						class="card-img-top mt-2 position-relative" alt="loading"
 						style="object-fit: contain; max-height: 150px; width: 100%;">
+						<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style="left:50px">
+							HIT !
+						</span>
 					</a>
 					<div class="card-body d-flex flex-column mx-3">
 						<p class="card-title fs-6">
 							<a
 								href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
-								class="list-group-item-action">${product.getProduct_name()}</a>
+								class="list-group-item-action">${fn:substring(product.getProduct_name(), 0, 12)}...</a>
 						</p>
 						<p class="card-text text-danger">
 						    <fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />

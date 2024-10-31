@@ -2,85 +2,26 @@ package com.example.dto;
 
 import org.apache.ibatis.type.Alias;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Alias("TrainerBoardCommentDTO")
 public class TrainerBoardCommentDTO {
 
+//TrainerBoardCommentDTO 수정 10.29
 	
-	int Postid;
-	int Commid;
-	int userid;
-	String commcontent;
-	String comcrdate;
-	String comupdate;
-	
-	public TrainerBoardCommentDTO() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public TrainerBoardCommentDTO(int postid, int commid, int userid, String commcontent, String comcrdate, String comupdate) {
-		super();
-		Postid = postid;
-		Commid = commid;
-		this.userid = userid;
-		this.commcontent = commcontent;
-		this.comcrdate = comcrdate;
-		this.comupdate = comupdate;
-	}
-
-	@Override
-	public String toString() {
-		return "CommentDTO [Postid=" + Postid + ", Commid=" + Commid + ", userid=" + userid + ", commcontent="
-				+ commcontent + ", comcrdate=" + comcrdate + ", comupdate=" + comupdate + "]";
-	}
-
-	public int getPostid() {
-		return Postid;
-	}
-
-	public void setPostid(int postid) {
-		Postid = postid;
-	}
-
-	public int getCommid() {
-		return Commid;
-	}
-
-	public void setCommid(int commid) {
-		Commid = commid;
-	}
-
-	public int getUserid() {
-		return userid;
-	}
-
-	public void setUserid(int userid) {
-		this.userid = userid;
-	}
-
-	public String getCommcontent() {
-		return commcontent;
-	}
-
-	public void setCommcontent(String commcontent) {
-		this.commcontent = commcontent;
-	}
-
-	public String getComcrdate() {
-		return comcrdate;
-	}
-
-	public void setComcrdate(String comcrdate) {
-		this.comcrdate = comcrdate;
-	}
-
-	public String getComupdate() {
-		return comupdate;
-	}
-
-	public void setComupdate(String comupdate) {
-		this.comupdate = comupdate;
-	}
+	private int postId; //글고유번호
+	private int commId; //댓글고유번호
+	private int userId; //댓글작성자
+	private String commContent; //댓글내용
+	private String comCrdate; //댓글작성일
+	private String comUpdate; //댓글수정일
+	private Integer parentId = 0; //부모댓글
+	private int repIndent; //댓글들여쓰기기준
 	
 	
 	

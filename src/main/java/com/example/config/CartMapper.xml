@@ -18,7 +18,7 @@
 
 	<insert id="cartInsert" parameterType="hashmap">
 		INSERT INTO product_cart
-		VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, 1, #{option_type},
+		VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, #{quantity}, #{option_type},
 		#{option_name})
 	</insert>
 
@@ -34,7 +34,7 @@
 	</delete>
 
 	<update id="increaseQuantity" parameterType="hashmap">
-		update product_cart set quantity = quantity + 1
+		update product_cart set quantity = quantity + #{quantity}
 		WHERE user_id=#{user_id}
 		AND product_Id=#{product_Id}
 		AND option_type=#{option_type}

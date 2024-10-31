@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<link href="resources/css/shoppingMall/QuickMenu.css" rel="stylesheet">
+<link href="resources/css/shoppingMall/quickMenu.css" rel="stylesheet">
 
 <div class="quick-menu">
 	<button id="scrollTopBtn">▲</button>

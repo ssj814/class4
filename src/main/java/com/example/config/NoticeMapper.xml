@@ -34,8 +34,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		
 	<!-- 글 저장 -->
 	<insert id="insertContent" parameterType="NoticeDTO">
-		insert into notice (title, content, createdate, category) 
-		values (#{title}, #{content}, sysdate, #{category})
+		insert into notice (title, content,writer, createdate, category) 
+		values (#{title}, #{content},#{writer} , sysdate, #{category})
 	</insert>
 	
 	<!-- 글 삭제 -->

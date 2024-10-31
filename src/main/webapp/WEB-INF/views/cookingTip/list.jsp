@@ -17,6 +17,9 @@
     <td>작성자</td>
     <td>작성일</td>
     <td>조회수</td>
+    <td>수정</td>
+    <td>삭제</td>
+    
     
   </tr>
   <c:forEach var="list" items="${allData}">
@@ -27,11 +30,16 @@
     <td>${list.writer}</td>
     <td>${list.regdate}</td>
     <td>${list.viewcnt}</td>
+    <td><button>E</button></td>
+   <td> <button>D</button></td>
     
    
   </tr>
   </c:forEach>
+   
 </table>
 
+	
+   
 </body>
 </html>

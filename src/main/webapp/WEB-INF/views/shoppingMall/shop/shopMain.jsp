@@ -1,7 +1,28 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="resources/css/shoppingMall/shopMain.css">
+
+<!-- 공지사항 모달 -->
+<div class="modal fade" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="noticeModalLabel">새로운 공지사항이 등록되었습니다</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <strong>${sessionScope.popupNotice.title}</strong>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closePopup" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- top -->
 <div id="carouselExampleFade" class="carousel slide carousel-fade">
@@ -47,7 +68,7 @@
 					data-bs-toggle="collapse" data-bs-target="#extra-items1">ShoppingMall
 				</li>
 				<!-- toggle list-->
-				<ul class="collapse list-group list-group-flush" id="extra-items1"
+				<ul class="collapse list-group list-group-flush show" id="extra-items1"
 					style="margin-left: 20px;">
 					<li class="list-group-item fst-italic"><a href="shopList"
 						class="text-dark" style="text-decoration: none">View All
@@ -87,9 +108,6 @@
 				<li class="list-group-item list-group-item-action fw-bolder"><a
 					href="#" class="text-dark" style="text-decoration: none">Meal
 						Plan</a></li>
-				<li class="list-group-item list-group-item-action fw-bolder"><a
-					href="#" class="text-dark" style="text-decoration: none">For
-						Contest</a></li>
 				<li class="list-group-item list-group-item-action fw-bolder"><a
 					href="#" class="text-dark" style="text-decoration: none">Notice</a></li>
 			</ul>
@@ -163,8 +181,9 @@
 								href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
 								class="list-group-item-action">${product.getProduct_name()}</a>
 						</p>
-						<p class="card-text text-danger">₩
-							${product.getProduct_price()}</p>
+						<p class="card-text text-danger">
+						    <fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
+						</p>
 						<div class="mt-auto"></div>
 					</div>
 				</div>
@@ -176,6 +195,7 @@
 <hr class="container p-3">
 
 <script>
+
 	// toggle list
 	$('.list-group-item-action').on('click', function() {
 		var target = $(this).data('bs-target');
@@ -212,6 +232,25 @@
 	        }
 	    }, 1000);
 	});
+	 $(document).ready(function () {
+	        const popupNotice = ${sessionScope.popupNotice != null}; // 공지사항 존재 여부 체크
+	        if (popupNotice) {
+	            const noticeModal = new bootstrap.Modal(document.getElementById('noticeModal'));
+	            noticeModal.show();
+	        }
 
+	        $('#closePopup').on('click', function() {
+	        	fetch('/app/clearPopupNotice', { 
+	        		method: 'POST' 
+	        		})
+                .then(response => {
+                    if (response.ok) {
+                        console.log("세션에서 공지 팝업 데이터 삭제 완료");
+                    } else {
+                    	console.log("세션 삭제 실패")
+                    }
+                }).catch(error => console.error("세션 삭제 오류:", error));
+	        });    
+	  });
 </script>
 

@@ -4,18 +4,38 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="TrainerBoardCommentMapper">	<!-- 네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;; -->
 	
-<select id="commentSelect" parameterType="int" resultType="TrainerBoardCommentDTO">
-    SELECT * FROM TRAINERBOARD_COMMENTS WHERE postid = #{postid}
-</select>
-	
-	<insert id="commentAdd" parameterType="TrainerBoardCommentDTO">
-	insert into TRAINERBOARD_COMMENTS (commID, postid, userid, commcontent, comcrdate, comupdate)
-	values (0, #{postid}, 2000, #{commcontent}, sysdate, sysdate)
+<!-- 댓글 목록 가져오기 (특정 게시물에 대한 댓글) -->
+	<select id="selectCommentsByPostId" resultType="TrainerBoardCommentDTO"
+		parameterType="int">
+		SELECT commId, parentId, postId, commContent, userId, TO_CHAR(comCrdate,
+		'YYYY-MM-DD') as comCrdate, repIndent
+		FROM commContent
+		WHERE postId = #{postId}
+		ORDER BY parentId ASC, comCrdate ASC
+	</select>
+
+	<!-- 댓글 삽입 -->
+	<insert id="insertComment" parameterType="TrainerBoardCommentDTO">
+		INSERT INTO commContent (commId, parentId, postId, commContent, userId, comCrdate,
+		repIndent)
+		VALUES (#{commId}, #{parentId}, #{postId}, #{commContent}, #{userId}, SYSDATE,
+		#{repIndent})
 	</insert>
 
-<delete id="commentDelete" parameterType="int">
-delete from TRAINERBOARD_COMMENTS
-where postid=#{postid}
-</delete>
+	<!-- 댓글 수정 -->
+	<update id="updateComment" parameterType="TrainerBoardCommentDTO">
+		UPDATE commContent
+		SET commContent = #{ commContent }
+		WHERE commId = #{commId}
+	</update>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		DELETE FROM commContent
+		WHERE id = #{commId}
+		OR parentId = #{commId}
+	</delete>
+
+
 
 </mapper>

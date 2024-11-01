@@ -16,12 +16,13 @@ public class TrainerBoardCommentDAO {
 	SqlSessionTemplate template;
 	
 	 // 특정 게시물의 댓글 목록 가져오기
-    public List<TrainerBoardCommentDTO> selectCommentsByPostId(int postId) {
-        return template.selectList("TrainerBoardCommentMapper.selectCommentsByPostId", postId);
+    public List<TrainerBoardCommentDTO> selectCommentsByPostId(int postid) {
+        return template.selectList("TrainerBoardCommentMapper.selectCommentsByPostId", postid);
     }
     
     //댓글등록
     public void addComment(TrainerBoardCommentDTO commentDTO) {
+    	System.out.println("commentDAOoooooooooooooo");
 		template.insert("TrainerBoardCommentMapper.insertComment", commentDTO);
 		
 	}
@@ -32,8 +33,8 @@ public class TrainerBoardCommentDAO {
     }
 
     // 댓글 삭제
-    public void deleteTrainerboardComment(int postId) {
-    	template.delete("TrainerBoardCommentMapper.deleteComment", postId);
+    public void deleteTrainerboardComment(int postid) {
+    	template.delete("TrainerBoardCommentMapper.deleteComment", postid);
     }
 
 

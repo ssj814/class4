@@ -61,6 +61,7 @@
                
                  <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
 				class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
+                <input type="hidden" name="imagename" value='${dto.imagename}'/>
                 </div>
                 
 			   <br>

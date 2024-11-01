@@ -18,8 +18,8 @@ public class TrainerBoardCommentService {
 	@Autowired
 	TrainerBoardCommentDAO dao;
 
-		public List<TrainerBoardCommentDTO> getCommentsByPostId(int postId) {
-		List<TrainerBoardCommentDTO> allTrainerboardComments = dao.selectCommentsByPostId(postId);
+		public List<TrainerBoardCommentDTO> getCommentsByPostId(int postid) {
+		List<TrainerBoardCommentDTO> allTrainerboardComments = dao.selectCommentsByPostId(postid);
 		return buildCommentHierarchy(allTrainerboardComments); 
 		}
 
@@ -30,10 +30,10 @@ public class TrainerBoardCommentService {
 
 			// 댓글을 parentId로 분류
 			for (TrainerBoardCommentDTO comment : allTrainerboardComments) {
-				if (comment.getParentId() == 0) { // 부모가 없으면 최상위 댓글
+				if (comment.getTr_ParentId() == 0) { // 부모가 없으면 최상위 댓글
 					rootComments.add(comment);
 				} else {
-					parentChildMap.computeIfAbsent(comment.getParentId(), k -> new ArrayList<>()).add(comment);
+					parentChildMap.computeIfAbsent(comment.getTr_ParentId(), k -> new ArrayList<>()).add(comment);
 				}
 			}
 
@@ -52,7 +52,7 @@ public class TrainerBoardCommentService {
 			List<TrainerBoardCommentDTO> childComments = parentChildMap.get(parent.getCommId());
 			if (childComments != null) {
 				for (TrainerBoardCommentDTO child : childComments) {
-					child.setRepIndent(indentLevel); // 들여쓰기 수준 설정
+					child.setTr_RepIndent(indentLevel); // 들여쓰기 수준 설정
 					result.add(child);
 					addChildComments(child, parentChildMap, result, indentLevel + 1);
 				}
@@ -60,6 +60,7 @@ public class TrainerBoardCommentService {
 		}
 		
 		public void addComment(TrainerBoardCommentDTO commentDTO) {
+			System.out.println("commentService=======");
 			dao.addComment(commentDTO);
 		}
 	

@@ -51,7 +51,7 @@
                 <!-- 이미지 첨부 -->
                 <div class="label">
                     <label for="weightImage">이미지첨부</label>
-                	<input type="file" id="weightImage" name="weightImage" accept="image/*"  onchange="showPreview(this, 'preview')" />
+                	<input type="file" id="weightImage" name="weightImage" accept="image/*"  onchange="showPreview(this, 'preview')" required/>
         			<img id="preview" class="image-preview" style="display: none;  width:100px; height:100px;" />
         			
 

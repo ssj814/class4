@@ -7,33 +7,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 댓글 목록 가져오기 (특정 게시물에 대한 댓글) -->
 	<select id="selectCommentsByPostId" resultType="TrainerBoardCommentDTO"
 		parameterType="int">
-		SELECT commId, parentId, postId, commContent, userId, TO_CHAR(comCrdate,
-		'YYYY-MM-DD') as comCrdate, repIndent
-		FROM commContent
-		WHERE postId = #{postId}
-		ORDER BY parentId ASC, comCrdate ASC
+		SELECT commId, tr_ParentId, postid, commContent, userId, TO_CHAR(comCrdate,
+		'YYYY-MM-DD HH24:MI:SS') as comCrdate, tr_RepIndent
+		FROM trainerboard_comments
+		WHERE postid = #{postid}
+		ORDER BY tr_ParentId ASC, comCrdate ASC
 	</select>
 
 	<!-- 댓글 삽입 -->
 	<insert id="insertComment" parameterType="TrainerBoardCommentDTO">
-		INSERT INTO commContent (commId, parentId, postId, commContent, userId, comCrdate,
-		repIndent)
-		VALUES (#{commId}, #{parentId}, #{postId}, #{commContent}, #{userId}, SYSDATE,
-		#{repIndent})
+	    INSERT INTO trainerboard_comments (tr_ParentId, postid, commContent, userId, comCrdate, tr_RepIndent)
+	    VALUES (#{tr_ParentId}, #{postid}, #{commContent}, 1000, SYSDATE, #{tr_RepIndent})
 	</insert>
+
 
 	<!-- 댓글 수정 -->
 	<update id="updateComment" parameterType="TrainerBoardCommentDTO">
-		UPDATE commContent
+		UPDATE trainerboard_comments
 		SET commContent = #{ commContent }
 		WHERE commId = #{commId}
 	</update>
 	
 	<!-- 댓글 삭제 -->
 	<delete id="deleteComment" parameterType="int">
-		DELETE FROM commContent
-		WHERE id = #{commId}
-		OR parentId = #{commId}
+		DELETE FROM trainerboard_comments
+		WHERE commId = #{commId}
+		OR tr_ParentId = #{commId}
 	</delete>
 
 

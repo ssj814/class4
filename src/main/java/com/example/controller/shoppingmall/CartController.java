@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import com.example.service.shoppingmall.CartService;
 import com.example.service.shoppingmall.ProductService;
 import com.example.service.shoppingmall.WishService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class CartController {
 	
@@ -31,8 +35,10 @@ public class CartController {
 	ProductService productService;
 
 	@GetMapping("/cartList")
-	public String cartList(Model m) {
-		int user_id = 1;
+	public String cartList(Model m, HttpSession session ) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
 		List<CartProductDTO> ProductList = service.selectCart(user_id);
 		 for (CartProductDTO product : ProductList) {
 			// 모든 옵션을 가져오기
@@ -50,7 +56,11 @@ public class CartController {
 	@PostMapping("/cart")
 	@ResponseBody
 	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
-		int user_Id = 1; //임시 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		//int user_Id = 1; //임시 유저
+		String user_Id = authentication.getName();
+
 		int productId = (int) requestMap.get("productId");
 		int productQuantity = (int) requestMap.get("productQuantity");
 		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
@@ -79,7 +89,8 @@ public class CartController {
 	        throw new IllegalArgumentException("Cart ID and Quantity cannot be null");
 	    }
 
-	    int user_Id = 1; // 임시 유저 ID 설정
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_Id = authentication.getName();
 	    CartDTO dto = new CartDTO();
 	    dto.setUser_id(user_Id);
 	    dto.setCart_id(cartId);
@@ -94,10 +105,11 @@ public class CartController {
 	        throw new IllegalArgumentException("삭제할 상품이 선택되지 않았습니다.");
 	    }
 
-	    int userId = 1; // 임시 유저 ID 설정
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_Id = authentication.getName();
 	    cartIds.forEach(cartId -> {
 	        CartDTO dto = new CartDTO();
-	        dto.setUser_id(userId);
+	        dto.setUser_id(user_Id);
 	        dto.setCart_id(cartId);
 	        service.cartDelete(dto);
 	    });
@@ -106,7 +118,10 @@ public class CartController {
 	@PostMapping("/updateCartOption")
 	@ResponseBody
 	public Map<String, String> updateCartOption(@RequestBody Map<String, Object> requestMap) {
-	    int user_Id = 1; // 임시 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		//int user_Id = 1; //임시 유저
+		String user_Id = authentication.getName();
 	    int cartId = Integer.parseInt((String) requestMap.get("cartId"));
 	    int productId = Integer.parseInt((String) requestMap.get("productId"));
 	    List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
@@ -135,7 +150,7 @@ public class CartController {
 	}
 	
 	//옵션 데이터를 처리 및 장바구니에 존재하는지 확인
-	private Map<String, Object> createCartMap(int userId, int productId, int cartId, List<Map<String, String>> options) {
+	private Map<String, Object> createCartMap(String userId, int productId, int cartId, List<Map<String, String>> options) {
 		// 옵션 데이터를 쉼표로 구분된 문자열로 변환
 		// StringBuilder : 문자열을 반복적으로 수정하거나 추가하는 작업에서 String보다 성능 좋음
 	    StringBuilder optionTypes = new StringBuilder();

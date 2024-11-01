@@ -12,6 +12,9 @@ import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,13 +28,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.NoticeDTO;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductRecentDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.service.notice.NoticeService;
 import com.example.service.shoppingmall.ProductReviewService;
 import com.example.service.shoppingmall.ProductService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProductController {
@@ -42,15 +49,22 @@ public class ProductController {
 	@Autowired
 	ProductReviewService productReviewService;
 	
+	@Autowired
+	NoticeService nService;
+	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String shopMain(Model m) {
+	public String shopMain(Model m, HttpSession session) {
 		List<ProductDTO> ProductList = service.selectProductMainList();
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
-		System.out.println("/주소 접근되는지=======");
+		
+		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
+	    if (noticePopupClosed == null || !noticePopupClosed) {
+	        List<NoticeDTO> popupNotices = nService.getPopupNotices();
+	        session.setAttribute("popupNotices", popupNotices);
+	    }
 		m.addAttribute("ProductList",ProductList);
 		m.addAttribute("CategoryList",CategoryList);
 		return "shoppingMall/shopMain";
-		//return "test";
 	}
 	
 	@RequestMapping(value="/shopList", method=RequestMethod.GET)
@@ -86,7 +100,7 @@ public class ProductController {
 		}
 		dataMap.put("sortList", sortList);
 		List<ProductDTO> ProductList = service.selectProductList(dataMap,bounds);
-		System.out.println(ProductList);
+
 		//페이징
 		int totalProductSize = service.selectProductMainList().size(); // 전체 상품 개수
 		if(search!=null || category!=null) { // 조건에 걸린 전체 상품 개수
@@ -100,8 +114,9 @@ public class ProductController {
 			totalPage++;
 		}
 		
-		//임시유저
-		int user_id = 1;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
 		// 최근 본 상품 목록 조회 및 이미지 정보 추가
 	    List<Map<String, Object>> recentProductWithImages = getRecentImages(user_id);
 	    
@@ -123,8 +138,8 @@ public class ProductController {
 			@RequestParam(value="reviewPage", required = false, defaultValue = "1") Integer reviewPage,
 			@RequestParam(value="sortType", required = false, defaultValue = "newest") String sortType) {
 
-		//임시유저
-		int user_id = 1;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
 		
 		// 최근 본 상품 추가 또는 업데이트 처리
 	    manageRecentProduct(productId, user_id);
@@ -374,7 +389,7 @@ public class ProductController {
 		return "redirect:/shopList";
 	}
 	
-	private void manageRecentProduct(int productId, int userId) {
+	private void manageRecentProduct(int productId, String userId) {
 	    Map<String, Object> data = new HashMap<>();
 	    data.put("product_id", productId);
 	    data.put("user_id", userId);
@@ -394,7 +409,7 @@ public class ProductController {
 	    }
 	}
 
-	private List<Map<String, Object>> getRecentImages(int userId) {
+	private List<Map<String, Object>> getRecentImages(String userId) {
 	    // 최근 본 상품 목록 조회
 	    List<ProductRecentDTO> recentProducts = service.getRecentProducts(userId);
 
@@ -409,5 +424,13 @@ public class ProductController {
 	    }
 	    
 	    return recentProductWithImages;
+	}
+	
+	@GetMapping("/clearPopupNotice")
+	@ResponseBody
+	public ResponseEntity<Void> clearPopupNotice(HttpSession session) {
+	    session.setAttribute("noticePopupClosed", true);
+	    session.removeAttribute("popupNotices");
+	    return ResponseEntity.ok().build();
 	}
 }

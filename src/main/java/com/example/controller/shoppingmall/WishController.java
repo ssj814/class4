@@ -14,8 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductWishDTO;
 import com.example.service.shoppingmall.ProductService;
 import com.example.service.shoppingmall.WishService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
 public class WishController {
@@ -28,24 +32,54 @@ public class WishController {
 	@GetMapping(value="/wishList")
 	public String wishList(Model m) {
 		int user_id = 1; // 임시 유저
-		List<Integer> list = service.selectWishList(user_id);
-		List<ProductDTO> ProductList = new ArrayList<ProductDTO>();
-		for(int i=0; i<list.size(); i++) {
-			ProductDTO product = productService.selectDetailproduct(list.get(i));
-			ProductList.add(product);
-		}
-		m.addAttribute("ProductList", ProductList);
+		List<ProductWishDTO> wishList = service.selectWishList(user_id);
+		List<Map<String, Object>> wishProductList = new ArrayList<>();
+
+	    for (ProductWishDTO wish : wishList) {
+	        ProductDTO product = productService.selectDetailproduct(wish.getProduct_id());
+	        
+	        Map<String, Object> wishProductMap = new HashMap<>();
+	        wishProductMap.put("wish", wish);
+	        wishProductMap.put("product", product);
+	        
+	        wishProductList.add(wishProductMap);
+	    }
+
+	    m.addAttribute("wishProductList", wishProductList);
 		return "shoppingMall/wishList";
 	}
 	
 	@GetMapping(value="/wish")
 	@ResponseBody
-	public Map<String,String> wishInsert(int productId, Model m) {
+	public Map<String,String> wishInsert(int productId, String options,Model m) {
 		int user_Id = 1; //임시 유저
+		
+		StringBuilder optionTypes = new StringBuilder();
+	    StringBuilder optionNames = new StringBuilder();
+
+	    List<Map<String, String>> optionList = new ArrayList<>();
+	    try {
+	        optionList = new ObjectMapper().readValue(options, new TypeReference<List<Map<String, String>>>() {});
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
+	    for (Map<String, String> option : optionList) {
+	        if (optionTypes.length() > 0) {
+	            optionTypes.append(",");
+	            optionNames.append(",");
+	        }
+	        optionTypes.append(option.get("type"));
+	        optionNames.append(option.get("name"));
+	    }
+	    
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("user_id", user_Id);
 		map.put("product_Id", productId);
+		map.put("option_type", optionTypes.toString());
+	    map.put("option_name", optionNames.toString());
+		
 		int check = service.checkWish(map); //wish에 존재? - wishCheck로 바꿔야지
+		System.out.println("위시 중복체크 : "+check);
 		Map<String,String> responseMap = new HashMap<String,String>();
 		String mesg = "이미 위시리스트에 존재하는 상품입니다";
 		if(check!=1) {

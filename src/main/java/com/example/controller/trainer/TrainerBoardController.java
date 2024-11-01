@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,25 +91,25 @@ public class TrainerBoardController {
 	//글쓰고나면 제목, 내용을 세션에 저장시킴 이미지 여기에 저장하기
 	@RequestMapping(value = "/write", method = RequestMethod.POST)
 	public String write(@RequestParam("title") String title, @RequestParam("content") String content,
-			HttpSession session,Model m, MultipartFile weightImage) {
-		String uploadDir = "C:/images/trainerboard_image/";
-		InputStream inputStream = null;
-		TrainerBoardDTO dto=null;
-		
+			HttpSession session,Model m, MultipartFile weightImage, TrainerBoardDTO dto) {
+		String uploadDir = "C:/images/trainerboard_image/";	 //이미지 저장 경로:C에 images폴더에 trainerboard_images에 저장
+		File uploadDirectory = new File(uploadDir); // uploadDir로 지정된 경로에 대한 File 객체를 생성
+        if (!uploadDirectory.exists()) {
+            uploadDirectory.mkdirs(); //폴더없으면 생성
+        }
+        
+		UUID uuid = UUID.randomUUID(); //Java에서 고유한 식별자인 UUID(Universally Unique Identifier)를 생성하는 코드
+		InputStream inputStream = null; //InputStream:이미지 파일의 데이터를 읽는 데 사용
 
 		try {
 			if(!weightImage.isEmpty()) {
-				inputStream = weightImage.getInputStream();
-				dto = new TrainerBoardDTO();
-				dto.setImagename(weightImage.getOriginalFilename());
-				// DTO 객체 생성 및 데이터 설정
-				
+				inputStream = weightImage.getInputStream(); //업로드된 파일의 내용을 읽기 위한 InputStream을 반환
+				String imgName = uuid + weightImage.getOriginalFilename(); //업로드된 파일의 원래 이름을 반환
+				dto.setImagename(imgName);
 				dto.setTitle(title);
 				dto.setContent(content);
 				
-				// 서비스 호출
-				
-				weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
+				weightImage.transferTo(new File(uploadDir + imgName)); //파일의 내용을 지정된 위치로 직접 저장
 			}
 			
 			// 서비스 호출
@@ -138,37 +139,47 @@ public class TrainerBoardController {
 
 	//수정 후 세션에 저장
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(TrainerBoardDTO dto, HttpSession session,Model m, MultipartFile weightImage ) {
-		System.out.println("확인----"+weightImage);
-		
-		String uploadDir = "C:/images/trainerboard_image/";
-		InputStream inputStream = null;
-		
+	public String update(TrainerBoardDTO dto, HttpSession session, Model m, MultipartFile weightImage) {
+	    String uploadDir = "C:/images/trainerboard_image/";
+	    InputStream inputStream = null;
 
-		dto.setContent(dto.getContent().replace("\r\n", "<br>"));
-		
-		try {
-			if(!weightImage.isEmpty()) {		
-		
-		dto.setImagename(weightImage.getOriginalFilename());
-		weightImage.transferTo(new File(uploadDir +weightImage.getOriginalFilename()));
-		}
+	    // 콘텐츠 줄 바꿈을 <br>로 변환
+	    dto.setContent(dto.getContent().replace("\r\n", "<br>"));
 
-			service.update(dto);
-		
-		}catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(inputStream!=null)inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	    try { //update.jsp에 input type="hidden"으로 db에 저장된 imagename넘김
+	    	//부팀장님껏도 다시 보기
+	        if (dto.getImagename() != null) { 
+	            File oldImageFile = new File(uploadDir + dto.getImagename());
+	           
+	            if (oldImageFile.exists()) {
+	                oldImageFile.delete(); // 기존 이미지 삭제
+	            }
+	        }
 
-		session.setAttribute("update", dto);
-		return "redirect:retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보게
+	        // 새 이미지가 있는 경우
+	        if (!weightImage.isEmpty()) {
+	            String newImageName = UUID.randomUUID() + weightImage.getOriginalFilename();
+	            dto.setImagename(newImageName); // 새로운 이미지 이름 설정
+	            weightImage.transferTo(new File(uploadDir + newImageName)); // 새로운 이미지 저장
+	        }
+
+	        // 게시글 업데이트
+	        service.update(dto);
+
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (inputStream != null) inputStream.close();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    session.setAttribute("update", dto);
+	    return "redirect:retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보기
 	}
+
 
 	
 	//수정 후에는 게시글 단순조회
@@ -195,20 +206,34 @@ public class TrainerBoardController {
 //삭제
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "postid", required = false) Integer postid,
-			RedirectAttributes redirectAttributes) {
-		if (postid == null) {
-			redirectAttributes.addFlashAttribute("message", "삭제할 게시글 번호가 유효하지 않습니다.");
-			return "redirect:/app/TrainerBoard"; // 유효하지 않은 경우 메인 페이지로 리다이렉트
-		}
+	                     RedirectAttributes redirectAttributes) {
+	    if (postid == null) {
+	        redirectAttributes.addFlashAttribute("message", "삭제할 게시글 번호가 유효하지 않습니다.");
+	        return "redirect:/app/TrainerBoard";
+	    }
 
-		try {
-			service.delete(postid);
-			redirectAttributes.addFlashAttribute("message", "삭제가 완료되었습니다.");
-		} catch (Exception e) {
-			redirectAttributes.addFlashAttribute("message", "삭제 중 오류가 발생했습니다.");
-			e.printStackTrace();
-		}
-		return "redirect:TrainerBoard"; // 삭제 후 메인 페이지로 리다이렉트
+	    try {
+	        // 게시글 정보 조회
+	        TrainerBoardDTO dto = service.retrieve(postid);
+	        String imgName = dto.getImagename();
+	        
+	        // 이미지 파일 삭제
+	        if (imgName != null) {
+	            String uploadDir = "C:/images/trainerboard_image/";
+	            File imageFile = new File(uploadDir + imgName);
+	            if (imageFile.exists()) {
+	                imageFile.delete(); // 이미지 파일 삭제
+	            }
+	        }
+
+	        // 게시글 삭제
+	        service.delete(postid);
+	        redirectAttributes.addFlashAttribute("message", "삭제가 완료되었습니다.");
+	    } catch (Exception e) {
+	        redirectAttributes.addFlashAttribute("message", "삭제 중 오류가 발생했습니다.");
+	        e.printStackTrace();
+	    }
+	    return "redirect:TrainerBoard";
 	}
 
 	
@@ -219,21 +244,22 @@ public class TrainerBoardController {
             @RequestParam(value = "postid", required = false) Integer postid) {
         System.out.println("commentDTO 전: "+commentDTO);
         // 부모 댓글 ID가 없으면 일반 댓글, 있으면 대댓글로 처리
-        if (commentDTO.getParentId() == null || commentDTO.getParentId() == 0) {
+        if (commentDTO.getTr_ParentId() == null || commentDTO.getTr_ParentId() == 0) {
             // 일반 댓글인 경우
-            commentDTO.setRepIndent(0);  // 일반 댓글은 들여쓰기 없음
-            commentDTO.setPostId(postid);  // 일반 댓글은 postid를 따로 설정해줌
+            commentDTO.setTr_RepIndent(0); // 일반 댓글은 들여쓰기 없음
+            commentDTO.setPostid(postid);  // 일반 댓글은 postid를 따로 설정해줌
         } else {
             // 대댓글의 경우, commentDTO에 이미 postid가 포함되어 있을 가능성이 있음
-            if (commentDTO.getPostId() == 0) {
-                commentDTO.setPostId(postid);  // 만약 postid가 없으면 추가 설정
+            if (commentDTO.getPostid() == 0) {
+                commentDTO.setPostid(postid);  // 만약 postid가 없으면 추가 설정
+                System.out.println(commentDTO);
             }
             // repIndent는 JSP에서 받아온 값을 그대로 사용
         }
-        System.out.println("commentDTO 후: "+commentDTO);
+        System.out.println("TrainerBoardCommentDTO 후: "+commentDTO);
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
         coservice.addComment(commentDTO);
-        System.out.println("comment 추가 완료=============");
+        System.out.println("TrainerBoardCommentDTO 추가 완료=============");
         // 성공적으로 저장 후 응답
         return "success";
     }
@@ -242,6 +268,7 @@ public class TrainerBoardController {
     @PostMapping("/updateTrainerboardComment")
     @ResponseBody
     public String updateTrainerboardComment (@RequestParam("commId") int commId, @RequestParam("commContent") String commContent) {
+    	System.out.println("111"+commId + commContent);
     	TrainerBoardCommentDTO commentDTO = new TrainerBoardCommentDTO();
         commentDTO.setCommId(commId);
         commentDTO.setCommContent(commContent);

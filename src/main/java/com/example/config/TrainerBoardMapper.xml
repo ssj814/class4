@@ -19,7 +19,7 @@ FROM (
 WHERE ROWNUM &lt;= 5
 </select>
 
-<select id="com.dao.selectAll" resultType="BoardDTO" parameterType="hashmap">
+<select id="selectAll" resultType="BoardDTO" parameterType="hashmap">
 
 		select postid, title, userid,
 		to_char(crdate,'YYYY-MM-DD')crdate,

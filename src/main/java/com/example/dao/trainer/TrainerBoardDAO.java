@@ -23,7 +23,7 @@ public class TrainerBoardDAO {
 		int perPage=pDTO.getPerPage();
 		int offset=(curPage-1)*perPage;
 		System.out.println(map);
-		List<TrainerBoardDTO> list=template.selectList("com.dao.BoardMapper.selectAll", map, new RowBounds(offset, perPage));
+		List<TrainerBoardDTO> list=template.selectList("BoardMapper.selectAll", map, new RowBounds(offset, perPage));
 		
 		pDTO.setCurPage(curPage);
 		pDTO.setList(list);

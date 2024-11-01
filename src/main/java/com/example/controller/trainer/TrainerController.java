@@ -3,6 +3,8 @@ package com.example.controller.trainer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,6 @@ import com.example.dto.TrainerDTO;
 import com.example.service.trainer.TrainerDBOracleService;
 
 @Controller
-@RequestMapping
 public class TrainerController {
 
     @Autowired
@@ -34,8 +35,8 @@ public class TrainerController {
             @RequestParam(required = false) String searchType,
             @RequestParam(required = false) String searchVal,
             @RequestParam(required = false) Integer page,
-            Model m
-            ) {
+            Model m ) {
+    	
         int listPerPage = 5;
         int currentPage = 1;
          
@@ -79,7 +80,15 @@ public class TrainerController {
     }
     
     @GetMapping("/trainer_join")
-    public String trainerJoin1() {
+    public String trainerJoin1(Model m) {
+    	
+    	// 필드(한글,영어), 프로그램 옵션 데이터
+        List<String> fieldOptions = new ArrayList<>(Arrays.asList("웨이트", "재활", "다이어트", "대회준비", "맨몸운동", "바디프로필", "건강관리"));
+        List<String> lsProgramOptions = new ArrayList<>(Arrays.asList("개인PT", "그룹PT", "방문PT"));
+        
+        m.addAttribute("fieldOptions", fieldOptions);
+        m.addAttribute("lsProgramOptions", lsProgramOptions);   
+
         return "trainer/trainerAdd";
     }
 
@@ -112,20 +121,33 @@ public class TrainerController {
     @GetMapping("/trainer_info")
     public String info(@RequestParam Integer idx, Model m) {
         TrainerDTO dto = service.selectTrainer(idx);
+        
+        System.out.println(idx);
+        System.out.println(dto);
         m.addAttribute("info", dto);
         return "trainer/trainerInfo";
     }
     
     @GetMapping("/trainer_modify")
     public String modify(@RequestParam Integer idx, Model m) {
+    	
+    	// 필드(한글,영어), 프로그램 옵션 데이터
+        List<String> fieldOptions = new ArrayList<>(Arrays.asList("웨이트", "재활", "다이어트", "대회준비", "맨몸운동", "바디프로필", "건강관리"));
+        List<String> lsProgramOptions = new ArrayList<>(Arrays.asList("개인PT", "그룹PT", "방문PT"));
+        
         TrainerDTO dto = service.selectTrainer(idx);
+        
+        m.addAttribute("fieldOptions", fieldOptions);
+        m.addAttribute("lsProgramOptions", lsProgramOptions);   
         m.addAttribute("info", dto);
+        
         return "trainer/trainerEdit";
     }
     
     @PostMapping("/trainer_modify")
     public String modify2(@RequestParam("trainer_img_url") MultipartFile trainer_img_url, 
-                          @ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
+    		 @ModelAttribute TrainerDTO trainer, RedirectAttributes ra) {
+
         String uploadDir = "C:/images/trainer_images/";
 
         // 트레이너의 기존 이미지 정보를 가져옴
@@ -145,12 +167,13 @@ public class TrainerController {
             }
 
             // 트레이너 정보 업데이트
+            System.out.println("????"+trainer);
             service.updateTrainer(trainer);
             
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        
         ra.addAttribute("idx", trainer.getTrainer_id());
         ra.addFlashAttribute("mesg", "트레이너 정보 수정 완료");
         return "redirect:/trainer_info";

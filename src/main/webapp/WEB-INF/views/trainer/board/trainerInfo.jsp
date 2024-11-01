@@ -15,8 +15,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">-->
+  
   <title>트레이너 프로필</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <style>
     body {
       background-color: #f9f9f9;
@@ -118,9 +119,12 @@
 
         <dt class="col-sm-3">전문 수업</dt>
         <dd class="col-sm-9">
-          <c:forTokens items="${info.field}" delims="," var="field">
-            <span class="badge badge-primary">${field}</span>
-          </c:forTokens>
+          <c:forEach items="${info.field}"  var="field">
+            <span class="badge bg-primary">${field}</span>
+          </c:forEach>
+          <c:if test="${info.field == null}">
+          	<span class="badge bg-secondary">x</span>
+          </c:if>
         </dd>
 
         <dt class="col-sm-3">활동 중인 센터</dt>
@@ -131,9 +135,12 @@
 
         <dt class="col-sm-3">레슨 프로그램</dt>
         <dd class="col-sm-9">
-          <c:forTokens items="${info.lesson_program}" delims="," var="program">
-            <span class="badge badge-secondary">${program}</span>
-          </c:forTokens>
+          <c:forEach items="${info.lesson_program}"  var="program">
+            <span class="badge bg-secondary">${program}</span>
+          </c:forEach>
+          <c:if test="${info.lesson_program == null}">
+          	<span class="badge bg-secondary">x</span>
+          </c:if>
         </dd>
       </dl>
 
@@ -146,8 +153,6 @@
     </div>
   </div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

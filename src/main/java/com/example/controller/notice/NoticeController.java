@@ -175,6 +175,7 @@ public class NoticeController {
             // repIndent는 JSP에서 받아온 값을 그대로 사용
         }
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
+        System.out.println("asdf"+commentDTO);
         cService.addComment(commentDTO);
         // 성공적으로 저장 후 응답
         return "success";

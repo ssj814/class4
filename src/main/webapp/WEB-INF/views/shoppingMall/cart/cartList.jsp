@@ -195,7 +195,7 @@
 											});
 									$("form").attr(
 											"action",
-											"orderList?productIdList="
+											"orderpayment?productIdList="
 													+ productIdList);
 								});
 

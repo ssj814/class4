@@ -3,6 +3,7 @@
 <%@ page import="com.example.dto.TrainerDTO"%>
 <%@ page import="java.util.List"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <link rel="stylesheet" href="resources/css/trainer/trainerList.css">
 
@@ -98,6 +99,14 @@
 <script type="text/javascript">
 
 	$(function() {
+		
+		// 로그인 유저 정보
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication }`;
+		
+		//회원만 트레이너 등록 버튼 보이도록 처리
+		if (!loginUser) {
+		    $(".trainerAdding").hide();
+		}
 		
 		// 필터 버튼 클릭 시 필터 적용
 		$(".filter-button").on("click", function() {

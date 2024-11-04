@@ -16,8 +16,8 @@ public class WishDAO {
 	@Autowired
 	SqlSessionTemplate session;
 	
-	public List<ProductWishDTO> selectWishList(int user_id) {
-		return session.selectList("WishMapper.selectWishList",user_id);
+	public List<ProductWishDTO> selectWishList(String userId) {
+		return session.selectList("WishMapper.selectWishList",userId);
 	}
 	
 	public int checkWish(Map<String, Object> map) {

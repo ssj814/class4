@@ -125,7 +125,7 @@
 			var height = 700;
 			var left = Math.ceil((window.screen.width - width) / 2);
 			var top = Math.ceil((window.screen.height - height) / 2);
-			window.open('/app/shop_productReview/' + productId,
+			window.open('/app/user/shop_productReview/' + productId,
 					'_blank', "width=" + width + ", height=" + height
 							+ ", left=" + left + ",top=" + top
 							+ "scrollbars=yes");
@@ -138,7 +138,7 @@
 			var height = 700;
 			var left = Math.ceil((window.screen.width - width) / 2);
 			var top = Math.ceil((window.screen.height - height) / 2);
-			window.open('/app/shop_productReview_update/' + reviewid,
+			window.open('/app/user/shop_productReview_update/' + reviewid,
 					'_blank', "width=" + width + ", height=" + height
 							+ ", left=" + left + ",top=" + top
 							+ "scrollbars=yes");

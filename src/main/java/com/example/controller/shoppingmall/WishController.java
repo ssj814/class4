@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,10 +31,11 @@ public class WishController {
 	@Autowired
 	ProductService productService;
 	
-	@GetMapping(value="/wishList")
+	@GetMapping(value="/user/wishList")
 	public String wishList(Model m) {
-		int user_id = 1; // 임시 유저
-		List<ProductWishDTO> wishList = service.selectWishList(user_id);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = authentication.getName();
+		List<ProductWishDTO> wishList = service.selectWishList(userId);
 		List<Map<String, Object>> wishProductList = new ArrayList<>();
 
 	    for (ProductWishDTO wish : wishList) {
@@ -52,7 +55,8 @@ public class WishController {
 	@GetMapping(value="/wish")
 	@ResponseBody
 	public Map<String,String> wishInsert(int productId, String options,Model m) {
-		int user_Id = 1; //임시 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = authentication.getName();
 		
 		StringBuilder optionTypes = new StringBuilder();
 	    StringBuilder optionNames = new StringBuilder();
@@ -73,7 +77,7 @@ public class WishController {
 	    }
 	    
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("user_id", user_Id);
+		map.put("user_id", userId);
 		map.put("product_Id", productId);
 		map.put("option_type", optionTypes.toString());
 	    map.put("option_name", optionNames.toString());
@@ -95,9 +99,10 @@ public class WishController {
 	@DeleteMapping(value="/wish/productId/{productId}")
 	@ResponseBody
 	public void wishDelete(@PathVariable int productId, Model m) {
-		int user_Id = 1; //임시 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = authentication.getName();
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("user_id", user_Id);
+		map.put("user_id", userId);
 		map.put("product_Id", productId);
 		service.wishDelete(map);
 	}
@@ -105,9 +110,10 @@ public class WishController {
 	@DeleteMapping(value="/wish/productIdList/{productIdList}")
 	@ResponseBody
 	public Map<String,String> AllwishDelete(@PathVariable List<String> productIdList, Model m) {
-		int user_Id = 1; //임시 유저
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = authentication.getName();
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("user_id", user_Id);
+		map.put("user_id", userId);
 		map.put("productIdList", productIdList);
 		int del = service.AllwishDelete(map);
 		Map<String,String> resMap = new HashMap<String,String>();

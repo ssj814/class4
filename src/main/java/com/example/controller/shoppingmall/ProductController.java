@@ -54,7 +54,10 @@ public class ProductController {
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m, HttpSession session) {
-		List<ProductDTO> ProductList = service.selectProductMainList();
+		List<ProductDTO> popularProduct = service.selectProductMainList("PRODUCT_VIEW");
+		List<ProductDTO> newProduct = service.selectProductMainList("PRODUCT_CREATEDAT");
+		System.out.println(popularProduct);
+		System.out.println(newProduct);
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
 		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
@@ -62,7 +65,8 @@ public class ProductController {
 	        List<NoticeDTO> popupNotices = nService.getPopupNotices();
 	        session.setAttribute("popupNotices", popupNotices);
 	    }
-		m.addAttribute("ProductList",ProductList);
+		m.addAttribute("popularProduct",popularProduct);
+		m.addAttribute("newProduct",newProduct);
 		m.addAttribute("CategoryList",CategoryList);
 		return "shoppingMall/shopMain";
 	}
@@ -102,7 +106,7 @@ public class ProductController {
 		List<ProductDTO> ProductList = service.selectProductList(dataMap,bounds);
 
 		//페이징
-		int totalProductSize = service.selectProductMainList().size(); // 전체 상품 개수
+		int totalProductSize = service.selectProductMainList("PRODUCT_VIEW").size(); // 전체 상품 개수
 		if(search!=null || category!=null) { // 조건에 걸린 전체 상품 개수
 			Map<String, String> selectMap = new HashMap<String, String>();
 			selectMap.put("search", search);

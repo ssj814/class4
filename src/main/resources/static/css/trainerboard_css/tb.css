@@ -417,7 +417,7 @@ label {
 	height: 80px;
 	border: 1px solid #ddd;
 	padding: 10px;
-	font-size: 14px;
+	font-size: 13px;
 	resize: none;
 	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
 }
@@ -471,7 +471,7 @@ label {
 	border: 1px solid #ddd;
 	border-radius: 5px;
 	padding: 10px;
-	font-size: 14px;
+	font-size: 13px;
 	resize: none;
 	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
 }

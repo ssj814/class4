@@ -81,7 +81,7 @@
 
 <div class="comment-container">
 			<div class="comment-header">
-				<h7>댓글 작성</h7>
+				<h7>댓글</h7>
 			</div>
 			<div class="comment-body">
 				<form class="replyForm">
@@ -89,8 +89,8 @@
 					<input type="hidden" name="userid" value="${dto.userid}">
 					<textarea id="comment-textarea" name="commContent"
 						placeholder="댓글을 입력하세요" rows="5"></textarea>
-					<button type="submit" id="submit-comment" class="hidden">댓글
-						작성</button>
+					<button type="submit" id="submit-comment" class="hidden">
+						등록</button>
 				</form>
 			</div>
 		</div>

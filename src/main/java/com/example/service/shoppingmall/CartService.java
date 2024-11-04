@@ -61,6 +61,9 @@ public class CartService {
 		dao.deleteCartById(cart_id);
 	}
 
+	public CartDTO selectByCartId(int cart_id){
+		return dao.selectByCartId(cart_id);
+	}
 		
 	
 }

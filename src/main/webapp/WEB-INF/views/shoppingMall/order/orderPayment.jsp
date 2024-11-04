@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +20,7 @@
             border-bottom: 4px solid black;
             width: 100%;
             max-width: 1000px;
-            margin: 0 auto;
+            margin: 0px auto;
         }
         .main-content-container {
             max-width: 1000px;
@@ -103,24 +104,24 @@
                         </div>
                     </div>
                     <div class="form-group-inline">
-                        <span class="form-label-inline">이름:</span>
-                        <input type="text" class="form-control" name="recipientName" style="flex: 1;">
+                        <span class="form-label-inline">이름: </span>
+                        <input type="text" class="form-control" name="recipientName" value="${user.realusername}" style="flex: 1;">
                     </div>
                     <div class="form-group-inline">
                         <span class="form-label-inline">연락처:</span>
-                        <input type="text" class="form-control" name="contact" style="flex: 1;">
+                        <input type="text" class="form-control" name="contact" value="${user.phone1}${user.phone2}${user.phone3}" style="flex: 1;">
                     </div>
                     <div class="form-group-inline">
                         <span class="form-label-inline">우편번호:</span>
-                        <input type="text" class="form-control" name="zipcode" style="flex: 1;">
+                        <input type="text" class="form-control" name="zipcode" value="${user.postalcode }" style="flex: 1;">
                     </div>
                     <div class="form-group-inline">
                         <span class="form-label-inline">기본 주소:</span>
-                        <input type="text" class="form-control" name="basicAddress" style="flex: 1;">
+                        <input type="text" class="form-control" name="basicAddress" value="${user.streetaddress }" style="flex: 1;">
                     </div>
                     <div class="form-group-inline">
                         <span class="form-label-inline">상세 주소:</span>
-                        <input type="text" class="form-control" name="detailAddress" style="flex: 1;">
+                        <input type="text" class="form-control" name="detailAddress" value="${user.detailedaddress }" style="flex: 1;">
                     </div>
                 </form>
             </div>
@@ -147,17 +148,18 @@
                     <div class="form-group-inline mb-2">
                         <span class="form-label-inline">카드 종류:</span>
                         <select class="form-select" name="cardType" style="flex: 1;">
-                            <option value="KB">KB카드</option>
-                            <option value="SHINHAN">신한카드</option>
-                            <option value="WOORI">우리카드</option>
+                        <c:forEach var="card" items="${cardInfoList}">
+					        <option value="${card.cardId}">${card.cardName}</option>
+					    </c:forEach>
                         </select>
                     </div>
                     <div class="form-group-inline">
                         <span class="form-label-inline">할부 종류:</span>
                         <select class="form-select" name="installmentType" style="flex: 1;">
                             <option value="lump-sum">일시불</option>
-                            <option value="3months">3개월</option>
-                            <option value="6months">6개월</option>
+                            <c:forEach begin="1" end="12" var="num">
+                            	<option value="${num}+months">${num}개월</option>
+                            </c:forEach>
                         </select>
                     </div>
                 </div>
@@ -170,18 +172,31 @@
                 <div class="section-header">주문 정보</div>
                 <hr>
                 <div class="order-items">
-                    <c:forEach var="item" items="${orderItems}">
+                    <c:forEach var="item" varStatus="status" items="${cartList}">
+                    <c:set var="product" value="${productList[status.index]}" />
                         <div class="order-item d-flex justify-content-between align-items-center">
                             <div>
-                                <strong><!-- 상품 이름 --></strong> <br>
-                                <small><!-- 상품 옵션 --></small> × <!-- 상품 개수 -->
+                                <strong>${product.product_name}</strong> <br>
+                				<small>
+				                    <c:forEach var="type" items="${fn:split(item.option_type, ',')}" varStatus="idx">
+				                        <c:set var="name" value="${fn:split(item.option_name, ',')[idx.index]}" />
+				                        ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
+				                    </c:forEach>
+				                </small> × ${item.quantity}
                             </div>
-                            <span>₩ <!-- 상품 가격 --></span>
+                            <span>₩ ${product.product_price * item.quantity}</span>
                         </div>
                     </c:forEach>
                 </div>
                 <div class="total-price text-end mt-3">
-                    Total: ₩<span><!-- 총액 --></span>
+                    Total: ₩<span>
+			        <c:set var="totalPrice" value="0" />
+			        <c:forEach var="item" varStatus="status" items="${cartList}">
+			            <c:set var="product" value="${productList[status.index]}" />
+			            <c:set var="itemTotal" value="${product.product_price * item.quantity}" />
+			            <c:set var="totalPrice" value="${totalPrice + itemTotal}" />
+			        </c:forEach>
+			        ${totalPrice}
                 </div>
                 <!-- 결제 버튼 -->
                 <button type="button" class="btn payment-button btn-lg" onclick="submitPayment()">결제하기</button>
@@ -193,6 +208,10 @@
 <!-- Bootstrap JS and dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+	$("#newAddress").on("click", function(){
+		$(".form-control").val("");
+	});
+
     function submitPayment() {
         // 결제 처리 로직
         alert("결제 진행");

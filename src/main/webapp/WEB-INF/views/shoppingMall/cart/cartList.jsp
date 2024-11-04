@@ -181,23 +181,16 @@
 				});
 
 				// 결제화면으로 넘어갈때 체크 데이터 가지고 넘어가기
-				$("#btn-order")
-						.on(
-								"click",
-								function() {
-									var productIdList = [];
-									$(".form-check-input").each(
-											function(idx, data) {
-												if (data.checked) {
-													productIdList.push($(data)
-															.val());
-												}
-											});
-									$("form").attr(
-											"action",
-											"orderpayment?productIdList="
-													+ productIdList);
-								});
+				$("#btn-order").on("click",	function() {
+						var cartIdList = [];
+						$(".form-check-input").each(
+							function(idx, data) {
+								if (data.checked) {
+									cartIdList.push($(data).val());
+								}
+							});
+						$("form").attr("action","orderpayment?cartIdList="+ cartIdList);
+				});
 
 
 

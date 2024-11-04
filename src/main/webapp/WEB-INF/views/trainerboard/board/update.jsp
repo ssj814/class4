@@ -31,8 +31,9 @@
     <!-- 모듈화된 Summernote 설정 파일 포함 -->
     <script src="resources/js/summernote.js"></script>
 
-<link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
-
+ 	
+ 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 </head>
 <body>
 <div class="container" style="margin-top:40px;">
@@ -72,10 +73,10 @@
 				<img id="preview" class="image-preview" style="display: none;  width:100px; height:100px;" />
 				</div>
 
-
-		    <div class="button">
-		    	<button class="buttonmulti">수정완료</button>
-		    	<button class="buttonmulti" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
+				<br>
+		    <div class="writeSubmit"  style="text-align: left;">
+		    	<button class="writeSubmit">수정완료</button>
+		    	<button class="writeSubmit" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록보기</button>
 
 			</div>
 	</form>		

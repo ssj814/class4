@@ -28,8 +28,9 @@
     <!-- 모듈화된 Summernote 설정 파일 포함 -->
     <script src="resources/js/summernote.js"></script>
     
-    <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
-
+  
+ 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 </head>
 <body>
     <div class="container" style="margin-top:40px;">
@@ -57,11 +58,12 @@
 
                 <!-- required 없이 저장가능하게  하고싶으나 sql 오류발생 / 부적합한 열 유형 :1111 어쩌라고-->
                 </div>
-
+					
+				<br>
                 <!-- 저장 버튼과 목록 보기 링크 -->
-                <div class="btn">
-                    <button class="btn" type="submit">저장</button>&nbsp;
-                    <button class="btn" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>	
+                <div class="writeSubmit" style="text-align: left;">
+                    <button class="writeSubmit" type="submit">저장</button>&nbsp;
+                    <button class="writeSubmit" type="button" onclick="location.href='${pageContext.request.contextPath}/TrainerBoard'">목록 보기</button>	
                 </div>
             </form>
         </main>

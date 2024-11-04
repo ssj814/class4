@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
+ 	<link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">	
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
  	<script
@@ -75,10 +75,27 @@
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
 	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 <!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
-</div>
-        <hr>
+		</div>
 
-		<div id="reply">
+<div id="total-replyForm">
+
+<div class="comment-container">
+			<div class="comment-header">
+				<h7>댓글 작성</h7>
+			</div>
+			<div class="comment-body">
+				<form class="replyForm">
+					<input type="hidden" name="postid" value="${dto.postid}">
+					<input type="hidden" name="userid" value="${dto.userid}">
+					<textarea id="comment-textarea" name="commContent"
+						placeholder="댓글을 입력하세요" rows="5"></textarea>
+					<button type="submit" id="submit-comment" class="hidden">댓글
+						작성</button>
+				</form>
+			</div>
+		</div>
+
+		<div id="reply" >
 			<c:forEach var="comment" items="${comments}">
 				<div class="reply-container"
 					style="margin-left: ${comment.tr_RepIndent * 20}px;">
@@ -104,7 +121,7 @@
 							<td class="reply-button">
 								<input type="button" class="edit-button" value="수정" data-id="${comment.commId}">
 								<input type="button" class="delete-button" value="삭제" data-id="${comment.commId}"> 
-								<input type="button" class="reply-reply-button" value="답글" data-parentid="${comment.commId}">
+								<input type="button" class="reply-reply-button" value="댓글" data-parentid="${comment.commId}">
 							</td>
 						</tr>
 					</table>
@@ -121,7 +138,7 @@
 							<div class="reply-textarea-container">
 					            <textarea name="commContent" placeholder="대댓글을 입력하세요" rows="3"></textarea>
 					            <div class="submit-reply-button-container">
-					                <button type="submit">댓글 작성</button>
+					                <button type="submit">등록</button>
 					            </div>
 					        </div>
 							
@@ -131,22 +148,7 @@
 			</c:forEach>
 		</div>
 
-
-		<div class="comment-container">
-			<div class="comment-header">
-				<h5>댓글 작성</h5>
-			</div>
-			<div class="comment-body">
-				<form class="replyForm">
-					<input type="hidden" name="postid" value="${dto.postid}">
-					<input type="hidden" name="userid" value="${dto.userid}">
-					<textarea id="comment-textarea" name="commContent"
-						placeholder="댓글을 입력하세요" rows="5"></textarea>
-					<button type="submit" id="submit-comment" class="hidden">댓글
-						작성</button>
-				</form>
-			</div>
-		</div>
+</div>	
 <!-- 삭제 요청을 위한 숨겨진 폼 -->
 <form id="deleteForm" method="post" style="display:none;"></form>
 

@@ -146,13 +146,16 @@ public class TrainerBoardController {
 	    // 콘텐츠 줄 바꿈을 <br>로 변환
 	    dto.setContent(dto.getContent().replace("\r\n", "<br>"));
 
-	    try { //update.jsp에 input type="hidden"으로 db에 저장된 imagename넘김
-	    	//부팀장님껏도 다시 보기
+	    try {
+	        // 기존 이미지가 있을 경우
 	        if (dto.getImagename() != null) { 
 	            File oldImageFile = new File(uploadDir + dto.getImagename());
 	           
 	            if (oldImageFile.exists()) {
-	                oldImageFile.delete(); // 기존 이미지 삭제
+	                // 새 이미지가 있는 경우에만 기존 이미지 삭제
+	                if (!weightImage.isEmpty()) {
+	                    oldImageFile.delete(); // 기존 이미지 삭제
+	                }
 	            }
 	        }
 
@@ -289,6 +292,5 @@ public class TrainerBoardController {
         return "success";
     }
 
-	
 
 }// main

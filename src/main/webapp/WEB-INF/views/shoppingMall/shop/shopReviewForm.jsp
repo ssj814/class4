@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<link rel="stylesheet" href="<c:url value='/resources/css/shoppingMall/shopReviewForm.css'/>">
 
 <div class="container">
 	<form action="/app/shop_productReview" method="post"

@@ -117,6 +117,18 @@
 		$(document).on('click', '.update-productReview', reviewUpdate); //리뷰업데이트버튼
 		$(document).on('click', '.del-productReview', reviewDelete); //리뷰삭제버튼
 		$(document).on('click', '.btn-feedback', reviewFeedbackUpdate); //리뷰피드백버튼
+		$(document).on('click', '.review-more', reviewMore); //리뷰더보기버튼
+		
+		//리뷰 - 더보기 버튼
+		function reviewMore(){		
+			var reviewContainer = $(this).closest('.review-content');
+		    
+		    var buttonText = $(this).text() === '더보기...' ? '간략히 보기' : '더보기...';
+		    reviewContainer.find('.review-more').text(buttonText);  // 버튼 텍스트 변경
+		    
+		    reviewContainer.find('.full-review').toggle();  // 전체 텍스트 보여줌
+		    reviewContainer.find('.slice-review').toggle();  // 자른 텍스트 숨김
+		}
 		
 		//리뷰 - 등록
 		$('#Product-Review-openWindow').on('click',function() {
@@ -314,9 +326,9 @@
 		
 		//유저별 추천 비추천
 		function reviewFeedbackUpdate(){
-			
+
+			//로그인 안되어있으면 피드백 방지
 			if(!loginUser){
-				//로그인 안되어있으면 피드백 방지
 				return;
 			}
 			
@@ -389,6 +401,15 @@
 						        '</button>'
 		    }
 		    
+		    // 리뷰내용이 길면 더보기 버튼 추가
+		    let reviewMoreBtn = '';
+		    if (productReview.content.length > 100) {
+		    	showReview = productReview.content.slice(0, 100);
+		    	reviewMoreBtn += '<span class="review-more">더보기...</span>';
+		    } else {
+		    	showReview = productReview.content;
+		    }
+		    
 			// 리뷰 HTML
 		    let reviewHTML = 
 		        '<input type="hidden" class="review_id" value="' + productReview.review_id + '">' +
@@ -403,11 +424,12 @@
 		        '</div>' +
 		        '</div>' +
 		        '<hr>' +
-		        '<div class="d-flex">' +
-		        '<div class="review-content" data-photos="' + productReview.photos + '">' + photosHTML +
-		        '<p class="mb-3" style="white-space: pre-wrap;">' + productReview.content + '</p>' +
+		        '<div class="row">' + 
+		        '<div class="review-content col-10" data-photos="' + productReview.photos + '">' + photosHTML +
+		        '<p class="slice-review mb-3" style="white-space: pre-wrap;">' + showReview + reviewMoreBtn + '</p>' +
+		        '<p class="full-review" style="display: none; white-space: pre-wrap;">' + productReview.content + reviewMoreBtn + '</p>'+
 		        '</div>' +
-		        '<div class="ms-auto">' + 
+		        '<div class="ms-auto col-2 text-end">' + 
 		        delUpdateHTML + 
 		        '<button id="up-' + productReview.review_id + '" class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
 		        '<i class="fa-regular fa-thumbs-up"></i>' +

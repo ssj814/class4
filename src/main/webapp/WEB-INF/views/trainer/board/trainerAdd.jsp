@@ -1,15 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>트레이너 등록</title>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+
 <link rel="stylesheet" type="text/css" href="resources/css/trainer/traineradd.css">  <!-- CSS 파일 링크 -->
-</head>
-<body>
+
 <div class="trainerContainer">
-    <!-- 파일 업로드를 허용하기 위해 enctype="multipart/form-data" 추가 -->
+
     <form action="trainer_join" method="post" enctype="multipart/form-data">
         <div class="bodyContainer">
             <h2>트레이너 등록</h2>
@@ -17,12 +13,12 @@
         
         <div class="bodyContainer">
             <label class="compulsory">실명</label>
-            <input type="text" id="name" name="name" placeholder="실명을 입력해주세요.">
+            <input type="text" id="name" name="name" placeholder="실명을 입력해주세요." required>
         </div>
         
         <div class="bodyContainer">
             <label class="compulsory">닉네임</label>
-            <input type="text" id="nickname" name="nickname" placeholder="센터에서 사용하는 이름을 입력해주세요.">
+            <input type="text" id="nickname" name="nickname" placeholder="센터에서 사용하는 이름을 입력해주세요." required>
         </div>
         
         <div class="bodyContainer">
@@ -32,61 +28,43 @@
                     <input type="radio" id="male" name="gender" value="남자"><span>남자</span>
                 </label>
                 <label>
-                    <input type="radio" id="female" name="gender" value="여자"><span>여자</span>
+                    <input type="radio" id="female" name="gender" value="여자" class="ms-3"><span>여자</span>
                 </label>
             </div>
         </div>
         
         <div class="bodyContainer">
-            <label class="compulsory">지도종목</label>
-            <div class="inputGroup">
-                <label>
-                    <input type="checkbox" class="field" name="field" value="웨이트"><span>웨이트</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="재활"><span>재활</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="다이어트"><span>다이어트</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="대회준비"><span>대회준비</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="맨몸운동"><span>맨몸운동</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="바디프로필"><span>바디프로필</span>
-                </label>
-                <label>
-                    <input type="checkbox" class="field" name="field" value="건강관리"><span>건강관리</span>
-                </label>
-            </div>
+	         <label class="compulsory">지도종목</label>
+	         <div class="inputGroup">
+	         	<c:forEach var="field" items="${fieldOptions}" begin="1" end="${fieldOptions.size() - 1}" varStatus="status">
+					<input type="checkbox" class="field me-1" name="field" value="${field}" id="${status.index}"><label for="${status.index}" class="me-3">${field}</label>
+				</c:forEach>
+	         </div>
         </div>
                 
         <div class="bodyContainer">
             <label class="compulsory">소속 센터명</label>
-            <input type="text" id="center" name="center_name" placeholder="활동중인 센터명을 입력해주세요.">
+            <input type="text" id="center" name="center_name" placeholder="활동중인 센터명을 입력해주세요." required>
         </div>
         
         <div class="bodyContainer">
             <label class="compulsory">소속 센터 주소</label>
             <div>
-                <input type="text" id="postcode" name="center_postcode" placeholder="우편번호">
+                <input type="text" id="postcode" name="center_postcode" placeholder="우편번호" required>
                 <input type="button" onclick="findpostcode()" value="우편번호 찾기"><br>
-                <input type="text" id="centerAddress" name="center_address1" placeholder="주소"><br>
-                <input type="text" id="centerAddressDetail" name="center_address2" placeholder="상세주소">
+                <input type="text" id="centerAddress" name="center_address1" placeholder="주소" required><br>
+                <input type="text" id="centerAddressDetail" name="center_address2" placeholder="상세주소" required>
             </div>
         </div>
         
         <div class="bodyContainer">
             <label class="compulsory">한줄 소개글 (대표 소개글로 설정됩니다.)</label>
-            <input type="text" id="intro" name="intro">
+            <input type="text" id="intro" name="intro" required>
         </div>
         
         <div class="bodyContainer">
             <label class="compulsory">소개글 및 소개사진</label>
-            <textarea id="introDetail" name="content" cols="30" rows="8"></textarea>
+            <textarea id="introDetail" name="content" cols="30" rows="8" required></textarea>
             <div class="notice">*최소 30자 이상</div>
             
             <!-- 이미지 파일 업로드 -->
@@ -102,7 +80,7 @@
                     <option>학력</option>
                     <option>수상경력</option>
                 </select>
-                <input type="text" class="cert" name="certificate" placeholder="내용을 입력해주세요.">
+                <input type="text" class="cert" name="certificate" placeholder="내용을 입력해주세요." required>
                 <button id="certAddButton">추가하기</button>
             </div>
         </div>
@@ -126,7 +104,6 @@
     </form>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script type="text/javascript">
 $('document').ready(function() {
@@ -219,4 +196,4 @@ $("#certAddButton").on("click", function(event) {
     return false;
 });
 </script>
-</html>
+

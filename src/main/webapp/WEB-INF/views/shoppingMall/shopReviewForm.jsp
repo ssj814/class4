@@ -8,6 +8,5 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="../resources/css/shoppingMall/shopReviewForm.css">
 
 <jsp:include page="shop/shopReviewForm.jsp" flush="true"></jsp:include>

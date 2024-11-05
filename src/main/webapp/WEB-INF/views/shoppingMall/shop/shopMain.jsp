@@ -123,7 +123,7 @@
 		<div class="col-9">
 			<div class="row g-4 mx-5">
 				<h2 class="mb-4 mt-2">new products</h2>
-				<c:forEach var="product" items="${ProductList}" begin="0" end="7">
+				<c:forEach var="product" items="${newProduct}" begin="0" end="7">
 					<div class="col-6 col-md-3">
 						<div class="card" style="height: 230px; border: none;">
 							<a
@@ -197,7 +197,7 @@
 		<div class="pb-2">
 			<h2>popular products</h2>
 		</div>
-		<c:forEach var="product" items="${ProductList}" begin="0" end="7">
+		<c:forEach var="product" items="${popularProduct}" begin="0" end="7">
 			<div class="col-6 col-md-3">
 				<div class="card" style="height: 300px; border: none;">
 					<a

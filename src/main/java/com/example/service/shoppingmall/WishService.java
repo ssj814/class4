@@ -15,8 +15,8 @@ public class WishService {
 	@Autowired
 	WishDAO dao;
 
-	public List<ProductWishDTO> selectWishList(int user_id) {
-		return dao.selectWishList(user_id);
+	public List<ProductWishDTO> selectWishList(String userId) {
+		return dao.selectWishList(userId);
 	}
 
 	public int checkWish(Map<String, Object> map) {

@@ -1,8 +1,7 @@
 package com.example.entity;
 
 import java.time.LocalDateTime;
-
-import com.example.entity.User.Role;
+import java.time.format.DateTimeFormatter;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -79,6 +78,28 @@ public class User {
         TRAINER // 트레이너
     }
     
+ // LocalDateTime을 String으로 변환하는 메서드
+    public String getFormattedCreated() {
+        return formatLocalDateTime(created);
+    }
+
+    public String getFormattedUpdated() {
+        return formatLocalDateTime(updated);
+    }
+
+    public String getFormattedLastLogin() {
+        return formatLocalDateTime(lastlogin);
+    }
+
+    // LocalDateTime을 String으로 포맷팅
+    private String formatLocalDateTime(LocalDateTime dateTime) {
+        if (dateTime != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            return dateTime.format(formatter);
+        }
+        return "";
+    }
+    
     //마이바티스의 경우 컬럼 디폴트로 대체 가능
     @PrePersist // 해당 초기값 DB에 저장
     public void prePersist(){
@@ -87,6 +108,15 @@ public class User {
         }
         if(this.role == null) {
         	this.role = Role.USER;
+        }
+        if (this.created == null) {
+            this.created = LocalDateTime.now();
+        }
+        if (this.updated == null) {
+            this.updated = LocalDateTime.now();
+        }
+        if (this.lastlogin == null) {
+            this.lastlogin = LocalDateTime.now();
         }
     }
     

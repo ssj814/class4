@@ -67,6 +67,28 @@ public class CookieUtils {
             }
         }
     }
+    
+    /**
+     * 특정 이름의 쿠키를 제거하는 메서드입니다.
+     *
+     * @param request  HTTP 요청 객체
+     * @param response HTTP 응답 객체
+     * @param name     제거할 쿠키의 이름
+     */
+    public static void removeCookie(HttpServletRequest request, HttpServletResponse response, String name) {
+        Cookie[] cookies = request.getCookies(); // 요청의 모든 쿠키를 가져옴
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                // 쿠키의 이름이 일치하는 경우
+                if (cookie.getName().equals(name)) {
+                    cookie.setValue(""); // 쿠키 값을 비워서 삭제
+                    cookie.setPath("/"); // 쿠키의 경로 설정
+                    cookie.setMaxAge(0); // 쿠키의 유효 기간을 0으로 설정하여 삭제
+                    response.addCookie(cookie); // 응답에 쿠키 추가
+                }
+            }
+        }
+    }
 
     /**
      * 주어진 객체를 직렬화하여 Base64 인코딩된 문자열로 변환합니다.

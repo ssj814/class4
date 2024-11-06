@@ -197,7 +197,7 @@
 			}
 		        $.ajax({
 		            type: "POST",
-		            url: "cart",
+		            url: "user/cart",
 		            dataType: "json",
 		            contentType: "application/json",
 		            data: JSON.stringify({

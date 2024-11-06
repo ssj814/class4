@@ -207,7 +207,7 @@
 				    }
 
 					$.ajax({
-						url : "cartDelete",
+						url : "/app/cartDelete",
 						type : "post",
 						data : {
 							cartIds: selectedCartIds

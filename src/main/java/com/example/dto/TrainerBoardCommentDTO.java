@@ -2,84 +2,98 @@ package com.example.dto;
 
 import org.apache.ibatis.type.Alias;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Alias("TrainerBoardCommentDTO")
 public class TrainerBoardCommentDTO {
 
+//TrainerBoardCommentDTO 수정 10.29
 	
-	int Postid;
-	int Commid;
-	int userid;
-	String commcontent;
-	String comcrdate;
-	String comupdate;
+	private int postid; //글고유번호
+	private int commId; //댓글고유번호
+	private int userId; //댓글작성자
+	private String commContent; //댓글내용
+	private String comCrdate; //댓글작성일
+	private String comUpdate; //댓글수정일
+	private Integer tr_ParentId = 0; //부모댓글
+	private int tr_RepIndent; //댓글들여쓰기기준
+	
+	
+	
+	public TrainerBoardCommentDTO(int postid, int commId, int userId, String commContent, String comCrdate,
+			String comUpdate, Integer tr_ParentId, int tr_RepIndent) {
+		super();
+		this.postid = postid;
+		this.commId = commId;
+		this.userId = userId;
+		this.commContent = commContent;
+		this.comCrdate = comCrdate;
+		this.comUpdate = comUpdate;
+		this.tr_ParentId = tr_ParentId;
+		this.tr_RepIndent = tr_RepIndent;
+	}
 	
 	public TrainerBoardCommentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public TrainerBoardCommentDTO(int postid, int commid, int userid, String commcontent, String comcrdate, String comupdate) {
-		super();
-		Postid = postid;
-		Commid = commid;
-		this.userid = userid;
-		this.commcontent = commcontent;
-		this.comcrdate = comcrdate;
-		this.comupdate = comupdate;
-	}
-
 	@Override
 	public String toString() {
-		return "CommentDTO [Postid=" + Postid + ", Commid=" + Commid + ", userid=" + userid + ", commcontent="
-				+ commcontent + ", comcrdate=" + comcrdate + ", comupdate=" + comupdate + "]";
+		return "TrainerBoardCommentDTO [postid=" + postid + ", commId=" + commId + ", userId=" + userId
+				+ ", commContent=" + commContent + ", comCrdate=" + comCrdate + ", comUpdate=" + comUpdate
+				+ ", tr_ParentId=" + tr_ParentId + ", tr_RepIndent=" + tr_RepIndent + "]";
 	}
 
 	public int getPostid() {
-		return Postid;
+		return postid;
 	}
-
 	public void setPostid(int postid) {
-		Postid = postid;
+		this.postid = postid;
 	}
-
-	public int getCommid() {
-		return Commid;
+	public int getCommId() {
+		return commId;
 	}
-
-	public void setCommid(int commid) {
-		Commid = commid;
+	public void setCommId(int commId) {
+		this.commId = commId;
 	}
-
-	public int getUserid() {
-		return userid;
+	public int getUserId() {
+		return userId;
 	}
-
-	public void setUserid(int userid) {
-		this.userid = userid;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-
-	public String getCommcontent() {
-		return commcontent;
+	public String getCommContent() {
+		return commContent;
 	}
-
-	public void setCommcontent(String commcontent) {
-		this.commcontent = commcontent;
+	public void setCommContent(String commContent) {
+		this.commContent = commContent;
 	}
-
-	public String getComcrdate() {
-		return comcrdate;
+	public String getComCrdate() {
+		return comCrdate;
 	}
-
-	public void setComcrdate(String comcrdate) {
-		this.comcrdate = comcrdate;
+	public void setComCrdate(String comCrdate) {
+		this.comCrdate = comCrdate;
 	}
-
-	public String getComupdate() {
-		return comupdate;
+	public String getComUpdate() {
+		return comUpdate;
 	}
-
-	public void setComupdate(String comupdate) {
-		this.comupdate = comupdate;
+	public void setComUpdate(String comUpdate) {
+		this.comUpdate = comUpdate;
+	}
+	public Integer getTr_ParentId() {
+		return tr_ParentId;
+	}
+	public void setTr_ParentId(Integer tr_ParentId) {
+		this.tr_ParentId = tr_ParentId;
+	}
+	public int getTr_RepIndent() {
+		return tr_RepIndent;
+	}
+	public void setTr_RepIndent(int tr_RepIndent) {
+		this.tr_RepIndent = tr_RepIndent;
 	}
 	
 	

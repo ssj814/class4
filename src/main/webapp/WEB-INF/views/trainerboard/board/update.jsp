@@ -8,6 +8,29 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+ 
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Summernote CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Summernote JS -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+
+    <!-- Summernote 한국어 설정 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
+
+    <!-- 모듈화된 Summernote 설정 파일 포함 -->
+    <script src="resources/js/summernote.js"></script>
+
 <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
 
 </head>
@@ -16,14 +39,15 @@
         <main>
 
 
-		   <form action="${pageContext.request.contextPath}/update" method="post" id="updateForm" enctype="multipart/form-data">
+		   <form action="${pageContext.request.contextPath}/update" method="post" id="writeForm" enctype="multipart/form-data">
 		    	<input type="hidden" name="postid" value="${dto.postid}">
 		    	<div class="label">
-		    	<label for="title">글제목</label></div>
+		    	<label for="title">제목</label></div>
 		    	<input type="text" id="title" name="title"  maxlength="50" required value="${dto.title}"><br><br>
 		    	<div class="label">
 		    	<label for="content">내용</label></div>
-		    	<textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br>
+		    	  <textarea class="summernote form-control" id="content" name="content">${dto.content}</textarea> 
+		    	<%-- <textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br> --%>
 			   
 			    <!-- 첨부된 파일 이름 표시 -->
                 <div class="label">
@@ -37,6 +61,7 @@
                
                  <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
 				class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
+                <input type="hidden" name="imagename" value='${dto.imagename}'/>
                 </div>
                 
 			   <br>

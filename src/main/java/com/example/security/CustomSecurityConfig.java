@@ -60,12 +60,14 @@ public class CustomSecurityConfig {
         		.deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
         )
         .oauth2Login(configure -> // OAuth2 로그인 설정
-        configure.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
-            config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
-        .userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
-            config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
-        .successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
-        .failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
+        	configure
+        		.loginPage("/user/loginForm") //커스텀로그인 페이지로 이동
+    			.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
+    				config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
+    			.userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
+    				config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
+				.successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
+				.failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
         )
         // status code 핸들링
         .exceptionHandling(exception -> exception

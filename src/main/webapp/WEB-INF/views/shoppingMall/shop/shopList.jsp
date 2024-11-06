@@ -124,7 +124,7 @@
 								style="object-fit: contain; max-height: 150px; width: 100%;">
 							</a>
 							<h2>
-								<a
+								<a class="product-name"
 									href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>">${product.getProduct_name()}</a>
 							</h2>
 							<p><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></p>
@@ -164,6 +164,11 @@
 	
 	$(function() {
 		
+		//상품명 길이 처리
+		$(".product-name").each(function(idx,data) {
+			sliceLength(data,10);
+		});
+		
 		// 모달창
         var message = '${mesg}';
         if (message) {
@@ -195,4 +200,13 @@
 		});
 
 	})
+	
+	function sliceLength(data,len){
+		let productName = $(data).text();
+		if(productName.length < len){
+			return
+		}
+	    let sliceName = $(data).text().slice(0,len) + "...";
+	    $(data).text(sliceName);
+	}
 </script>

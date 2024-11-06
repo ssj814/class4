@@ -113,6 +113,9 @@
 	
 	$(function() {
 		
+		// 로그인 유저 정보
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		
 		// total 계산
 		$(".product-quantity").on("change", function(){
 			var productPrice = `${product.getProduct_price()}`;
@@ -127,6 +130,11 @@
 
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
+			
+			if(!loginUser){
+				return modalShow("로그인하세요.");
+			}
+			
 			var productId = $(".ProductId").val();
 			var options = [];
 
@@ -151,9 +159,7 @@
 		                options: JSON.stringify(options)
 		            },
 		            success: function(resData, status, xhr) {
-		            	$("#mesg").html(resData.mesg);
-		            	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
-		                messageModal.show();
+		            	modalShow(resData.mesg);
 		            },
 		            error: function(xhr, status, error) {
 		                alert("실패");
@@ -165,6 +171,11 @@
 	
 		// cart 이동버튼
 		$(".btn-cart").on("click", function(){
+			
+			if(!loginUser){
+				return modalShow("로그인하세요.");
+			}
+			
 			var productId = parseInt($(".ProductId").val());
 			var options = [];
 			 // 각 옵션의 타입과 선택된 값 가져오기
@@ -195,10 +206,7 @@
 	                    productQuantity: productQuantity
 	                }),
 		            success: function(resData, status, xhr) {
-		            	console.log(resData);
-		            	$("#mesg").html(resData.mesg);
-		            	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
-		                messageModal.show();
+		                modalShow(resData.mesg);
 		            },
 		            error: function(xhr, status, error) {
 		                alert("실패");
@@ -206,6 +214,13 @@
 		            }
 		    });
 		});
+		
+		//모달창 함수
+		function modalShow(mesg) {
+			$("#mesg").html(mesg);
+        	var messageModal = new bootstrap.Modal($('#messageModal')[0]);
+            messageModal.show();
+		}
 		
 		const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 		const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))

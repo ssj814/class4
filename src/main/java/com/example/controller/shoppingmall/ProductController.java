@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +55,8 @@ public class ProductController {
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m, HttpSession session) {
-		List<ProductDTO> ProductList = service.selectProductMainList();
+		List<ProductDTO> popularProduct = service.selectProductMainList("PRODUCT_VIEW");
+		List<ProductDTO> newProduct = service.selectProductMainList("PRODUCT_CREATEDAT");
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
 		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
@@ -63,7 +65,8 @@ public class ProductController {
 	        List<NoticeDTO> popupNotices = nService.getPopupNotices();
 	        session.setAttribute("popupNotices", popupNotices);
 	    }
-		m.addAttribute("ProductList",ProductList);
+		m.addAttribute("popularProduct",popularProduct);
+		m.addAttribute("newProduct",newProduct);
 		m.addAttribute("CategoryList",CategoryList);
 		return "shoppingMall/shopMain";
 	}
@@ -101,9 +104,9 @@ public class ProductController {
 		}
 		dataMap.put("sortList", sortList);
 		List<ProductDTO> ProductList = service.selectProductList(dataMap,bounds);
-
+		
 		//페이징
-		int totalProductSize = service.selectProductMainList().size(); // 전체 상품 개수
+		int totalProductSize = service.selectProductMainList("PRODUCT_VIEW").size(); // 전체 상품 개수
 		if(search!=null || category!=null) { // 조건에 걸린 전체 상품 개수
 			Map<String, String> selectMap = new HashMap<String, String>();
 			selectMap.put("search", search);
@@ -114,13 +117,12 @@ public class ProductController {
 		if(totalProductSize%perPage!=0) {
 			totalPage++;
 		}
-		
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String user_id = authentication.getName();
 		
 		// 최근 본 상품 목록 조회 및 이미지 정보 추가
 	    List<Map<String, Object>> recentProductWithImages = getRecentImages(user_id);
-	    
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
 		m.addAttribute("recentProducts", recentProductWithImages);
@@ -173,7 +175,6 @@ public class ProductController {
 		service.addViewCount(productId); //조회수++
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
-
 		m.addAttribute("averageRating",roundedAverageRating);
 	    m.addAttribute("sortType",sortType);
 		m.addAttribute("recentProducts", recentProductWithImages);
@@ -249,6 +250,7 @@ public class ProductController {
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		return "redirect:/shopList";
 	}
+	
 	
 	@DeleteMapping(value="/product/productId/{productId}")
 	@ResponseBody

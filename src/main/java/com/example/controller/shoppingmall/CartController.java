@@ -34,19 +34,18 @@ public class CartController {
 	@Autowired
 	ProductService productService;
 
-	@GetMapping("/cartList")
+	@GetMapping("/user/cartList")
 	public String cartList(Model m, HttpSession session ) {
-		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String user_id = authentication.getName();
-		List<CartProductDTO> ProductList = service.selectCart(user_id);
+		String userId = authentication.getName();
+		List<CartProductDTO> ProductList = service.selectCart(userId);
 		 for (CartProductDTO product : ProductList) {
 			// 모든 옵션을 가져오기
 		        List<ProductOptionDTO> allOptions = productService.selectProductOptions(product.getProduct_id());
 		        product.setAllOptions(allOptions);
 		        
 		        // 장바구니에 선택된 옵션을 가져오기
-		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), user_id);
+		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), userId);
 		        product.setSelectedOptions(selectedOptions);
 		    }
 		m.addAttribute("ProductList", ProductList);
@@ -57,14 +56,11 @@ public class CartController {
 	@ResponseBody
 	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		//int user_Id = 1; //임시 유저
-		String user_Id = authentication.getName();
-
+		String userId = authentication.getName();
 		int productId = (int) requestMap.get("productId");
 		int productQuantity = (int) requestMap.get("productQuantity");
 		List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
-		Map<String,Object> map = createCartMap(user_Id, productId, -1, options);
+		Map<String,Object> map = createCartMap(userId, productId, -1, options);
 		int check = service.cartCheck(map); //cart에 존재여부
 		
 		map.put("quantity", productQuantity);
@@ -90,9 +86,9 @@ public class CartController {
 	    }
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String user_Id = authentication.getName();
+		String userId = authentication.getName();
 	    CartDTO dto = new CartDTO();
-	    dto.setUser_id(user_Id);
+	    dto.setUser_id(userId);
 	    dto.setCart_id(cartId);
 	    dto.setQuantity(quantity);
 	    service.cartUpdate(dto);
@@ -106,10 +102,10 @@ public class CartController {
 	    }
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String user_Id = authentication.getName();
+		String userId = authentication.getName();
 	    cartIds.forEach(cartId -> {
 	        CartDTO dto = new CartDTO();
-	        dto.setUser_id(user_Id);
+	        dto.setUser_id(userId);
 	        dto.setCart_id(cartId);
 	        service.cartDelete(dto);
 	    });
@@ -119,14 +115,12 @@ public class CartController {
 	@ResponseBody
 	public Map<String, String> updateCartOption(@RequestBody Map<String, Object> requestMap) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		//int user_Id = 1; //임시 유저
-		String user_Id = authentication.getName();
+		String userId = authentication.getName();
 	    int cartId = Integer.parseInt((String) requestMap.get("cartId"));
 	    int productId = Integer.parseInt((String) requestMap.get("productId"));
 	    List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
 	    
-	    Map<String, Object> map = createCartMap(user_Id, productId, cartId, options);
+	    Map<String, Object> map = createCartMap(userId, productId, cartId, options);
 	    // 동일한 상품이 장바구니에 있는지 확인
 	    int existingCartId = service.checkExistingCart(map); // 이미 있는 상품의 cartId를 리턴
 	    Map<String, String> responseMap = new HashMap<>();

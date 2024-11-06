@@ -19,8 +19,8 @@ public class ProductDAO {
 	@Autowired
 	SqlSessionTemplate session;
 	
-	public List<ProductDTO> selectProductMainList() {
-		return session.selectList("ProductMapper.selectProductMainList");
+	public List<ProductDTO> selectProductMainList(String order) {
+		return session.selectList("ProductMapper.selectProductMainList",order);
 	}
 	
 	public ProductDTO selectDetailproduct(int productId) {

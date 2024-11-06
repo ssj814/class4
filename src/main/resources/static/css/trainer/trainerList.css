@@ -1,120 +1,150 @@
-/* 기본 스타일 설정 */
 body {
-    font-family: 'Malgun Gothic', '맑은 고딕', 'Apple SD Gothic Neo', 'Arial', sans-serif;
-    color: #333;
-    margin: 0;
-    padding: 0;
-    background-color: #f8f9fa;
-}
-/* a태그 밑줄 없애기 */
-a{
-	text-decoration-line: none;
-	color: inherit;
+	background-color: #f8f9fa;
 }
 
-/* 타이틀 스타일 */
+.container {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
 .title {
-    text-align: center;
-    color: #555;
-    margin: 20px 0;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 30px;
+	font-size: 2rem;
 }
 
-/* 버튼 그룹 스타일 */
-.button-group {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4열의 그리드 레이아웃 */
-    gap: 10px; /* 버튼 사이의 간격 */
-    margin: 20px auto;
-    max-width: 800px; /* 버튼 그룹의 최대 너비 설정 */
-    padding: 0 10px; /* 버튼 그룹의 좌우 패딩 */
-    box-sizing: border-box; /* 패딩 포함 크기 계산 */
+.filter-group {
+	text-align: center;
+	margin-bottom: 20px;
 }
 
-.filter-button {
-    padding: 8px 0; /* 상하 패딩만 추가 */
-    border: none;
-    border-radius: 5px;
-    background-color: #c0c0c0; /* 회색 */
-    color: #333;
-    cursor: pointer;
-    font-size: 14px; /* 글꼴 크기 조정 */
-    text-align: center;
-    box-sizing: border-box; /* 박스 크기 계산 */
+.filter-group button {
+	margin-right: 5px;
+	margin-bottom: 5px;
+	font-size: 0.9rem;
+	padding: 7px 15px;
+	border: none;
+	background-color: #6c757d; /* 중성적 회색 */
+	color: white;
+	transition: background-color 0.3s ease;
 }
 
-.filter-button:hover {
-    background-color: darkgrey; /* 호버 시 색상 */
+.filter-group button:hover {
+	background-color: #495057; /* 호버 시 약간 어두운 회색 */
 }
 
-.trainer-search, .trainerAdding {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    align-items: center;
-    margin: 0 auto;
-}
-.pagination {
-    text-align : center;
-	padding: 5px;
+.search-bar {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 20px;
 }
 
-/* 트레이너 카드 스타일 */
+.search-bar input, .search-bar select {
+	margin-right: 10px;
+	border: 1px solid #ced4da;
+}
+
+.search-bar button {
+	background-color: #343a40; /* 진한 회색 */
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+	background-color: #23272b; /* 호버 시 약간 더 어두운 색 */
+}
+
 .trainer-list {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%; /* 전체 너비를 80%로 조정 */
-    margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .trainer-card {
-    display: flex;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 1000px; /* 최대 너비를 1000px로 조정 */
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
+	background-color: white;
+	border-radius: 12px;
+	padding: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.trainer-header {
-    flex: 1;
-}
-
-.trainer-name {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-.trainer-center {
-    color: #777;
-}
-
-.trainer-intro {
-    font-size: 18px;
-    margin: 10px 0;
-}
-
-.trainer-spec {
-    color: #666;
-}
-
-.trainer-date {
-    color: #999;
-}
-
-.trainer-image {
-    flex: 0 0 200px; /* 이미지 영역의 고정 너비 설정 */
-    margin-left: 20px;
-    text-align: center;
+.trainer-card:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .trainer-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
+	width: 150px;
+	height: 150px;
+	border-radius: 12px;
+	object-fit: cover;
+	margin-right: 30px;
+}
+
+.trainer-info {
+	flex-grow: 1;
+}
+
+.trainer-name {
+	font-size: 1.5rem;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+.trainer-intro {
+	font-size: 1rem;
+	color: #666;
+	margin-bottom: 10px;
+}
+
+.trainer-spec {
+	font-size: 0.9rem;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+}
+
+.pagination a {
+	margin: 0 5px;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: #adb5bd; /* 세련된 회색 */
+	color: white;
+	text-decoration: none;
+	transition: background-color 0.3s ease;
+}
+
+.pagination a:hover {
+	background-color: #6c757d; /* 호버 시 조금 더 어두운 회색 */
+}
+
+.trainerAdding {
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+	z-index: 1000;
+}
+
+.trainerAdding a {
+	padding: 12px 20px;
+	background-color: #007bff; /* 모던한 파란색 */
+	color: white;
+	text-decoration: none;
+	border-radius: 50px; /* 둥근 버튼 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.trainerAdding a:hover {
+	background-color: #0056b3; /* 호버 시 더 진한 파란색 */
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }

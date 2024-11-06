@@ -1,25 +1,68 @@
 package com.example.service.shoppingmall;
 
-import com.example.entity.Order;
-import com.example.repository.OrderRepository;
-import lombok.RequiredArgsConstructor;
+import com.example.entity.OrderMain;
+import com.example.entity.OrderPayment;
+import com.example.entity.OrderProduct;
+import com.example.entity.OrderProductOption;
+import com.example.repository.OrderMainRepository;
+import com.example.repository.OrderPaymentRepository;
+import com.example.repository.OrderProductRepository;
+import com.example.repository.OrderProductOptionRepository;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-//@RequiredArgsConstructor : final 필드인 orderRepository를 생성자 주입으로 자동 생성함. @Autowired를 사용할 필요가 없어짐.
 public class OrderService {
 
-    private final OrderRepository orderRepository;
+    private final OrderMainRepository orderMainRepository;
+    private final OrderPaymentRepository orderPaymentRepository;
+    private final OrderProductRepository orderProductRepository;
+    private final OrderProductOptionRepository orderProductOptionRepository;
 
+    // OrderMain 저장
     @Transactional
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public OrderMain saveOrderMain(OrderMain orderMain) {
+        return orderMainRepository.save(orderMain);
     }
 
-    public Order getOrder(Long id) {
-        return orderRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Order not found"));
+    // OrderPayment 저장
+    @Transactional
+    public OrderPayment saveOrderPayment(OrderPayment orderPayment) {
+        return orderPaymentRepository.save(orderPayment);
+    }
+
+    // OrderProduct 저장
+    @Transactional
+    public OrderProduct saveOrderProduct(OrderProduct orderProduct) {
+        return orderProductRepository.save(orderProduct);
+    }
+
+    // OrderProductOption 저장
+    @Transactional
+    public OrderProductOption saveOrderProductOption(OrderProductOption orderProductOption) {
+        return orderProductOptionRepository.save(orderProductOption);
+    }
+
+    // OrderMain 조회
+    public OrderMain findOrderMainById(Long id) {
+        return orderMainRepository.findById(id).orElse(null);
+    }
+
+    // OrderPayment 조회
+    public OrderPayment findOrderPaymentById(Long id) {
+        return orderPaymentRepository.findById(id).orElse(null);
+    }
+
+    // OrderProduct 조회
+    public OrderProduct findOrderProductById(Long id) {
+        return orderProductRepository.findById(id).orElse(null);
+    }
+
+    // OrderProductOption 조회
+    public OrderProductOption findOrderProductOptionById(Long id) {
+        return orderProductOptionRepository.findById(id).orElse(null);
     }
 }

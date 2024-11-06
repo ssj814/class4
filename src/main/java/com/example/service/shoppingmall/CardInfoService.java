@@ -20,7 +20,6 @@ public class CardInfoService {
     @Transactional(readOnly = true)
     public List<CardInfo> getAllCardInfo() {
         List<CardInfo> cardInfoList = cardInfoRepository.findAll();
-        System.out.println("CardInfoRepository.findAll() 결과: " + cardInfoList); // 디버깅 출력
         return cardInfoList;
     }
 

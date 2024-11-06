@@ -52,7 +52,7 @@
 		});
 
 		$("#viewListButton").on("click", function() {
-			location.href = 'notice';
+			location.href = '/app/notice';
 		});
 
 	});

@@ -64,9 +64,11 @@
 	border: 1px solid #ddd;
 	border-radius: 4px;
 	margin-bottom: 20px;
+	
 }
 
 #boardArticle_content table {
+	min-height: 300px;
 	width: 100%;
 	border-collapse: collapse; /* 테이블 경계 겹침 제거 */
 }
@@ -75,6 +77,8 @@
 	padding: 10px;
 	line-height: 1.6;
 	border: 1px solid #ddd; /* 테이블 셀 경계 */
+    vertical-align: top; 
+	
 }
 
 /* 게시물 푸터 스타일 */

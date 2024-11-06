@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -249,7 +250,9 @@
 										</c:forEach>
 									</small> × ${item.quantity}
 								</div>
-								<span>₩ ${product.product_price * item.quantity}</span>
+								<span>
+									<fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
+								</span>
 							</div>
 					        <input type="hidden" name="productIds" value="${product.product_id}">
 					        <input type="hidden" name="quantities" value="${item.quantity}">
@@ -259,13 +262,16 @@
 						</c:forEach>
 					</div>
 					<div class="total-price text-end mt-3">
-						Total: ₩<span> <c:set var="totalPrice" value="0" /> <c:forEach
-								var="item" varStatus="status" items="${cartList}">
+						Total: 
+						<span> 
+							<c:set var="totalPrice" value="0" />
+							<c:forEach var="item" varStatus="status" items="${cartList}">
 								<c:set var="product" value="${productList[status.index]}" />
-								<c:set var="itemTotal"
-									value="${product.product_price * item.quantity}" />
+								<c:set var="itemTotal" value="${product.product_price * item.quantity}" />
 								<c:set var="totalPrice" value="${totalPrice + itemTotal}" />
-							</c:forEach> ${totalPrice} 
+							</c:forEach>
+							<fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="₩ " />
+						</span>
 					</div>
 					<!-- 결제 버튼 -->
 					<button type="button" class="btn payment-button btn-lg"
@@ -431,15 +437,15 @@
 		        contentType: "application/json",
 		        data: JSON.stringify(data),
 		        success: function(response) {
-		            alert("결제가 완료되었습니다.");
-		            window.location.href = "/app/user/orderSuccess"; // 결제 성공 페이지로 이동
+		        	console.log("Received orderId:", response.orderId); // 로그 추가
+	        	    alert(response.message);
+	        	    window.location.href = "/app/user/orderSuccess?orderId=" + response.orderId;
 		        },
 		        error: function(xhr, status, error) {
 		            alert("결제에 실패했습니다. 다시 시도해 주세요.");
 		        }
 		    });
 		}
-
 	</script>
 
 </body>

@@ -4,7 +4,9 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,7 +89,7 @@ public class OrderController {
 	@PostMapping("/user/order")
 	@ResponseBody
 	@Transactional
-	public String createOrder(@RequestBody OrderRequestDTO orderRequest) {
+	public Map<String, Object> createOrder(@RequestBody OrderRequestDTO orderRequest) {
 
 	    // 현재 사용자 ID 가져오기
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -138,13 +140,23 @@ public class OrderController {
 	            orderService.saveOrderProductOption(orderProductOption);
 	        }
 	    }
-	    return "결제가 완료되었습니다.";
+	 // 반환할 orderId를 JSON 형식으로 감싸서 반환
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("orderId", savedOrderMain.getOrderId());
+	    response.put("message", "결제가 완료되었습니다.");
+	    return response;
 	}
 	
 	// 결제 성공 페이지
 	@GetMapping("/user/orderSuccess")
-	public String orderSuccess() {
+	public String orderSuccess(@RequestParam("orderId") Long orderId, Model model) {
+		OrderMain orderMain = orderService.findOrderMainById(orderId);
+		OrderPayment orderPay = orderService.findOrderPaymentById(orderId);
+		List<CardInfo> cardInfoList = cardInfoService.getAllCardInfo();
 		
+		model.addAttribute("cardInfoList", cardInfoList);
+	    model.addAttribute("orderPay", orderPay);
+	    model.addAttribute("orderMain", orderMain);
 		return "shoppingMall/orderSuccess";
 	}
 

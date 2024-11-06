@@ -2,6 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <div class="container">
 	<div id="boardList">
 		<div id="boardList_title">[ 공 지 사 항 ]</div>
@@ -55,9 +57,14 @@
 						<tr class="reply">
 							<td class="reply-createdate">${comment.createdate}</td>
 							<td class="reply-button">
+							<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN') 
+            					or (comment.userid eq sessionScope.SPRING_SECURITY_CONTEXT.authentication.name) }">
 								<input type="button" class="edit-button" value="수정" data-id="${comment.id}">
 								<input type="button" class="delete-button" value="삭제" data-id="${comment.id}"> 
-								<input type="button" class="reply-reply-button" value="답글" data-parentid="${comment.id}">
+							</c:if>
+								<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }">
+									<input type="button" class="reply-reply-button" value="답글" data-parentid="${comment.id}">
+								</c:if>
 							</td>
 						</tr>
 					</table>
@@ -69,7 +76,7 @@
 							<input type="hidden" name="parentId" value="${comment.id}">
 							<input type="hidden" name="repIndent"
 								value="${comment.repIndent + 1}">
-							<input type="hidden" name="userid" value="${BoardOne.writer}">
+							<input type="hidden" name="userid" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
 							
 							<div class="reply-textarea-container">
 					            <textarea name="content" placeholder="대댓글을 입력하세요" rows="3"></textarea>
@@ -92,19 +99,22 @@
 			<div class="comment-body">
 				<form class="replyForm">
 					<input type="hidden" name="postid" value="${BoardOne.postid}">
-					<input type="hidden" name="userid" value="${BoardOne.writer}">
+					<input type="hidden" name="userid" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
 					<textarea id="comment-textarea" name="content"
 						placeholder="댓글을 입력하세요" rows="5"></textarea>
-					<button type="submit" id="submit-comment" class="hidden">댓글
-						작성</button>
+					<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }">
+						<button type="submit" id="submit-comment" class="hidden">댓글 작성</button>
+					</c:if>
 				</form>
 			</div>
 		</div>
 
 		<div id="boardArticle_footer">
 			<div>
-				<input type="button" value=" 수정 " id="BoardUpdate" /> <input
-					type="button" value=" 삭제 " id="BoardDelete" />
+				<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+					<input type="button" value=" 수정 " id="BoardUpdate" /> 
+					<input type="button" value=" 삭제 " id="BoardDelete" />
+				</c:if>
 			</div>
 			<div>
 				<input type="button" value=" 목록 " id="viewList" />
@@ -120,17 +130,17 @@
 				var currentPage = ${currentPage}; // JavaScript 변수로 currentPage 값 설정
 
 				$("#viewList").on("click", function() {
-					location.href = 'notice?currentPage=' + currentPage;
+					location.href = '/app/notice?currentPage=' + currentPage;
 				});
 
 				$("#BoardUpdate").on("click", function() {
-					location.href = 'notice_update?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
+					location.href = 'admin/notice_update?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
 				});
 
 				$("#BoardDelete").on("click", function() {
 					var confirmed = confirm("정말로 삭제하겠습니까?");
 					if (confirmed) {
-						location.href = 'notice_delete?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
+						location.href = 'admin/notice_delete?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
 					}
 				});
 				

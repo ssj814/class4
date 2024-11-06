@@ -6,10 +6,6 @@
 
 <h1 class="text-center mt-2">장바구니 엔터금지</h1>
 
-<%-- ${sessionScope.SPRING_SECURITY_CONTEXT.authentication }
-
- <sec:authentication property="principal.username"/> --%>
-
 <form method="post" class="container text-center d-block p-0">
 	<c:forEach var="product" items="${ProductList}">
 		<div class="row align-items-center border border-dark rounded"
@@ -182,14 +178,22 @@
 
 				// 결제화면으로 넘어갈때 체크 데이터 가지고 넘어가기
 				$("#btn-order").on("click",	function() {
-						var cartIdList = [];
-						$(".form-check-input").each(
-							function(idx, data) {
-								if (data.checked) {
-									cartIdList.push($(data).val());
-								}
-							});
-						$("form").attr("action","orderpayment?cartIdList="+ cartIdList);
+					var cartIdList = [];
+						
+					$(".form-check-input").each(function(idx, data) {
+				        if (data.checked) {
+				            cartIdList.push($(data).val());
+				        }
+				    });
+
+				    // 체크된 상품이 하나도 없으면 경고창 띄우고 이동 막기
+				    if (cartIdList.length === 0) {
+				        alert("결제할 상품을 선택해 주세요.");
+				        event.preventDefault(); // 폼 제출 막기
+				        return;
+				    }
+						    
+					$("form").attr("action","orderpayment?cartIdList="+ cartIdList);
 				});
 
 

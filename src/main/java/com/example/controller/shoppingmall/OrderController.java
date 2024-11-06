@@ -46,7 +46,7 @@ public class OrderController {
 	private final UserRepository userRepository;
 	
 
-	@PostMapping("/orderpayment")
+	@PostMapping("/user/orderpayment")
 	public String orderPayment(@RequestParam String[] cartIdList, Model m) {
 		System.out.println("결제 정보 입력 페이지 이동");
 		List<CartDTO> cartList = new ArrayList<>();
@@ -84,7 +84,7 @@ public class OrderController {
 	}
 
 	// 결제 정보 저장 후 성공 페이지로 리다이렉트
-	@PostMapping("/order")
+	@PostMapping("/user/order")
 	@ResponseBody
 	@Transactional
 	public String createOrder(@RequestBody OrderRequestDTO orderRequest) {
@@ -142,7 +142,7 @@ public class OrderController {
 	}
 	
 	// 결제 성공 페이지
-	@GetMapping("/orderSuccess")
+	@GetMapping("/user/orderSuccess")
 	public String orderSuccess() {
 		
 		return "shoppingMall/orderSuccess";

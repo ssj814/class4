@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
 <html>
@@ -62,7 +63,7 @@
 						<li class="nav-item"><a class="nav-link active"
 							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name } 님 환영합니다.</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="/app/logout" style="color: pink;">LOGOUT</a></li>
+							href="${pageContext.request.contextPath}/logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"
 							href="/app/user/wishList" style="color: pink;">WISH</a></li>
 						<li class="nav-item"><a class="nav-link active"
@@ -79,9 +80,6 @@
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
 							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
-							<li class="nav-item"><a class="nav-link active"
-							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
-							 style="color: pink;">카카오로그아웃</a></li>
 					</ul>
 				</c:if>
 			</div>

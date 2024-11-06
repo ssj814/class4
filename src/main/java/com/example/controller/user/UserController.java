@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.dto.user.UserDto;
 import com.example.entity.User;
+import com.example.repository.UserRepository;
 import com.example.service.user.UserService;
 
 @Controller
@@ -19,6 +20,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserRepository userRepository;
     
 //    @RequestMapping("/")
 //    public String main() {
@@ -87,7 +91,7 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String managerView(Model m) { 
 		System.out.println("/admin/view");
-		List<User> users= userService.findAll();
+		List<User> users= userRepository.findAll();
 		System.out.println("users" + users);
 		m.addAttribute("users", users);
 		return "user/adminView";

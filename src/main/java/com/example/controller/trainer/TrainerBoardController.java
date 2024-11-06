@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -89,9 +91,12 @@ public class TrainerBoardController {
 	}
 
 	//글쓰고나면 제목, 내용을 세션에 저장시킴 이미지 여기에 저장하기
-	@RequestMapping(value = "/write", method = RequestMethod.POST)
+	@RequestMapping(value = "/trainer/write", method = RequestMethod.POST)
 	public String write(@RequestParam("title") String title, @RequestParam("content") String content,
 			HttpSession session,Model m, MultipartFile weightImage, TrainerBoardDTO dto) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userid = authentication.getName();
+		
 		String uploadDir = "C:/images/trainerboard_image/";	 //이미지 저장 경로:C에 images폴더에 trainerboard_images에 저장
 		File uploadDirectory = new File(uploadDir); // uploadDir로 지정된 경로에 대한 File 객체를 생성
         if (!uploadDirectory.exists()) {
@@ -108,6 +113,7 @@ public class TrainerBoardController {
 				dto.setImagename(imgName);
 				dto.setTitle(title);
 				dto.setContent(content);
+				dto.setUserid(userid);
 				
 				weightImage.transferTo(new File(uploadDir + imgName)); //파일의 내용을 지정된 위치로 직접 저장
 			}
@@ -125,27 +131,39 @@ public class TrainerBoardController {
 			}
 		}
 		// 메인 페이지로 리다이렉트
-		return "redirect:TrainerBoard"; //저장되고나면 main페이지로 다시 이동
+		return "redirect:/TrainerBoard"; //저장되고나면 main페이지로 다시 이동
 	}
 
 	//update.jsp로 - 수정폼으로
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String showUpdateForm(@RequestParam("postid") int postid, Model m) {
-		System.out.println("수정클릭");
+		
 		TrainerBoardDTO dto = service.retrieve(postid); // postid받아와서 상세내용 불러오고 
 		m.addAttribute("dto", dto);
 		return "trainerboard/update"; // update.jsp로
 	}
 
 	//수정 후 세션에 저장
-	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	@RequestMapping(value = "/trainer/update", method = RequestMethod.POST)
 	public String update(TrainerBoardDTO dto, HttpSession session, Model m, MultipartFile weightImage) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userid = authentication.getName();
+		
 	    String uploadDir = "C:/images/trainerboard_image/";
 	    InputStream inputStream = null;
 
 	    // 콘텐츠 줄 바꿈을 <br>로 변환
 	    dto.setContent(dto.getContent().replace("\r\n", "<br>"));
-
+	    
+	 // 수정하려는 게시글의 작성자와 로그인된 사용자가 일치하는지 확인
+        TrainerBoardDTO existingDto = service.retrieve(dto.getPostid());
+        if (existingDto == null || !existingDto.getUserid().equals(userid)) {
+            // 작성자가 다르면 수정 불가 처리
+        	System.out.println(userid + "==="+existingDto);
+            return "redirect:/TrainerBoard"; // 권한이 없으므로 메인 페이지로 리다이렉트
+        }
+        
 	    try {
 	        // 기존 이미지가 있을 경우
 	        if (dto.getImagename() != null) { 
@@ -180,7 +198,7 @@ public class TrainerBoardController {
 	    }
 
 	    session.setAttribute("update", dto);
-	    return "redirect:retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보기
+	    return "redirect:/retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보기
 	}
 
 
@@ -188,8 +206,11 @@ public class TrainerBoardController {
 	//수정 후에는 게시글 단순조회
 	@RequestMapping(value = "/retrieve/{postid}", method = RequestMethod.GET)
 	public String retrievePost(@PathVariable("postid") int postid, Model m) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userid = authentication.getName();
+		
 		TrainerBoardDTO dto = service.retrieve(postid);
-		int userid = dto.getUserid();
 		String title = dto.getTitle();
 		String content = dto.getContent();
 
@@ -207,17 +228,26 @@ public class TrainerBoardController {
 	
 	
 //삭제
-	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	@RequestMapping(value = "/trainer/delete", method = RequestMethod.POST)
 	public String delete(@RequestParam(value = "postid", required = false) Integer postid,
 	                     RedirectAttributes redirectAttributes) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userid = authentication.getName();
+		
 	    if (postid == null) {
 	        redirectAttributes.addFlashAttribute("message", "삭제할 게시글 번호가 유효하지 않습니다.");
 	        return "redirect:/app/TrainerBoard";
 	    }
 
 	    try {
-	        // 게시글 정보 조회
-	        TrainerBoardDTO dto = service.retrieve(postid);
+            // 게시글 정보 조회
+            TrainerBoardDTO dto = service.retrieve(postid);
+            if (dto == null || !dto.getUserid().equals(userid)) {
+                // 작성자가 다르면 삭제 불가 처리
+                redirectAttributes.addFlashAttribute("message", "권한이 없습니다.");
+                return "redirect:/TrainerBoard";
+            }
 	        String imgName = dto.getImagename();
 	        
 	        // 이미지 파일 삭제
@@ -236,7 +266,7 @@ public class TrainerBoardController {
 	        redirectAttributes.addFlashAttribute("message", "삭제 중 오류가 발생했습니다.");
 	        e.printStackTrace();
 	    }
-	    return "redirect:TrainerBoard";
+	    return "redirect:/TrainerBoard";
 	}
 
 	
@@ -245,6 +275,19 @@ public class TrainerBoardController {
     @ResponseBody
     public String writeTrainerboardComment (@ModelAttribute TrainerBoardCommentDTO commentDTO,
             @RequestParam(value = "postid", required = false) Integer postid) {
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userId = authentication.getName();
+    	
+	    // 로그인하지 않은 경우 (익명 사용자)
+	    if (userId.equals("anonymousUser")) {
+	        return "로그인이 필요합니다.";  // 익명 사용자 (로그인하지 않은 경우)
+	    }
+		
+		if (userId == null || userId.isEmpty()) {
+	        return "로그인이 필요합니다.";  // 로그인하지 않은 경우
+	    }
+		
         System.out.println("commentDTO 전: "+commentDTO);
         // 부모 댓글 ID가 없으면 일반 댓글, 있으면 대댓글로 처리
         if (commentDTO.getTr_ParentId() == null || commentDTO.getTr_ParentId() == 0) {
@@ -259,6 +302,10 @@ public class TrainerBoardController {
             }
             // repIndent는 JSP에서 받아온 값을 그대로 사용
         }
+       
+        // 로그인된 사용자 ID를 댓글 DTO에 설정
+        commentDTO.setUserId(userId);
+        
         System.out.println("TrainerBoardCommentDTO 후: "+commentDTO);
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
         coservice.addComment(commentDTO);
@@ -271,6 +318,10 @@ public class TrainerBoardController {
     @PostMapping("/updateTrainerboardComment")
     @ResponseBody
     public String updateTrainerboardComment (@RequestParam("commId") int commId, @RequestParam("commContent") String commContent) {
+    	
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String userid = authentication.getName();
+    	
     	System.out.println("111"+commId + commContent);
     	TrainerBoardCommentDTO commentDTO = new TrainerBoardCommentDTO();
         commentDTO.setCommId(commId);
@@ -279,18 +330,39 @@ public class TrainerBoardController {
         // 댓글 수정 서비스 호출
         coservice.updateTrainerboardComment(commentDTO);
         
-        return "success";
+     // 댓글 작성자와 로그인된 사용자가 일치하는지 확인
+        if (commentDTO != null && commentDTO.getUserId() != null && commentDTO.getUserId().equals(userid)) {
+            commentDTO.setCommContent(commContent);  // 수정된 댓글 내용 설정
+            coservice.updateTrainerboardComment(commentDTO);  // 댓글 수정
+
+            return "success";
+        } else {
+            return "권한이 없습니다.";  // 작성자만 수정 가능
+        }
     }
+    
 
     //댓글 삭제 (대댓글도 함께 삭제됨)
     @PostMapping("/deleteTrainerboardComment")
     @ResponseBody
     public String deleteTrainerboardComment (@RequestParam("commId") int commId) {
-        // 댓글 삭제 서비스 호출
-    	coservice.deleteTrainerboardComment (commId);
-        
-        return "success";
-    }
+    	
+    	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    	    String userId = authentication.getName(); // 현재 로그인된 사용자 ID
+
+    	    // 해당 댓글을 가져옵니다.
+    	    TrainerBoardCommentDTO commentDTO = coservice.getCommentByPostId(commId); // commId로 댓글 조회
+
+    	    // 댓글이 존재하고 작성자와 로그인된 사용자가 일치하는지 확인
+    	    if (commentDTO != null && commentDTO.getUserId().equals(userId)) {
+    	        // 댓글 및 대댓글 삭제
+    	        coservice.deleteTrainerboardComment(commId); // 댓글 삭제
+    	        return "success"; // 삭제 성공
+    	    } else {
+    	        return "권한이 없습니다."; // 작성자만 삭제 가능
+    	    }
+    	}
+    
 
 
 }// main

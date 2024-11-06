@@ -40,7 +40,7 @@
         <main>
 
 
-		   <form action="${pageContext.request.contextPath}/update" method="post" id="writeForm" enctype="multipart/form-data">
+		   <form action="${pageContext.request.contextPath}/trainer/update" method="post" id="writeForm" enctype="multipart/form-data">
 		    	<input type="hidden" name="postid" value="${dto.postid}">
 		    	<div class="label">
 		    	<label for="title">제목</label></div>

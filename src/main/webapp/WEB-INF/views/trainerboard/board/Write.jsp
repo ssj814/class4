@@ -35,7 +35,7 @@
 <body>
     <div class="container" style="margin-top:40px;">
         <main>
-            <form action="${pageContext.request.contextPath}/write" method="post" id="writeForm" enctype="multipart/form-data">
+            <form action="${pageContext.request.contextPath}/trainer/write" method="post" id="writeForm" enctype="multipart/form-data">
                 <!-- 글제목 입력란 -->
                 <div class="label">
                     <label for="title">제목</label>

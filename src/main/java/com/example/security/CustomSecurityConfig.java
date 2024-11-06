@@ -40,7 +40,7 @@ public class CustomSecurityConfig {
     	.authorizeHttpRequests(authorize -> authorize
     	.requestMatchers("/admin/**").hasRole("ADMIN")
     	.requestMatchers("/api/user/**").hasRole("USER") // /api/user/** 경로는 USER 역할만 접근 가능
-    	//.requestMatchers("/trainer/**").hasRole("TRAINER")
+    	.requestMatchers("/trainer/**").hasRole("TRAINER")
     	//추후 트레이너 페이지 추가 시
     	.requestMatchers("/oracle/**").permitAll() // 오라클 콘솔 접근 허용
     	.anyRequest().permitAll() // 나머지 요청 허용

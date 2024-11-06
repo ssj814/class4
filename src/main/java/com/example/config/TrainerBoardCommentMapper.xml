@@ -13,11 +13,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		WHERE postid = #{postid}
 		ORDER BY tr_ParentId ASC, comCrdate ASC
 	</select>
+	
+	
+	<select id="selectCommentByPostId" resultType="TrainerBoardCommentDTO" parameterType="int">
+    SELECT commId, tr_ParentId, postid, commContent, userId, TO_CHAR(comCrdate, 'YYYY-MM-DD HH24:MI:SS') as comCrdate, tr_RepIndent
+    FROM trainerboard_comments
+    WHERE commId = #{commId}
+</select>
+	
 
 	<!-- 댓글 삽입 -->
 	<insert id="insertComment" parameterType="TrainerBoardCommentDTO">
 	    INSERT INTO trainerboard_comments (tr_ParentId, postid, commContent, userId, comCrdate, tr_RepIndent)
-	    VALUES (#{tr_ParentId}, #{postid}, #{commContent}, 1000, SYSDATE, #{tr_RepIndent})
+	    VALUES (#{tr_ParentId}, #{postid}, #{commContent}, #{userId}, SYSDATE, #{tr_RepIndent})
 	</insert>
 
 

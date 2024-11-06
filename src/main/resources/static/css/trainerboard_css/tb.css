@@ -427,6 +427,7 @@ label {
     position: absolute;
     bottom: 10px;
     
+    
 }
 
 /* 버튼 스타일 */
@@ -510,6 +511,15 @@ label {
 }
 /* 버튼 컨테이너 */
 .edit-buttons {
+	text-align: right;
+    padding-right: 10px;
+    font-size: 11px;
+	border: none;
+	color: #fff;
+	padding: 0.5px 1px;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s;
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
@@ -517,11 +527,9 @@ label {
 
 /* 저장 및 취소 버튼 스타일 */
 .edit-buttons button {
-	margin:10px 0px 5px 5px;
 	border: none;
 	background-color: #838383;
 	color: #fff;
-	padding: 4px 9px;
 	border-radius: 4px;
 	cursor: pointer;
 	transition: background-color 0.3s;

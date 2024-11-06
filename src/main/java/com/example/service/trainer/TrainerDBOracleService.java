@@ -28,7 +28,9 @@ public class TrainerDBOracleService {
     }
 
     public TrainerDTO selectTrainer(int idx) {
-        return dao.selectTrainer(idx);
+    	TrainerDTO dto = dao.selectTrainer(idx);
+    	System.out.println("service : "+dto);
+        return dto;
     }
 
     public int updateTrainer(TrainerDTO dto) {

@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.dto.CommentDTO;
 import com.example.dto.TrainerBoardCommentDTO;
 
 @Repository
@@ -14,31 +15,34 @@ public class TrainerBoardCommentDAO {
 	@Autowired
 	SqlSessionTemplate template;
 	
-	//네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;;
-	//네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;;
-	//네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;;
-	//네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;;
-	//네임스페이스 다른걸로 바꾸고 dao도 수정좀^^;;
+	 // 특정 게시물의 댓글 목록 가져오기
+    public List<TrainerBoardCommentDTO> selectCommentsByPostId(int postid) {
+        return template.selectList("TrainerBoardCommentMapper.selectCommentsByPostId", postid);
+    }
+    
+    //댓글등록
+    public void addComment(TrainerBoardCommentDTO commentDTO) {
+    	System.out.println("commentDAOoooooooooooooo");
+		template.insert("TrainerBoardCommentMapper.insertComment", commentDTO);
+		
+	}
+    
+    // 댓글 수정
+    public void updateTrainerboardComment(TrainerBoardCommentDTO commentDTO) {
+    	template.update("TrainerBoardCommentMapper.updateComment", commentDTO);
+    }
+
+    // 댓글 삭제
+    public void deleteTrainerboardComment(int postid) {
+    	template.delete("TrainerBoardCommentMapper.deleteComment", postid);
+    }
+
+
+
+
+
 	
-	public int commentAdd( TrainerBoardCommentDTO dto) {
-		int n=template.insert("TrainerBoardCommentMapper.commentAdd", dto);
-		System.out.println("CommentDAO :"+n);
-		return n;
-	}
-
-
-	public List<TrainerBoardCommentDTO> commentSelect(int postid) {
-		List<TrainerBoardCommentDTO> dto = template.selectList("TrainerBoardCommentMapper.commentSelect", postid);
-		System.out.println("dao"+dto); //
-		return dto;
-	}
-
-
-	public void delete(Integer postid) {
-		// TODO Auto-generated method stub
-	int p = postid;
-		template.delete("TrainerBoardCommentMapper.commentDelete",p);
-	}
+	
 	
 	
 }

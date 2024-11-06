@@ -7,6 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.dto.ProductWishDTO;
+
 
 @Repository
 public class WishDAO {
@@ -14,8 +16,8 @@ public class WishDAO {
 	@Autowired
 	SqlSessionTemplate session;
 	
-	public List<Integer> selectWishList(int user_id) {
-		return session.selectList("WishMapper.selectWishList",user_id);
+	public List<ProductWishDTO> selectWishList(String userId) {
+		return session.selectList("WishMapper.selectWishList",userId);
 	}
 	
 	public int checkWish(Map<String, Object> map) {

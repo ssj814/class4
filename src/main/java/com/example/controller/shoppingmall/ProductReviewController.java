@@ -3,7 +3,6 @@ package com.example.controller.shoppingmall;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +10,8 @@ import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -24,9 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
-import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductReviewDTO;
 import com.example.dto.ProductReviewFeedbackDTO;
 import com.example.service.shoppingmall.ProductReviewService;
@@ -41,7 +40,7 @@ public class ProductReviewController {
 	@Autowired
 	ProductReviewService productReviewService;
 
-	@GetMapping("/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
+	@GetMapping("/user/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
 	public String getProductReviewPage(@PathVariable int productId, Model m) {
 		ProductDTO productDTO = productService.selectDetailproduct(productId);
 		m.addAttribute("productDTO", productDTO);
@@ -52,6 +51,10 @@ public class ProductReviewController {
 	@PostMapping("/shop_productReview") // 리뷰 insert
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
 		String uploadDir = "C:/images/shoppingMall_review/";
         File uploadDirectory = new File(uploadDir);
         if (!uploadDirectory.exists()) {
@@ -61,7 +64,6 @@ public class ProductReviewController {
 		InputStream inputStream = null;
 		String imgNames = "";
 		int num = 0;
-		int user_id = 1; // 임시 유저
 		try {
 			if (!multipartFilePhotos[0].isEmpty()) {
 				for (MultipartFile img : multipartFilePhotos) {
@@ -91,7 +93,7 @@ public class ProductReviewController {
 		}
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		redirectAttributes.addFlashAttribute("closeWindow", true);
-		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
+		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 
 	@Transactional
@@ -110,7 +112,7 @@ public class ProductReviewController {
 		productReviewService.deleteReview(reviewId);
 	}
 	
-	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
+	@GetMapping("/user/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
 	public String getProductReview_update(@PathVariable int reviewid, Model m) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewid);
 		ProductDTO productDTO = productService.selectDetailproduct(productReviewDTO.getProduct_id());
@@ -123,12 +125,15 @@ public class ProductReviewController {
 	@PostMapping("/shop_productReview_update/{reviewid}") // 리뷰 update
 	public String postProductReview_update(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos, 
 			RedirectAttributes redirectAttributes) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
 		String uploadDir = "C:/images/shoppingMall_review/";
 		UUID uuid = UUID.randomUUID();
 		InputStream inputStream = null;
 		String imgNames = "";
 		int num = 0;
-		int user_id = 1; // 임시 유저
 		try {
 			if (!multipartFilePhotos[0].isEmpty()) {
 				//기존 이미지 삭제
@@ -169,14 +174,17 @@ public class ProductReviewController {
 		}
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		redirectAttributes.addFlashAttribute("closeWindow", true);
-		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
+		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
 	@Transactional
 	@ResponseBody
 	@PatchMapping("/shop_productReview_Feedback") //후기 평가 update
 	public String patchProductReview_Feedback(@RequestParam String feedback, @RequestParam int reviewid, @RequestParam String cancel) {
-		int user_id = 1; // 임시 유저
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
 		Map<String, Object> map = new HashMap<>();
 		map.put("feedback", feedback);
 		map.put("cancel", cancel);
@@ -195,7 +203,6 @@ public class ProductReviewController {
 		}
 		map.put("feedbackType", res);
 		productReviewService.updateReviewFeedback(map);
-		System.out.println(res);
 		return res;
 	}
 	
@@ -203,7 +210,10 @@ public class ProductReviewController {
 	@ResponseBody
     @GetMapping("/shop_Detail_productReview_Feedback") 
     public List<ProductReviewFeedbackDTO> getProductReview_Feedback(@RequestParam List<Integer> review_id) {
-        int user_id = 1; //임시유저
+        
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
     	Map<String, Object> map = new HashMap<>();
         map.put("user_id", user_id);
         map.put("review_id", review_id);

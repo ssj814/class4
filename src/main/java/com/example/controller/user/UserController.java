@@ -75,13 +75,15 @@ public class UserController {
     @RequestMapping("/loginDenied")
 	public String loginDenied() {
 		System.out.println("/loginDenied");
-		return "user/loginDenied";
+		//return "user/loginDenied";
+		return "error/403";
 	}
     
     @RequestMapping("/loginCancel")
 	public String loginCancel() {
 		System.out.println("/loginCancel");
-		return "user/loginCancel";
+		//return "user/loginCancel";
+		return "error/403";
 	}
     
 	////////예외처리

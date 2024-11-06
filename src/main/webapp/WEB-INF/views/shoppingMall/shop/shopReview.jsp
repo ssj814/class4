@@ -33,10 +33,12 @@
 
 	<div class="d-flex justify-content-between align-items-center">
 		<h3 class="align-items-center fw-bold">상품 리뷰</h3>
-		<button id="Product-Review-openWindow"
-			class="btn btn-link fst-italic text-dark mb-0">
-			<i class="fa-solid fa-pen"></i>리뷰 등록하기
-		</button>
+		<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
+			<button id="Product-Review-openWindow"
+				class="btn btn-link fst-italic text-dark mb-0">
+				<i class="fa-solid fa-pen"></i>리뷰 등록하기
+			</button>
+		</c:if>
 	</div>
 	
 	<hr class="mt-0">
@@ -85,6 +87,9 @@
 
 	$(function() {
 		
+		// 로그인 유저 정보
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		
 		//화면 최초 랜더링시 리뷰조회
 		var nowReviewPage = 0;
 		reviewPaging();
@@ -112,6 +117,18 @@
 		$(document).on('click', '.update-productReview', reviewUpdate); //리뷰업데이트버튼
 		$(document).on('click', '.del-productReview', reviewDelete); //리뷰삭제버튼
 		$(document).on('click', '.btn-feedback', reviewFeedbackUpdate); //리뷰피드백버튼
+		$(document).on('click', '.review-more', reviewMore); //리뷰더보기버튼
+		
+		//리뷰 - 더보기 버튼
+		function reviewMore(){		
+			var reviewContainer = $(this).closest('.review-content');
+		    
+		    var buttonText = $(this).text() === '더보기...' ? '간략히 보기' : '더보기...';
+		    reviewContainer.find('.review-more').text(buttonText);  // 버튼 텍스트 변경
+		    
+		    reviewContainer.find('.full-review').toggle();  // 전체 텍스트 보여줌
+		    reviewContainer.find('.slice-review').toggle();  // 자른 텍스트 숨김
+		}
 		
 		//리뷰 - 등록
 		$('#Product-Review-openWindow').on('click',function() {
@@ -120,7 +137,7 @@
 			var height = 700;
 			var left = Math.ceil((window.screen.width - width) / 2);
 			var top = Math.ceil((window.screen.height - height) / 2);
-			window.open('/app/shop_productReview/' + productId,
+			window.open('/app/user/shop_productReview/' + productId,
 					'_blank', "width=" + width + ", height=" + height
 							+ ", left=" + left + ",top=" + top
 							+ "scrollbars=yes");
@@ -133,7 +150,7 @@
 			var height = 700;
 			var left = Math.ceil((window.screen.width - width) / 2);
 			var top = Math.ceil((window.screen.height - height) / 2);
-			window.open('/app/shop_productReview_update/' + reviewid,
+			window.open('/app/user/shop_productReview_update/' + reviewid,
 					'_blank', "width=" + width + ", height=" + height
 							+ ", left=" + left + ",top=" + top
 							+ "scrollbars=yes");
@@ -309,6 +326,12 @@
 		
 		//유저별 추천 비추천
 		function reviewFeedbackUpdate(){
+
+			//로그인 안되어있으면 피드백 방지
+			if(!loginUser){
+				return;
+			}
+			
 			//버튼 종류 - up,down
 			var feedback = $(this).hasClass('up') ? 'up' : 'down';
 			var otherFeedback = $(this).hasClass('up') ? 'down' : 'up';
@@ -355,7 +378,8 @@
 	
 		//리뷰 HTML 생성 함수
 		function generateReviewHTML(productReview) {
-			//이미지 태그 미리 생성
+			
+			// 이미지 태그 미리 생성
 		    let photosHTML = '';
 		    if (productReview.photos && productReview.photos.length > 0) {
 		        const photoList = productReview.photos.split(',');
@@ -365,6 +389,27 @@
 		            			"' alt='사용자 사진' class='img-thumbnail me-2 mb-2 review-img' style='width: 100px; height: 100px; object-fit: cover;' />";
 		        }
 		    }
+		    
+		    // 작성 유저에게만 수정, 삭제 버튼 노출
+		    let delUpdateHTML = '';
+		    if (productReview.user_id == loginUser){
+		    	delUpdateHTML += '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
+						        '<i class="fa-solid fa-pen-to-square"></i>' +
+						        '</button>' +
+						        '<button class="del-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
+						        '<i class="fa-solid fa-trash"></i>' +
+						        '</button>'
+		    }
+		    
+		    // 리뷰내용이 길면 더보기 버튼 추가
+		    let reviewMoreBtn = '';
+		    if (productReview.content.length > 100) {
+		    	showReview = productReview.content.slice(0, 100);
+		    	reviewMoreBtn += '<span class="review-more">더보기...</span>';
+		    } else {
+		    	showReview = productReview.content;
+		    }
+		    
 			// 리뷰 HTML
 		    let reviewHTML = 
 		        '<input type="hidden" class="review_id" value="' + productReview.review_id + '">' +
@@ -379,17 +424,13 @@
 		        '</div>' +
 		        '</div>' +
 		        '<hr>' +
-		        '<div class="d-flex">' +
-		        '<div class="review-content" data-photos="' + productReview.photos + '">' + photosHTML +
-		        '<p class="mb-3" style="white-space: pre-wrap;">' + productReview.content + '</p>' +
+		        '<div class="row">' + 
+		        '<div class="review-content col-10" data-photos="' + productReview.photos + '">' + photosHTML +
+		        '<p class="slice-review mb-3" style="white-space: pre-wrap;">' + showReview + reviewMoreBtn + '</p>' +
+		        '<p class="full-review" style="display: none; white-space: pre-wrap;">' + productReview.content + reviewMoreBtn + '</p>'+
 		        '</div>' +
-		        '<div class="ms-auto">' +
-		        '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-solid fa-pen-to-square"></i>' +
-		        '</button>' +
-		        '<button class="del-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-solid fa-trash"></i>' +
-		        '</button>' +
+		        '<div class="ms-auto col-2 text-end">' + 
+		        delUpdateHTML + 
 		        '<button id="up-' + productReview.review_id + '" class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
 		        '<i class="fa-regular fa-thumbs-up"></i>' +
 		        '<span class="up-feedback-' + productReview.review_id + '">' + productReview.feedback_up + '</span>' +

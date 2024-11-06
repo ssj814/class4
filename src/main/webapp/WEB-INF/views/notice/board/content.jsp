@@ -148,7 +148,7 @@
 		        // 댓글 및 대댓글 작성 폼 제출 처리
 		        $(document).on('submit', '.replyForm', function(event) {
 		            event.preventDefault();
-
+					
 		            $.ajax({
 		                type: 'POST',
 		                url: 'saveComment',  // 댓글 저장할 URL

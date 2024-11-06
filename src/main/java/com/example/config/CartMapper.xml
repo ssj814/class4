@@ -76,4 +76,9 @@
 		DELETE FROM product_cart
 		WHERE cart_id = #{cart_Id}
 	</delete>
+	
+	<select id="selectByCartId" parameterType="int" resultType="CartDTO">
+		select * from product_cart 
+		where cart_id = #{cart_id}
+	</select>
 </mapper>

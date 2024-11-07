@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -96,5 +97,12 @@ public class UserController {
 		m.addAttribute("users", users);
 		return "user/adminView";
 	}
+	
+	//삭제
+	 @RequestMapping("/admin/delete/{usernumber}")
+	    public String deleteUser(@PathVariable("usernumber") int usernumber) {
+	        userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
+	        return "redirect:/admin/view";  // 삭제 후 목록 페이지로 리다이렉트
+	    }
 
 }

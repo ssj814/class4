@@ -80,14 +80,14 @@ img {
 	<div class="section-box">
 		<div class="section-header d-flex align-items-center pe-2">
 			<span>상품 정보</span>
-			<button type="button" class="btn-allDel btn btn-outline-dark text-end ms-auto">전체삭제</button>
+			<button type="button" class="btn-allDel btn btn-outline-dark text-end ms-auto" >전체삭제</button>
 		</div>
 		<hr style="border: solid 1px black; opacity: inherit; ">
 		<div class="form-group-inline">
 			<div class="wish-items">
 				<c:forEach var="item" varStatus="status" items="${wishProductList}">
 					<div id="wish-${item.wish.wish_id}" class="wish-item row justify-content-between align-items-center" data-wishid="${item.wish.wish_id}">						
-						<div class="col-2" style="width:100px; padding:5px;">
+						<div class="col-2" style="width:100px; padding:10px;">
 							<a href="/app/shopDetail?productId=${item.wish.product_id}"  style="text-decoration: none;">
 			                	<img src="<c:url value='/images/shoppingMall_product/${item.product.product_imagename}'/>" alt="Image">
 			              	</a>
@@ -130,7 +130,7 @@ img {
 	
 		// 전체삭제
 		$(".btn-allDel").on("click", function(){
-			var delCheck = confirm("선택된 상품을 삭제하시겠어요?");
+			var delCheck = confirm("전체상품 삭제하시겠습니까?");
 			var wishIdList = [];
 			$(".wish-item").each(function(idx,data) {
 				wishIdList.push($(this).data('wishid'));

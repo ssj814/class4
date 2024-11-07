@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.security.SecurityUser;
@@ -39,7 +39,7 @@ public class SecurityUserDetailService  implements UserDetailsService {
 		System.out.println("UserDetailServie: dto==="+ user);
 		
 		 // User 객체를 UserDto로 변환
-	    UserDto userdto = new UserDto();
+	    UserDTO userdto = new UserDTO();
 	    userdto.setUserid(user.getUserid());
 	    userdto.setUserpw(user.getUserpw());
 	    userdto.setRole(user.getRole()); // 필요한 경우

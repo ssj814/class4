@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+    #passwordTooltip {
+	    position: absolute;
+	    top: 10%; /* 입력 필드 바로 아래에 위치 */
+	    left: 0;
+	    margin-top: 5px;
+	    padding: 10px;
+	    background-color: #f9f9f9;
+	    border: 1px solid #ccc;
+	    border-radius: 4px;
+	    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+	    width: 200px;
+	    z-index: 1000;
+	    display: none; /* 기본적으로 툴팁을 숨김 */
+	}
+
+    .strengthBar {
+        height: 5px;
+        width: 100%;
+        background-color: #ddd;
+        margin-top: 5px;
+    }
+
+    .strengthBar.weak {
+        background-color: red;
+        width: 33%;
+    }
+
+    .strengthBar.medium {
+        background-color: orange;
+        width: 66%;
+    }
+
+    .strengthBar.strong {
+        background-color: green;
+        width: 100%;
+    }

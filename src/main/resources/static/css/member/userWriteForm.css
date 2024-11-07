@@ -1,0 +1,152 @@
+/* 기본 스타일링 초기화 */
+body, h1, h2, p, ul, li, form, table, th, td {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body 스타일링 */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #333;
+    min-height: 100vh; /* 화면 전체 높이 사용 */
+    margin: 0; /* 기본 여백 제거 */
+}
+
+/* 폼 컨테이너 스타일링 */
+form {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1000px; /* 폼 너비 제한 */
+    margin: auto; /* 좌우 중앙 정렬 */
+    text-align: left; /* 폼 내부의 텍스트 정렬을 왼쪽으로 설정 */
+}
+
+/* 제목 스타일링 */
+form b {
+    display: block;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-align: center; /* 제목을 중앙 정렬 */
+}
+
+/* 테이블 스타일링 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* 테이블 셀 스타일링 */
+td {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* 입력 필드 스타일링 */
+input[type="text"],
+input[type="password"],
+select {
+    width: calc(100% - 2rem); /* 입력 필드의 너비를 조정 */
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+/* 버튼 스타일링 */
+button {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
+button:hover {
+    background-color: #222;
+}
+
+/* 에러 메시지 스타일링 */
+span {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #d9534f;
+}
+
+/* 체크박스 스타일링 */
+input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+/* 제출 버튼 스타일링 */
+input[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+input[type="submit"]:hover {
+    background-color: #222;
+}
+
+/* 툴팁 스타일링 */
+#passwordTooltip {
+	    position: absolute;
+	    top: 10%; /* 입력 필드 바로 아래에 위치 */
+	    left: 0;
+	    margin-top: 5px;
+	    padding: 10px;
+	    background-color: #f9f9f9;
+	    border: 1px solid #ccc;
+	    border-radius: 4px;
+	    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+	    width: 200px;
+	    z-index: 1000;
+	    display: none; /* 기본적으로 툴팁을 숨김 */
+	}
+	
+	input[type="text"],
+	input[type="password"],
+	select {
+	    width: calc(100% - 2rem);
+	    padding: 0.5rem;
+	    border: 1px solid #ccc;
+	    border-radius: 4px;
+	    margin-bottom: 0.5rem;
+	    position: relative; /* 상대 위치 설정 */
+	}
+	
+    .strengthBar {
+	    height: 5px;
+	    width: 0; /* 초기 너비 0으로 설정 */
+	    background-color: #ddd;
+	    margin-top: 5px;
+	    transition: width 0.3s; /* 너비 변화에 애니메이션 추가 */
+	}
+
+    .strengthBar.weak {
+        background-color: red;
+        width: 33%;
+    }
+
+    .strengthBar.medium {
+        background-color: orange;
+        width: 66%;
+    }
+
+    .strengthBar.strong {
+        background-color: green;
+        width: 100%;
+    }

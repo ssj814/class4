@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.service.user.UserService;
@@ -47,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(UserDto userDto) { // UserDto를 사용
+    public String register(UserDTO userDto) { // UserDto를 사용
         userService.register(userDto); // DB에 사용자 저장
         return "redirect:loginForm"; // 회원가입 후 로그인 페이지로 리다이렉트
     }
@@ -59,7 +59,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(UserDto userDto, Model model) { // UserDto를 사용
+    public String login(UserDTO userDto, Model model) { // UserDto를 사용
         System.out.println(userDto);
         User user = userService.login(userDto); // DTO를 통해 로그인 처리
         System.out.println("login user"+user);

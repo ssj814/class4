@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.util.jwt.JwtUtil;
@@ -25,13 +25,13 @@ public class UserService {
     private JwtUtil jwtUtil; // JWT 유틸리티
     
     // 회원가입 메서드
-    public User register(UserDto userDto) {
+    public User register(UserDTO userDto) {
         User user = new User();
         user.setUserid(userDto.getUserid());
         user.setUserpw(passwordEncoder.encode(userDto.getUserpw()));
         user.setRealusername(userDto.getRealusername());
-        user.setEmailusername(userDto.getEmailusername());
-        user.setEmaildomain(userDto.getEmaildomain());
+        user.setEmailusername(userDto.getEmailUsername());
+        user.setEmaildomain(userDto.getEmailDomain());
         user.setBirthdate(userDto.getBirthdate());
         user.setGender(userDto.getGender());
         user.setEmailverified(userDto.getEmailverified());
@@ -52,7 +52,7 @@ public class UserService {
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
-        user.setEmail(userDto.getEmailusername()+"@"+userDto.getEmaildomain());
+        user.setEmail(userDto.getEmailUsername()+"@"+userDto.getEmailDomain());
         user.setProvider(null);
         user.setProviderid(null);
 
@@ -60,7 +60,7 @@ public class UserService {
     }
 
     // 로그인 메서드
-    public User login(UserDto userDto) { // UserDto를 인자로 받는 로그인 메서드
+    public User login(UserDTO userDto) { // UserDto를 인자로 받는 로그인 메서드
         User user = userRepository.findByUserid(userDto.getUserid())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials")); // 사용자 없음 예외 처리
 

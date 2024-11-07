@@ -81,7 +81,7 @@ public class WishController {
 		map.put("product_Id", productId);
 		map.put("option_type", optionTypes.toString());
 	    map.put("option_name", optionNames.toString());
-		
+		System.out.println("map : "+map);
 		int check = service.checkWish(map); //wish에 존재? - wishCheck로 바꿔야지
 		System.out.println("위시 중복체크 : "+check);
 		Map<String,String> responseMap = new HashMap<String,String>();

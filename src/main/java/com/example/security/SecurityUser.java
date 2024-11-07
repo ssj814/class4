@@ -12,7 +12,7 @@ public class SecurityUser extends User{
 //	public SecurityUser(Member member) {
 //		super(member.getId(), "{noop}"+member.getPassword(), AuthorityUtils.createAuthorityList(member.getRole().toString()));
 //	}
-	
+
 	//암호화 사용
 	public SecurityUser(UserDto userdto) {
 		super(userdto.getUserid(), userdto.getUserpw(), AuthorityUtils.createAuthorityList("ROLE_" + userdto.getRole()));

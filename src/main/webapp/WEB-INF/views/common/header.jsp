@@ -19,7 +19,7 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="resources/css/main.css">
+<link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>">
 <title>Insert title here</title>
 
 </head>
@@ -64,9 +64,9 @@
 						<li class="nav-item"><a class="nav-link active"
 							href="/app/logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="wishList" style="color: pink;">WISH</a></li>
+							href="/app/user/wishList" style="color: pink;">WISH</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="cartList" style="color: pink;">CART</a></li>
+							href="/app/user/cartList" style="color: pink;">CART</a></li>
 						<li class="nav-item"><a class="nav-link active"
 							href="#" style="color: pink;">MY</a></li>
 						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">

@@ -1,14 +1,16 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%@ page import="java.util.*"%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<!-- <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">	 -->
+ 	<link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
  	<script
@@ -152,8 +154,9 @@
 								<c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
 									<input type="button" class="edit-button" value="수정" data-id="${comment.commId}">
 									<input type="button" class="delete-button" value="삭제" data-id="${comment.commId}"> 
-								</c:if>
-								<input type="button" class="reply-reply-button" value="댓글" data-parentid="${comment.commId}">
+								</c:if>	
+									<input type="button" class="reply-reply-button" value="댓글" data-parentid="${comment.commId} onclick="checkLoginBeforeComment()">
+								
 							</td>
 						</tr>
 					</table>
@@ -301,6 +304,9 @@
 		});
 	});
 </script>
+</main>
+</div>
+
 
 </body>
 </html>

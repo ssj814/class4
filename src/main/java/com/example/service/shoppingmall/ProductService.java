@@ -19,8 +19,8 @@ public class ProductService {
 	@Autowired
 	ProductDAO dao;
 	
-	public List<ProductDTO> selectProductMainList() {
-		return dao.selectProductMainList();
+	public List<ProductDTO> selectProductMainList(String order) {
+		return dao.selectProductMainList(order);
 	}//selectProductMainList() - 메인에서 보여질 상품들(전체 선택, 조회수 정렬)
 	
 	public ProductDTO selectDetailproduct(int productId) {

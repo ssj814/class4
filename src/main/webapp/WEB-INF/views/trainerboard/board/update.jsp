@@ -10,8 +10,7 @@
 <title>Insert title here</title>
 
  
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
     
     <!-- Summernote CSS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -31,7 +30,7 @@
     <!-- 모듈화된 Summernote 설정 파일 포함 -->
     <script src="resources/js/summernote.js"></script>
 
- 	
+ 	 <link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
 </head>
@@ -80,8 +79,7 @@
 
 			</div>
 	</form>		
-        </main>
-       </div>
+     
 <script>
 	
 	//이미지 미리보기
@@ -106,6 +104,9 @@
         }
     }
 	</script>
+	
+   </main>
+</div>
 
 </body>
 </html>

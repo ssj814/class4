@@ -40,7 +40,7 @@ public class ProductReviewController {
 	@Autowired
 	ProductReviewService productReviewService;
 
-	@GetMapping("/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
+	@GetMapping("/user/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
 	public String getProductReviewPage(@PathVariable int productId, Model m) {
 		ProductDTO productDTO = productService.selectDetailproduct(productId);
 		m.addAttribute("productDTO", productDTO);
@@ -93,7 +93,7 @@ public class ProductReviewController {
 		}
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		redirectAttributes.addFlashAttribute("closeWindow", true);
-		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
+		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 
 	@Transactional
@@ -112,7 +112,7 @@ public class ProductReviewController {
 		productReviewService.deleteReview(reviewId);
 	}
 	
-	@GetMapping("/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
+	@GetMapping("/user/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
 	public String getProductReview_update(@PathVariable int reviewid, Model m) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewid);
 		ProductDTO productDTO = productService.selectDetailproduct(productReviewDTO.getProduct_id());
@@ -174,7 +174,7 @@ public class ProductReviewController {
 		}
 		redirectAttributes.addFlashAttribute("mesg", mesg);
 		redirectAttributes.addFlashAttribute("closeWindow", true);
-		return "redirect:/shop_productReview/" + productReviewDTO.getProduct_id();
+		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
 	@Transactional

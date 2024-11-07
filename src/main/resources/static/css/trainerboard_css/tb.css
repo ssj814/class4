@@ -426,6 +426,9 @@ label {
 .submit-reply-button-container {
     position: absolute;
     bottom: 10px;
+    text-align: right;
+    display: inline-block;
+    margin-left: 20px;
     
     
 }
@@ -516,7 +519,6 @@ label {
     font-size: 11px;
 	border: none;
 	color: #fff;
-	padding: 0.5px 1px;
 	border-radius: 4px;
 	cursor: pointer;
 	transition: background-color 0.3s;

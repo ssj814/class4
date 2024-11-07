@@ -123,7 +123,7 @@
 		<div class="col-9">
 			<div class="row g-4 mx-5">
 				<h2 class="mb-4 mt-2">new products</h2>
-				<c:forEach var="product" items="${ProductList}" begin="0" end="7">
+				<c:forEach var="product" items="${newProduct}" begin="0" end="7">
 					<div class="col-6 col-md-3">
 						<div class="card" style="height: 230px; border: none;">
 							<a
@@ -132,16 +132,16 @@
 								<img
 									src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>" 
 									class="card-img-top mt-2 position-relative" alt="loading"
-									style="object-fit: contain; max-height: 150px; width: 100%;">
+									style="object-fit: contain; height: 150px; width: 100%;">
 								<span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style="left:170px">
 								    NEW
 								 </span>
 							</a>
-							<div class="card-body d-flex flex-column mx-3">
-								<p class="card-title" style="font-size: 15px;">
+							<div class="card-body d-flex flex-column mx-3 ps-1">
+								<p class="card-title" style="font-size: 12px;">
 									<a
 										href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
-										class="list-group-item-action">${fn:substring(product.getProduct_name(), 0, 8)}...</a>
+										class="newProduct-name list-group-item-action">${product.getProduct_name()}</a>
 								</p>
 								<p class="card-text text-danger">
 								    <fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
@@ -178,26 +178,11 @@
 
 <div class="container pt-0">
 
-<div class="countdown">
-    <div class="time">
-        <span id="days">00</span> Days
-    </div>
-    <div class="time">
-        <span id="hours">00</span> Hours
-    </div>
-    <div class="time">
-        <span id="minutes">00</span> Minutes
-    </div>
-    <div class="time">
-        <span id="seconds">00</span> Seconds
-    </div>
-</div>
-
 	<div class="row g-4 mx-5">
 		<div class="pb-2">
 			<h2>popular products</h2>
 		</div>
-		<c:forEach var="product" items="${ProductList}" begin="0" end="7">
+		<c:forEach var="product" items="${popularProduct}" begin="0" end="7">
 			<div class="col-6 col-md-3">
 				<div class="card" style="height: 300px; border: none;">
 					<a
@@ -214,7 +199,7 @@
 						<p class="card-title fs-6">
 							<a
 								href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>"
-								class="list-group-item-action">${fn:substring(product.getProduct_name(), 0, 12)}...</a>
+								class="popoluarProduct-name list-group-item-action">${product.getProduct_name()}</a>
 						</p>
 						<p class="card-text text-danger">
 						    <fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
@@ -237,38 +222,28 @@
 		$('.collapse').not(target).collapse('hide');
 	});
 	
-	document.addEventListener("DOMContentLoaded", function () {
-	    // 설정된 종료 시간을 설정 (일 * 시 * 분 * 초 * 밀리초)
-	    // 밀리초(ms) => Date 객체가 밀리초 단위로 표현하기 때문 
-	    var countdownDate = new Date().getTime() + (1 * 01 * 01 * 15 * 1000); 
-
-	    // 1초마다 남은 시간을 계산하고 화면에 표시
-	    var interval = setInterval(function () {
-	        var now = new Date().getTime();
-	        var distance = countdownDate - now;
-
-	        // 남은 일, 시, 분, 초 계산
-	        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-	        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-	        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-	        // 계산한 값을 HTML에 삽입
-	        document.getElementById("days").innerText = String(days).padStart(2, '0');
-	        document.getElementById("hours").innerText = String(hours).padStart(2, '0');
-	        document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
-	        document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
-
-	        // 카운트다운이 끝났을 때
-	        if (distance < 0) {
-	            clearInterval(interval);
-	         // 카운트다운 div 숨김
-	            document.querySelector(".countdown").style.display = "none";
-	        }
-	    }, 1000);
-	});
+	function sliceLength(data,len){
+		let productName = $(data).text();
+		if(productName.length < len){
+			return
+		}
+	    let sliceName = $(data).text().slice(0,len) + "...";
+	    $(data).text(sliceName);
+	}
 
 	$(document).ready(function () {
+		
+		// 신상품명 길이 처리
+		$(".newProduct-name").each(function(idx,data) {
+			sliceLength(data,10);
+		});
+		
+		// 인기상품명 길이 처리
+		$(".popoluarProduct-name").each(function(idx,data) {
+			sliceLength(data,13);
+		});
+
+		// 팝업
 		if ($('#noticeModal').length > 0) {
 	        const noticeModal = new bootstrap.Modal(document.getElementById('noticeModal'));
 	        noticeModal.show();

@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<!-- 글 수정 -->
 	<update id="updateContent" parameterType="NoticeDTO">
-		update notice set title=#{title}, content=#{content}, category=#{category} 
+		update notice set title=#{title}, content=#{content}, category=#{category}, popup=#{popup} 
 		where postid=#{postid}
 	</update>
 	

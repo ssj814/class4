@@ -72,7 +72,7 @@
 							href="#" style="color: pink;">MY</a></li>
 						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
         					<li class="nav-item"><a class="nav-link active"
-								href="admin/view" style="color: pink;">ADMIN</a></li>
+								href="${pageContext.request.contextPath}/admin/view" style="color: pink;">ADMIN</a></li>
         				</c:if>
 					</ul>
 				</c:if>

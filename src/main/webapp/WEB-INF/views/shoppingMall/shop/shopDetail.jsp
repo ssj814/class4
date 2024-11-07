@@ -101,7 +101,7 @@
 	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
 	            	<i class="fa-solid fa-cart-shopping "></i>
 	            </button>			
-	            <button class="mt-3 w-100" onclick="#">구매하기</button>		
+	            <button class="mt-3 w-100" onclick="location.href='user/orderpayment'">구매하기</button>		
 			</div>
 		</div>
 		<div class="col-0"></div>

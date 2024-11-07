@@ -25,7 +25,7 @@ public class CartProductDTO {
 	private String product_createdat;
 	private String product_isactive;
 	private int cart_id;
-	private int user_id;
+	private String user_id;
 	private int quantity;
 	private List<ProductOptionDTO> allOptions; // 전체 옵션 목록
 	private List<CartDTO> selectedOptions; // 선택된 옵션

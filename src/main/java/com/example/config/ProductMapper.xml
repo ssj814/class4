@@ -2,9 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="ProductMapper"> <!-- 구별용 이름 -->
 
-	<select id="selectProductMainList" resultType="ProductDTO">
-		SELECT * FROM
-		product ORDER BY PRODUCT_VIEW DESC
+	<select id="selectProductMainList" parameterType="String" resultType="ProductDTO">
+		SELECT * 
+		FROM product
+		<choose>
+	        <when test="order == 'PRODUCT_CREATEDAT'">
+	            ORDER BY PRODUCT_CREATEDAT DESC
+	        </when>
+	        <otherwise>
+	            ORDER BY PRODUCT_VIEW DESC
+	        </otherwise>
+	    </choose>
 	</select>
 
 	<select id="selectDetailproduct" parameterType="int"
@@ -138,14 +146,14 @@
 		AND USER_ID = #{user_id}
 	</update>
 
-	<select id="getRecentProducts" parameterType="int"
+	<select id="getRecentProducts" parameterType="String"
 		resultType="ProductRecentDTO">
 		SELECT * FROM PRODUCT_RECENT
 		WHERE USER_ID = #{user_id}
 		ORDER BY VIEWDATE DESC
 	</select>
 
-	<delete id="deleteRecentView" parameterType="int">
+	<delete id="deleteRecentView" parameterType="String">
 		DELETE FROM
 		PRODUCT_RECENT
 		WHERE USER_ID = #{user_id}

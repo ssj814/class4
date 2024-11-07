@@ -47,4 +47,13 @@ public class NoticeDAO {
 	public void increaseViewCount(int postid) {
 		session.update("NoticeMapper.increaseViewCount", postid);
 	}
+
+	public List<NoticeDTO> selectPopupNotices() {
+		return session.selectList("NoticeMapper.selectPopupNotices");
+	}
+
+	public void updatePopupToN(NoticeDTO notice) {
+		session.update("NoticeMapper.updatePopupToN", notice);
+	}
+
 }

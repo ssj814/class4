@@ -1,5 +1,7 @@
 package com.example.controller.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -42,7 +44,7 @@ public class UserController {
     @PostMapping("/register")
     public String register(UserDto userDto) { // UserDto를 사용
         userService.register(userDto); // DB에 사용자 저장
-        return "redirect:login"; // 회원가입 후 로그인 페이지로 리다이렉트
+        return "redirect:loginForm"; // 회원가입 후 로그인 페이지로 리다이렉트
     }
 
     @GetMapping("/login")
@@ -69,20 +71,25 @@ public class UserController {
     @RequestMapping("/loginDenied")
 	public String loginDenied() {
 		System.out.println("/loginDenied");
-		return "user/loginDenied";
+		//return "user/loginDenied";
+		return "error/403";
 	}
     
     @RequestMapping("/loginCancel")
 	public String loginCancel() {
 		System.out.println("/loginCancel");
-		return "user/loginCancel";
+		//return "user/loginCancel";
+		return "error/403";
 	}
     
 	////////예외처리
 	@RequestMapping("/admin/view")
 	@PreAuthorize("hasRole('ADMIN')")
-	public String managerView() { 
+	public String managerView(Model m) { 
 		System.out.println("/admin/view");
+		List<User> users= userService.findAll();
+		System.out.println("users" + users);
+		m.addAttribute("users", users);
 		return "user/adminView";
 	}
 

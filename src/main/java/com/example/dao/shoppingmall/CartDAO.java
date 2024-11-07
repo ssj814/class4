@@ -17,7 +17,7 @@ public class CartDAO {
 	@Autowired
 	SqlSessionTemplate session;
 
-	public List<CartProductDTO> selectCart(int user_id) {
+	public List<CartProductDTO> selectCart(String user_id) {
 		return session.selectList("CartMapper.selectCart", user_id);
 	}
 
@@ -41,7 +41,7 @@ public class CartDAO {
 		return session.update("CartMapper.increaseQuantity", map);
 	}
 
-	public List<CartDTO> selectProductOptions(int product_id, int user_id) {
+	public List<CartDTO> selectProductOptions(int product_id, String user_id) {
 		Map<String, Object> data = new HashMap<>();
 		data.put("product_id", product_id);
 		data.put("user_id", user_id);

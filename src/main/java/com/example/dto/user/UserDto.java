@@ -41,5 +41,9 @@ public class UserDto {
     private LocalDateTime updated; // 수정일자
     private LocalDateTime lastlogin;
     
+    private String email;
+    private String provider;
+    private String providerid;
+    
     private Role role;
 }

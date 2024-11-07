@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Alias("ProductReviewFeedbackDTO")
-public class ProductReviewFeedbackDTO {
-	
-	private String user_id;
-	private int review_id;
-	private String feedback;
-
+@Alias("ProductWishDTO")
+public class ProductWishDTO {
+		private int wish_id;
+		private String user_id;
+		private int product_id;
+		private String option_type;
+		private String option_name;
 }

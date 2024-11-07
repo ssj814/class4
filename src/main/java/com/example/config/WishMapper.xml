@@ -4,16 +4,22 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="WishMapper"> <!-- 구별용 이름 -->
 
-	<select id="selectWishList" parameterType="int" resultType="int">
-		SELECT product_id FROM product_wish  WHERE user_id=#{user_id}
+	<select id="selectWishList" parameterType="String" resultType="ProductWishDTO">
+		SELECT * FROM product_wish  WHERE user_id=#{user_id}
 	</select>
 
 	<insert id="wishInsert" parameterType="hashmap">
-		INSERT INTO product_wish VALUES(#{user_id},#{product_Id})
+	    INSERT INTO product_wish (user_id, product_id, option_type, option_name)
+	    VALUES (#{user_id}, #{product_Id}, #{option_type}, #{option_name})
 	</insert>
 	
 	<select id="checkWish" parameterType="hashmap" resultType="int">
-		SELECT count(*) FROM product_wish  WHERE user_id=#{user_id} and product_Id=#{product_Id}
+	    SELECT count(*) 
+	    FROM product_wish 
+	    WHERE user_id = #{user_id} 
+	    AND product_Id = #{product_Id} 
+	    AND option_type = #{option_type} 
+	    AND option_name = #{option_name}
 	</select>
 	
 	<delete id="wishDelete" parameterType="hashmap">

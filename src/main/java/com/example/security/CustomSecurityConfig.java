@@ -39,8 +39,8 @@ public class CustomSecurityConfig {
     	//페이지 권한 설정
     	.authorizeHttpRequests(authorize -> authorize
     	.requestMatchers("/admin/**").hasRole("ADMIN")
-    	.requestMatchers("/api/user/**").hasRole("USER") // /api/user/** 경로는 USER 역할만 접근 가능
-    	//.requestMatchers("/trainer/**").hasRole("TRAINER")
+    	.requestMatchers("/trainer/**").hasRole("TRAINER")
+    	.requestMatchers("/user/**").authenticated() // /user/** 경로는 인증된 경우 접근 
     	//추후 트레이너 페이지 추가 시
     	.requestMatchers("/oracle/**").permitAll() // 오라클 콘솔 접근 허용
     	.anyRequest().permitAll() // 나머지 요청 허용
@@ -54,18 +54,20 @@ public class CustomSecurityConfig {
             .permitAll() // 모든 사용자에게 로그인 페이지 허용
     	)
         .logout(logout -> logout
+        		.logoutSuccessHandler(logoutSuccessHandler()) // 커스텀 로그아웃 성공 핸들러
         		.logoutSuccessUrl("/") // 로그아웃 성공 후 이동 url
         		.invalidateHttpSession(true) // 세션 무효화
         		.deleteCookies("JSESSIONID") // JSESSIONID 쿠키 삭제
-        		.logoutSuccessHandler(logoutSuccessHandler()) // 커스텀 로그아웃 성공 핸들러
         )
         .oauth2Login(configure -> // OAuth2 로그인 설정
-        configure.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
-            config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
-        .userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
-            config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
-        .successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
-        .failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
+        	configure
+        		.loginPage("/user/loginForm") //커스텀로그인 페이지로 이동
+    			.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
+    				config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
+    			.userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
+    				config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
+				.successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
+				.failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
         )
         // status code 핸들링
         .exceptionHandling(exception -> exception
@@ -99,20 +101,20 @@ public class CustomSecurityConfig {
 
                 // OAuth2 제공자별 로그아웃 처리
                 String provider = oauth2Auth.getAuthorizedClientRegistrationId();
+                String redirectUrl = "/app";
                 if ("google".equals(provider)) {
                     response.sendRedirect("https://accounts.google.com/Logout");
                 } else if ("naver".equals(provider)) {
-                	String redirectUrl = "http://localhost:8090/app/";
-                    response.sendRedirect("https://nid.naver.com/nidlogin.logout");
+                    response.sendRedirect("https://nid.naver.com/nidlogin.logout?redirect_uri=" + URLEncoder.encode(redirectUrl, "UTF-8"));
                 } else if ("kakao".equals(provider)) {
                     response.sendRedirect("https://kapi.kakao.com/v1/user/logout");
                 } else {
-                    response.sendRedirect("/"); // 기본 리디렉션 URL
+                    response.sendRedirect("/app"); // 기본 리디렉션 URL
                 }
                 return; // 리디렉션 후 메서드 종료
             }
 
-            response.sendRedirect("/"); // OAuth2 인증이 아닐 경우 기본 리디렉션 URL
+            response.sendRedirect("/app"); // OAuth2 인증이 아닐 경우 기본 리디렉션 URL
         };
     }
 }

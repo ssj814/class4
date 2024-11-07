@@ -19,8 +19,8 @@ public class ProductService {
 	@Autowired
 	ProductDAO dao;
 	
-	public List<ProductDTO> selectProductMainList() {
-		return dao.selectProductMainList();
+	public List<ProductDTO> selectProductMainList(String order) {
+		return dao.selectProductMainList(order);
 	}//selectProductMainList() - 메인에서 보여질 상품들(전체 선택, 조회수 정렬)
 	
 	public ProductDTO selectDetailproduct(int productId) {
@@ -87,11 +87,11 @@ public class ProductService {
 		dao.updateRecentView(data);
 	}
 
-	public List<ProductRecentDTO> getRecentProducts(int user_id) {
+	public List<ProductRecentDTO> getRecentProducts(String user_id) {
 		return dao.getRecentProducts(user_id);
 	}
 
-	public void deleteRecentView(int user_id) {
+	public void deleteRecentView(String user_id) {
 		dao.deleteRecentView(user_id);
 	}
 	

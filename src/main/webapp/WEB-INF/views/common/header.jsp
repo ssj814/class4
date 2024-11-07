@@ -19,7 +19,7 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="resources/css/main.css">
+<link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>">
 <title>Insert title here</title>
 
 </head>
@@ -62,11 +62,11 @@
 						<li class="nav-item"><a class="nav-link active"
 							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name } 님 환영합니다.</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="logout" style="color: pink;">LOGOUT</a></li>
+							href="/app/logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="wishList" style="color: pink;">WISH</a></li>
+							href="/app/user/wishList" style="color: pink;">WISH</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="cartList" style="color: pink;">CART</a></li>
+							href="/app/user/cartList" style="color: pink;">CART</a></li>
 						<li class="nav-item"><a class="nav-link active"
 							href="#" style="color: pink;">MY</a></li>
 						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
@@ -78,8 +78,8 @@
 				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
-						<li class="nav-item"><a class="nav-link active"
+							href="/app/loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							<li class="nav-item"><a class="nav-link active"
 							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
 							 style="color: pink;">카카오로그아웃</a></li>
 					</ul>

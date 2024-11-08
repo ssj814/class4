@@ -47,7 +47,7 @@
 						data-bs-toggle="dropdown" aria-expanded="false"
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="/app/cookingTip">Cooking	Tip</a></li>
+							<li><a class="dropdown-item" href="/app/cookingTip_cooking">Cooking	Tip</a></li>
 							<li><a class="dropdown-item" href="/app/sicdan/list">Sicdan</a></li>
 							<li><a class="dropdown-item" href="/app/Chart">Chart</a></li>
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
@@ -68,14 +68,18 @@
 							<li><a class="dropdown-item" href="#">Something else
 									here</a></li>
 						</ul></li>
+					
 				</ul>
 				<ul class="navbar-nav ms-auto">
+					
 					<li class="nav-item"><a class="nav-link active"
 						href="wishList" style="color: pink;">WISH</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="cartList" style="color: pink;">CART</a></li>
 					<li class="nav-item"><a class="nav-link active" href="#"
 						style="color: pink;">LOGIN</a></li>
+					<li class="nav-item"><a class="nav-link active"
+					href="Faq_allList" style="color: pink;">FAQ</a></li>
 				</ul>
 			</div>
 		</div>

@@ -1,67 +1,71 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microwaveable Bowl Cooking Guide</title>
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #d0d0d0;
-            color: #000000;
-            font-family: Arial, sans-serif;
-            padding-top: 20px;
-        }
+<jsp:include page="../common/header.jsp" flush="true"></jsp:include>
 
-        h1 {
-            font-size: 2rem;
-            color: #000000;
-            margin-bottom: 40px;
-            font-weight: bold;
-            text-align: center;
-        }
+<style>
+    body {
+        color: #000000;
+        font-family: Arial, sans-serif;
+        padding-top: 80px; 
+        margin: 0;
+    }
 
-        .container {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            max-width: 100%;
-            margin: auto;
-            background-color: #ffffff;
-        }
+    h1 {
+        font-size: 2rem;
+        color: #000000;
+        margin-bottom: 40px;
+        font-weight: bold;
+        text-align: center;
+    }
 
-        .item {
-            text-align: center;
-            margin: 0 10px;
-        }
+    .container1 {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+        max-width: 100%;
+        margin: 0 auto; 
+    }
 
-        .img-fluid {
-            max-width: 100%;
-            height: auto;
-            border-radius: 4px;
-        }
+    .item {
+        text-align: center;
+        margin: 10px; 
+    }
 
-        .instruction-text {
-            font-size: 1rem;
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #000000;
-            border-radius: 4px;
-            background-color: #f9f9f9;
-        }
+    .img-fluid {
+        max-width: 100%;
+        height: auto;
+        border-radius: 4px;
+    }
 
-        .item-container {
-            width: 20%;
-        }
-    </style>
+    .instruction-text {
+        font-size: 1rem;
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #000000;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .item-container {
+        width: calc(20% - 20px); 
+        min-width: 200px;
+        box-sizing: border-box;
+    }
+
+    /* footer 높이 및 중앙 정렬 조정 */
+    footer.bg-dark {
+        padding-top: 23.3px !important;
+        padding-bottom: 25.5px !important;
+      
+    }
+</style>
 </head>
 <body>
 
-<h1>Microwaveable Bowl Cooking Guide</h1>
+<h1>전자레인지 용기 조리법💜</h1>
 
-<div class="container">
+<div class="container1">
     <div class="item item-container">
         <img src="resources/img/cookingTip/microwaveable bowl/2.jpg" class="img-fluid" alt="Step 1">
         <p class="instruction-text">1. 해동된 생선을 흐르는 물에 씻어 주세요</p>
@@ -85,4 +89,5 @@
 </div>
 
 </body>
-</html>
+
+<jsp:include page="../common/footer.jsp" flush="true"></jsp:include>

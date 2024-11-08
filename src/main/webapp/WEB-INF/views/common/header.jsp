@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html>
@@ -17,7 +19,7 @@
 	rel="stylesheet"
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
-<link rel="stylesheet" href="resources/css/main.css">
+<link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>">
 <title>Insert title here</title>
 
 </head>
@@ -53,34 +55,35 @@
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/FitnessContest" style="color: beige;">For Contest</a></li>
-					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
-
-
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"
-						style="color: beige;">dropdown test</a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="#">Action</a></li>
-							<li><a class="dropdown-item" href="#">Another action</a></li>
-							<li><a class="dropdown-item" href="#">Something else
-									here</a></li>
-						</ul></li>
-					
+					<li class="nav-item"><a class="nav-link active"
+						href="Faq_allList" style="color: pink;">FAQ</a></li>
 				</ul>
-				<ul class="navbar-nav ms-auto">
-					
-					<li class="nav-item"><a class="nav-link active"
-						href="wishList" style="color: pink;">WISH</a></li>
-					<li class="nav-item"><a class="nav-link active"
-						href="cartList" style="color: pink;">CART</a></li>
-					<li class="nav-item"><a class="nav-link active" href="#"
-						style="color: pink;">LOGIN</a></li>
-					<li class="nav-item"><a class="nav-link active"
-					href="Faq_allList" style="color: pink;">FAQ</a></li>
-				</ul>
+
+				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link active"
+							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }<sec:authentication property="principal.userDto.userid" /> 님 환영합니다.</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="${pageContext.request.contextPath}/logout" style="color: pink;">LOGOUT</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="/app/user/wishList" style="color: pink;">WISH</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="/app/user/cartList" style="color: pink;">CART</a></li>
+						<li class="nav-item"><a class="nav-link active"
+							href="#" style="color: pink;">MY</a></li>
+						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+        					<li class="nav-item"><a class="nav-link active"
+								href="${pageContext.request.contextPath}/admin/view" style="color: pink;">ADMIN</a></li>
+        				</c:if>
+					</ul>
+				</c:if>
+				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item"><a class="nav-link active"
+							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+					</ul>
+				</c:if>
 			</div>
 		</div>
 	</nav>

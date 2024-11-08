@@ -1,6 +1,8 @@
-<%@page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="resources/css/shoppingMall/shopList.css">
 
 <div class="main-container">
@@ -65,7 +67,10 @@
 					</c:if>
 					<input type="text" name="search" placeholder="search"
 						value="${not empty search ? search : ''}">
-					<button type="submit">검색</button>
+					<button type="submit">
+						<!-- 검색 -->
+						<i class="fa-solid fa-magnifying-glass"></i>
+					</button>
 				</form>
 
 			</div>
@@ -103,7 +108,7 @@
 					</ul>
 				</div>
 				<!-- 관리자 영역-->
-				<c:if test="true" >
+				<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
 					<button onclick="location.href='<c:url value='/product'/>'">상품등록버튼</button>
 				</c:if>
 			</div>
@@ -119,12 +124,12 @@
 								style="object-fit: contain; max-height: 150px; width: 100%;">
 							</a>
 							<h2>
-								<a
+								<a class="product-name"
 									href="<c:url value='shopDetail?productId=${product.getProduct_id()}'/>">${product.getProduct_name()}</a>
 							</h2>
-							<p>₩ ${product.getProduct_price()}</p>
+							<p><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" /></p>
 							<!-- 관리자 영역-->
-							<c:if test="true">
+							<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
 								<button
 									onclick="location.href='<c:url value="/productUpdate?productId=${product.getProduct_id()}&page=${currentPage}" />'">수정하기</button>
 								<button class="del-product" data-id="${product.getProduct_id()}">삭제</button>
@@ -159,6 +164,11 @@
 	
 	$(function() {
 		
+		//상품명 길이 처리
+		$(".product-name").each(function(idx,data) {
+			sliceLength(data,10);
+		});
+		
 		// 모달창
         var message = '${mesg}';
         if (message) {
@@ -190,4 +200,13 @@
 		});
 
 	})
+	
+	function sliceLength(data,len){
+		let productName = $(data).text();
+		if(productName.length < len){
+			return
+		}
+	    let sliceName = $(data).text().slice(0,len) + "...";
+	    $(data).text(sliceName);
+	}
 </script>

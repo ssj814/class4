@@ -19,6 +19,9 @@
 					</td>
 				</tr>
 				<tr>
+					<td id="pop-up">
+                        팝업 표시<input type="checkbox" name="popup" id="popup" value="Y" style="width: 90%;">
+                    </td>
 					<td colspan="2" align="center">
 						<button type="submit">작성 완료</button>
 						<button type="reset">다시 입력</button>
@@ -49,7 +52,7 @@
 		});
 
 		$("#viewListButton").on("click", function() {
-			location.href = 'notice';
+			location.href = '/app/notice';
 		});
 
 	});

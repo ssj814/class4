@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Alias("ProductReviewFeedbackDTO")
 public class ProductReviewFeedbackDTO {
 	
-	private int user_id;
+	private String user_id;
 	private int review_id;
 	private String feedback;
 

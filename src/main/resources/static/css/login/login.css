@@ -1,0 +1,101 @@
+body {
+    display: flex;
+    flex-direction: column; /* 세로 방향으로 정렬 */
+    justify-content: center; /* 수직 중앙 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    height: 100vh; /* 화면 높이의 100% */
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif; /* 네이버와 유사한 폰트 */
+    background-color: #f0f0f0; /* 배경 색상 */
+}
+
+.logo {
+    margin-bottom: 20px; /* 로그인 컨테이너와의 간격 */
+    text-align: center; /* 중앙 정렬 */
+}
+
+.logo img {
+    max-width: 80%; /* 로고 이미지의 최대 너비 */
+    height: auto; /* 비율 유지 */
+}
+
+.login-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 350px; /* 너비 설정 */
+}
+
+h2 {
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 24px;
+    color: #333; /* 제목 색상 */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #666; /* 레이블 색상 */
+}
+
+input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%; /* 입력 필드 너비 */
+    box-sizing: border-box; /* 패딩 포함 */
+    font-size: 14px;
+}
+
+button {
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* 버튼 너비 */
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #222; /* 버튼 호버 시 색상 변화 */
+}
+
+.social-login {
+    margin-top: 30px; /* 소셜 로그인과 로그인 폼 간격 */
+    text-align: center;
+}
+
+.social-login div {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #666; /* 제목 색상 */
+}
+
+.social-button {
+    padding: 10px;
+    margin: 5px;
+    background-color: #333; /* 기본 소셜 버튼 색상 */
+    border: 1px solid #ccc; /* 경계선 */
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%; /* 버튼 너비 */
+    font-size: 14px;
+    transition: background-color 0.3s, border-color 0.3s; /* 애니메이션 추가 */
+}
+
+.social-button:hover {
+    background-color: #222; /* 버튼 호버 시 색상 변화 */
+    border-color: #bbb; /* 경계선 호버 시 색상 변화 */
+}

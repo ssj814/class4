@@ -2,6 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <div class="container">
 	<div id="boardList">
 		<div id="boardList_title">[ 공 지 사 항 ]</div>
@@ -77,7 +79,9 @@
 				</form>
 			</div>
 			<div>
-				<input type="button" value=" 글쓰기 " id="Writing" />
+				<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+					<input type="button" value=" 글쓰기 " id="Writing" />
+				</c:if>
 			</div>
 		</div>
 	</div>
@@ -87,7 +91,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#Writing").on("click", function() {
-			location.href = 'notice_write';
+			location.href = 'admin/notice_write';
 		});
 
 		$("#boardSearch").on("click", function() {

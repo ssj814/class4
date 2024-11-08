@@ -33,4 +33,5 @@ build/
 .vscode/
 
 /bin/
-/application.properties
+/src/main/resources/application.properties
+/.tern-project

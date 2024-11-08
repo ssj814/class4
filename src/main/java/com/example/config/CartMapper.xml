@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="CartMapper"> <!-- 구별용 이름 -->
 
-	<select id="selectCart" parameterType="int" resultType="CartProductDTO">
+	<select id="selectCart" parameterType="String" resultType="CartProductDTO">
 		select * from product JOIN product_cart using(product_id) where
 		user_id=#{user_id}
 	</select>
@@ -18,7 +18,7 @@
 
 	<insert id="cartInsert" parameterType="hashmap">
 		INSERT INTO product_cart
-		VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, 1, #{option_type},
+		VALUES(CART_ID_SEQ.nextval,#{user_id},#{product_Id}, #{quantity}, #{option_type},
 		#{option_name})
 	</insert>
 
@@ -34,7 +34,7 @@
 	</delete>
 
 	<update id="increaseQuantity" parameterType="hashmap">
-		update product_cart set quantity = quantity + 1
+		update product_cart set quantity = quantity + #{quantity}
 		WHERE user_id=#{user_id}
 		AND product_Id=#{product_Id}
 		AND option_type=#{option_type}
@@ -57,7 +57,7 @@
 	<!-- 동일한 상품과 옵션이 있는지 검사 -->
 	<select id="checkExistingCart" parameterType="hashmap" resultType="int">
 		SELECT cart_id FROM product_cart 
-		WHERE user_id = #{user_id, jdbcType=INTEGER} 
+		WHERE user_id = #{user_id, jdbcType=VARCHAR} 
 		AND product_id = #{product_Id, jdbcType=INTEGER} 
 		AND option_type = #{option_type, jdbcType=VARCHAR} 
 		AND option_name = #{option_name, jdbcType=VARCHAR} 
@@ -76,4 +76,9 @@
 		DELETE FROM product_cart
 		WHERE cart_id = #{cart_Id}
 	</delete>
+	
+	<select id="selectByCartId" parameterType="int" resultType="CartDTO">
+		select * from product_cart 
+		where cart_id = #{cart_id}
+	</select>
 </mapper>

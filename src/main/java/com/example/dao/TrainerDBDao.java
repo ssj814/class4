@@ -14,7 +14,6 @@ public interface TrainerDBDao {
 	public abstract List<TrainerDTO> getlistsByPage(Map<String, Object> params);
 	
 	public abstract int insertTrainer(TrainerDTO dto);
-//	public abstract TrainerDTO select(Map<String, String> params); 없어도될듯
 	public abstract TrainerDTO selectTrainer(int idx);
 	public abstract int updateTrainer(TrainerDTO dto);
 	public abstract int deleteTrainer(int id);

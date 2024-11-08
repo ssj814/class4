@@ -57,16 +57,6 @@
 
 <div class="container" style="margin-top:20px; ">
     <main>
-        
-      
-         <!--   BoardDTO dto = (BoardDTO) request.getAttribute("dto");
-            
-          
-            int postid = dto.getPostid();
-            String title = dto.getTitle();
-            String content = dto.getContent();
-            int userid = dto.getUserid();
-        -->
 <br>
 
         <table border="1" id="retrieveForm">
@@ -106,6 +96,8 @@
 	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 <!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
 		</div>
+		
+		 		<hr>
 
 <div id="total-replyForm">
 
@@ -116,7 +108,6 @@
 			<div class="comment-body">
 				<form class="replyForm">
 					<input type="hidden" name="postid" value="${dto.postid}">
-					<input type="hidden" name="userid" value="${dto.userid}">
 					<textarea id="comment-textarea" name="commContent"
 						placeholder="댓글을 입력하세요" rows="5"></textarea>
 					<button type="submit" id="submit-comment" class="hidden" onclick="checkLoginBeforeComment()">
@@ -131,7 +122,12 @@
 					style="margin-left: ${comment.tr_RepIndent * 20}px;">
 					<table class="reply-table">
 						<tr class="reply">
-							<td class="reply-userid" colspan="2">${comment.userId}</td>
+							<td class="reply-userid" colspan="2" 
+							<c:if test="${dto.userid == comment.userId}">
+							style="background-color: black; color:pink";
+							</c:if>>
+							${comment.realUsername}</td>
+						<!-- comment.userid와 로그인한 user가 같으면 black배경에 pink글자색  -->
 						</tr>
 						<tr class="reply">
 							<td class="reply-content" colspan="2">
@@ -168,7 +164,7 @@
 							<input type="hidden" name="tr_ParentId" value="${comment.commId}">
 							<input type="hidden" name="tr_RepIndent"
 								value="${comment.tr_RepIndent + 1}">
-							<input type="hidden" name="userId" value="${dto.userid}">
+							<input type="hidden" name="realUsername" value="${comment.realUsername}">
 							
 							<div class="reply-textarea-container">
 					            <textarea name="commContent" placeholder="대댓글을 입력하세요" rows="3"></textarea>
@@ -193,7 +189,7 @@
 	$(document).ready(function() {
 				var curPage = ${curPage}; // JavaScript 변수로 currentPage 값 설정
 		
-				console.log(`${dto.userid}`);
+				console.log(`${dto.realUsername}`);
 				console.log(`${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}`);
 				
 				// 댓글 작성 폼의 textarea에 포커스

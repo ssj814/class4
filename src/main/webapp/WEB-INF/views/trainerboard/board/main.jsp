@@ -18,7 +18,7 @@
 		<main>
 		<form action="TrainerBoard" method="get" id="search">
 			<select name="searchName">
-				<option value="userid">작성자</option>
+				<option value="realUsername">작성자</option>
 				<option value="title">제목</option>
 				<option value="content">내용</option>
 			</select>

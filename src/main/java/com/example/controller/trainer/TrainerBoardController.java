@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.PageDTO;
 import com.example.dto.TrainerBoardCommentDTO;
 import com.example.dto.TrainerBoardDTO;
+import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.service.trainer.TrainerBoardCommentService;
 import com.example.service.trainer.TrainerBoardService;
@@ -76,9 +77,9 @@ public class TrainerBoardController {
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
-		System.out.println("1"+dto);
+		System.out.println("111 "+dto);
 		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
-		System.out.println(comments);
+		System.out.println("222 "+comments);
 		m.addAttribute("comments", comments);
 
 		
@@ -99,6 +100,12 @@ public class TrainerBoardController {
 			HttpSession session,Model m, MultipartFile weightImage, TrainerBoardDTO dto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userid = authentication.getName();
+		User user = UserRepository.findByUserid(userid).orElse(null);
+		//회원db에 있는 정보 전체 꺼내오기
+		String realUsername=user.getRealusername();
+		//회원db에있는 user 전체 가져와서 내 dto의 realUsername에 담기
+		
+		System.out.println("realusername"+realUsername);
 		
 		String uploadDir = "C:/images/trainerboard_image/";	 //이미지 저장 경로:C에 images폴더에 trainerboard_images에 저장
 		File uploadDirectory = new File(uploadDir); // uploadDir로 지정된 경로에 대한 File 객체를 생성
@@ -117,8 +124,8 @@ public class TrainerBoardController {
 				dto.setImagename(imgName);
 				dto.setTitle(title);
 				dto.setContent(content);
-				//dto.setUserid(userid);
-				dto.setRealUsername(userid);
+				dto.setUserid(userid);
+				dto.setRealUsername(realUsername);
 				
 				System.out.println("realUsername: " + dto.getRealUsername());
 				
@@ -285,7 +292,15 @@ public class TrainerBoardController {
     	
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
-    	
+		
+		User user = UserRepository.findByUserid(userId).orElse(null);
+		//회원db에 있는 정보 전체 꺼내오기
+		String realUsername=user.getRealusername();
+		//회원db에있는 user 전체 가져와서 내 dto의 realUsername에 담기
+
+		System.out.println("=====댓글확인====="+userId);
+		System.out.println("=====댓글username확인======"+realUsername);
+		
 	    // 로그인하지 않은 경우 (익명 사용자)
 	    if (userId.equals("anonymousUser")) {
 	        return "로그인이 필요합니다.";  // 익명 사용자 (로그인하지 않은 경우)
@@ -312,6 +327,8 @@ public class TrainerBoardController {
        
         // 로그인된 사용자 ID를 댓글 DTO에 설정
         commentDTO.setUserId(userId);
+        commentDTO.setRealUsername(realUsername);
+        System.out.println("commentDTO에 담겼나 확인 ======"+realUsername);
         
         System.out.println("TrainerBoardCommentDTO 후: "+commentDTO);
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)

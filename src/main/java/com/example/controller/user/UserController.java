@@ -7,11 +7,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.dto.user.UserDto;
 import com.example.entity.User;
+import com.example.repository.UserRepository;
 import com.example.service.user.UserService;
 
 @Controller
@@ -19,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserRepository userRepository;
     
 //    @RequestMapping("/")
 //    public String main() {
@@ -87,10 +92,17 @@ public class UserController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public String managerView(Model m) { 
 		System.out.println("/admin/view");
-		List<User> users= userService.findAll();
+		List<User> users= userRepository.findAll();
 		System.out.println("users" + users);
 		m.addAttribute("users", users);
 		return "user/adminView";
 	}
+	
+	//삭제
+	 @RequestMapping("/admin/delete/{usernumber}")
+	    public String deleteUser(@PathVariable("usernumber") int usernumber) {
+	        userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
+	        return "redirect:/admin/view";  // 삭제 후 목록 페이지로 리다이렉트
+	    }
 
 }

@@ -52,7 +52,7 @@ public class CartController {
 		return "shoppingMall/cartList";
 	}
 	
-	@PostMapping("/cart")
+	@PostMapping("/user/cart")
 	@ResponseBody
 	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

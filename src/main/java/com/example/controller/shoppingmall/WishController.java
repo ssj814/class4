@@ -81,7 +81,7 @@ public class WishController {
 		map.put("product_Id", productId);
 		map.put("option_type", optionTypes.toString());
 	    map.put("option_name", optionNames.toString());
-		
+		System.out.println("map : "+map);
 		int check = service.checkWish(map); //wish에 존재? - wishCheck로 바꿔야지
 		System.out.println("위시 중복체크 : "+check);
 		Map<String,String> responseMap = new HashMap<String,String>();
@@ -96,25 +96,25 @@ public class WishController {
 		return responseMap;
 	}
 	
-	@DeleteMapping(value="/wish/productId/{productId}")
+	@DeleteMapping(value="/wish/wishId/{wishId}")
 	@ResponseBody
-	public void wishDelete(@PathVariable int productId, Model m) {
+	public void wishDelete(@PathVariable int wishId, Model m) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("user_id", userId);
-		map.put("product_Id", productId);
+		map.put("wish_id", wishId);
 		service.wishDelete(map);
 	}
 	
-	@DeleteMapping(value="/wish/productIdList/{productIdList}")
+	@DeleteMapping(value="/wish/wishIdList/{wishIdList}")
 	@ResponseBody
-	public Map<String,String> AllwishDelete(@PathVariable List<String> productIdList, Model m) {
+	public Map<String,String> AllwishDelete(@PathVariable List<String> wishIdList, Model m) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("user_id", userId);
-		map.put("productIdList", productIdList);
+		map.put("wishIdList", wishIdList);
 		int del = service.AllwishDelete(map);
 		Map<String,String> resMap = new HashMap<String,String>();
 		resMap.put("mesg","삭제 실패");

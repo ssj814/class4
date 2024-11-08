@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -75,19 +77,19 @@ public class NoticeController {
 		return "notice/content";
 	}
 
-	@RequestMapping("/notice_write")
+	@RequestMapping("/admin/notice_write")
 	public String BoardWrite() {
 		return "notice/BoardWriting";
 	}
 
-	@RequestMapping("/notice_update")
+	@RequestMapping("/admin/notice_update")
 	public String BoardUpdate(@RequestParam("postid") int postid, Model m) {
 		NoticeDTO dto = service.selectBoardOne(postid);
 		m.addAttribute("post", dto);
 		return "notice/BoardWriting";
 	}
 
-	@RequestMapping("/notice_delete")
+	@RequestMapping("/admin/notice_delete")
 	public String BoardDelete(@RequestParam("postid") int postid, @RequestParam("currentPage") int currentPage,
 			RedirectAttributes redirectAttributes) {
 
@@ -102,7 +104,7 @@ public class NoticeController {
 		return "redirect:/notice?currentPage=" + currentPage;
 	}
 
-	@RequestMapping("/notice_save")
+	@RequestMapping("/admin/notice_save")
 	public String BoardSave(HttpSession session, @RequestParam("title") String title,
 			@RequestParam("content") String content, @RequestParam(value = "postid", required = false) Integer postid,
 			@RequestParam(value = "popup", required = false) String popup, RedirectAttributes redirectAttributes) {
@@ -111,11 +113,15 @@ public class NoticeController {
 		if (category == null) {
 			category = ""; // 혹은 적절한 기본 카테고리 설정
 		}
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
 		NoticeDTO dto = new NoticeDTO();
 		dto.setTitle(title);
 		dto.setContent(content);
 		dto.setCategory(category);
-		dto.setWriter("임시");
+		dto.setWriter(user_id);
 		
 		// 팝업 표시 여부 확인
         if ("Y".equals(popup)) {

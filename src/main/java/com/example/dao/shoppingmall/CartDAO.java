@@ -65,4 +65,8 @@ public class CartDAO {
 		session.delete("CartMapper.deleteCartById", cart_id);
 	}
 
+	public CartDTO selectByCartId(int cart_id) {
+		return session.selectOne("CartMapper.selectByCartId", cart_id);
+	}
+
 }

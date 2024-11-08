@@ -27,14 +27,14 @@
 	</select>
 	
 	<delete id="wishDelete" parameterType="hashmap">
-		DELETE FROM product_wish WHERE user_id=#{user_id} and product_Id=#{product_Id}
+		DELETE FROM product_wish WHERE user_id=#{user_id} and WISH_ID=#{wish_id}
 	</delete>
 	
 	<delete id="AllwishDelete" parameterType="hashmap">
 		DELETE FROM product_wish
 		WHERE user_id=#{user_id}
-		and product_Id
-		<foreach collection="productIdList" item="item" open="IN(" separator="," close=")">
+		and WISH_ID
+		<foreach collection="wishIdList" item="item" open="IN(" separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>

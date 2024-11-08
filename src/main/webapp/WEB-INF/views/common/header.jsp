@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 
 <!DOCTYPE html>
 <html>
@@ -61,7 +60,7 @@
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name } 님 환영합니다.</a></li>
+							href="#" style="color: pink;">${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }<sec:authentication property="principal.userDto.userid" /> 님 환영합니다.</a></li>
 						<li class="nav-item"><a class="nav-link active"
 							href="${pageContext.request.contextPath}/logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"

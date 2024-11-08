@@ -9,9 +9,7 @@
 <meta charset="UTF-8">
 <title>주문 / 결제</title>
 <!-- Bootstrap CSS -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-	rel="stylesheet">
+
 <style>
 .main-title-container {
 	padding: 20px;
@@ -86,8 +84,12 @@
 
 	<!-- Page Title with Breadcrumb on Right -->
 	<div class="main-title-container">
-		<span>주문 / 결제</span> <span style="font-size: 18px;">01 주문/결제
-			&gt; 02 주문완료</span>
+		<span>주문 / 결제</span> 
+		<span style="font-size: 18px;">
+			<span style="color:gray;">00 장바구니 &gt;</span> 
+			01 주문/결제 &gt; 
+			<span style="color:gray;">02 주문완료</span>
+		</span>
 	</div>
 
 	<!-- Main Content -->
@@ -235,44 +237,76 @@
 				<div class="order-summary">
 					<div class="section-header">주문 정보</div>
 					<hr style="border: solid 1px black; opacity: inherit; ">
-					<div class="order-items">
-						<c:forEach var="item" varStatus="status" items="${cartList}">
-							<c:set var="product" value="${productList[status.index]}" />
-							<div
-								class="order-item d-flex justify-content-between align-items-center">
-								<div>
-									<strong>${product.product_name}</strong> <br> <small>
-										<c:forEach var="type"
-											items="${fn:split(item.option_type, ',')}" varStatus="idx">
-											<c:set var="name"
-												value="${fn:split(item.option_name, ',')[idx.index]}" />
-				                        ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
-										</c:forEach>
-									</small> × ${item.quantity}
-								</div>
-								<span>
-									<fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
-								</span>
-							</div>
-					        <input type="hidden" name="productIds" value="${product.product_id}">
-					        <input type="hidden" name="quantities" value="${item.quantity}">
-					        <input type="hidden" name="individualPrices" value="${product.product_price}">
-					        <input type="hidden" name="optionTypes" value="${item.option_type}">
-					        <input type="hidden" name="optionNames" value="${item.option_name}">
-						</c:forEach>
-					</div>
-					<div class="total-price text-end mt-3">
-						Total: 
-						<span> 
-							<c:set var="totalPrice" value="0" />
-							<c:forEach var="item" varStatus="status" items="${cartList}">
-								<c:set var="product" value="${productList[status.index]}" />
-								<c:set var="itemTotal" value="${product.product_price * item.quantity}" />
-								<c:set var="totalPrice" value="${totalPrice + itemTotal}" />
-							</c:forEach>
-							<fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="₩ " />
-						</span>
-					</div>
+					<!-- 여러 상품 주문 -->
+				    <c:if test="${not empty cartList}">
+				        <c:forEach var="item" varStatus="status" items="${cartList}">
+				            <c:set var="product" value="${productList[status.index]}" />
+				            <div class="order-item d-flex justify-content-between align-items-center">
+				                <div>
+				                    <strong>${product.product_name}</strong> <br>
+				                    <small>
+				                        <c:forEach var="type" items="${fn:split(item.option_type, ',')}" varStatus="idx">
+				                            <c:set var="name" value="${fn:split(item.option_name, ',')[idx.index]}" />
+				                            ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
+				                        </c:forEach>
+				                    </small> × ${item.quantity}
+				                </div>
+				                <span>
+				                    <fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
+				                </span>
+				            </div>
+				            <input type="hidden" name="productIds" value="${product.product_id}">
+				            <input type="hidden" name="quantities" value="${item.quantity}">
+				            <input type="hidden" name="individualPrices" value="${product.product_price}">
+				            <input type="hidden" name="optionTypes" value="${item.option_type}">
+				            <input type="hidden" name="optionNames" value="${item.option_name}">
+				        </c:forEach>
+				    </c:if>
+				
+				    <!-- 단일 상품 주문 -->
+				    <c:if test="${not empty product}">
+				        <div class="order-item d-flex justify-content-between align-items-center">
+				            <div>
+				                <strong>${product.product_name}</strong> <br>
+				                <small>
+				                    <c:forEach var="option" items="${options}" varStatus="idx">
+				                        ${option['type']} : ${option['name']}<c:if test="${!idx.last}"> || </c:if>
+				                    </c:forEach> 
+				                </small> × ${quantity}
+				            </div>
+				            <span>
+				                <fmt:formatNumber value="${product.product_price * quantity}" type="currency" currencySymbol="₩ " />
+				            </span>
+				        </div>
+				        <input type="hidden" name="productId" value="${product.product_id}">
+				        <input type="hidden" name="quantity" value="${quantity}">
+				        <input type="hidden" name="individualPrice" value="${product.product_price}">
+				        <c:forEach var="option" items="${options}">
+				            <input type="hidden" name="optionType" value="${option['type']}">
+				            <input type="hidden" name="optionName" value="${option['name']}">
+				        </c:forEach>
+				    </c:if>
+				
+				    <!-- 총액 계산 -->
+				    <div class="total-price text-end mt-3">
+				        Total: 
+				        <span> 
+				            <c:set var="totalPrice" value="0" />
+				            <c:if test="${not empty cartList}">
+				                <!-- 여러 상품 총액 계산 -->
+				                <c:forEach var="item" varStatus="status" items="${cartList}">
+				                    <c:set var="product" value="${productList[status.index]}" />
+				                    <c:set var="itemTotal" value="${product.product_price * item.quantity}" />
+				                    <c:set var="totalPrice" value="${totalPrice + itemTotal}" />
+				                </c:forEach>
+				            </c:if>
+				            <c:if test="${not empty product}">
+				                <!-- 단일 상품 총액 계산 -->
+				                <c:set var="totalPrice" value="${product.product_price * quantity}" />
+				            </c:if>
+				            <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="₩ " />
+				        </span>
+				    </div>
 					<!-- 결제 버튼 -->
 					<button type="button" class="btn payment-button btn-lg"
 						onclick="validateAndSubmitForm()">결제하기</button>
@@ -386,30 +420,48 @@
 		    let individualPrices = [];
 		    let optionTypes = [];
 		    let optionNames = [];
+		    let totalAmount = 0;
 		    
-		    $("input[name='productIds']").each(function() {
-		        productIds.push($(this).val());
-		    });
-		    $("input[name='quantities']").each(function() {
-		        quantities.push($(this).val());
-		    });
-		    $("input[name='individualPrices']").each(function() {
-		        individualPrices.push($(this).val());
-		    });
+		    if ($("input[name='productIds']").length > 0) {
+		        // 여러 상품 주문일 경우
+		        $("input[name='productIds']").each(function() {
+		            productIds.push($(this).val());
+		        });
+		        $("input[name='quantities']").each(function() {
+		            quantities.push($(this).val());
+		        });
+		        $("input[name='individualPrices']").each(function() {
+		            let price = parseFloat($(this).val());
+		            individualPrices.push(price);
+		        });
+		        $("input[name='optionTypes']").each(function() {
+		            optionTypes.push($(this).val().split(",")); // 예: "color,size" -> ["color", "size"]
+		        });
+		        $("input[name='optionNames']").each(function() {
+		            optionNames.push($(this).val().split(",")); // 예: "blue,L" -> ["blue", "L"]
+		        });
+		        totalAmount = individualPrices.reduce((sum, price, idx) => sum + (price * quantities[idx]), 0);
+		    } else {
+		        // 단일 상품 주문일 경우
+		        productIds.push($("input[name='productId']").val());
+		        quantities.push($("input[name='quantity']").val());
+		        individualPrices.push(parseFloat($("input[name='individualPrice']").val()));
 
-		    // 옵션 타입과 옵션 이름을 각각 분리하여 리스트로 수집
-		    $("input[name='optionTypes']").each(function() {
-		        optionTypes.push($(this).val().split(",")); // 예: "color,size" -> ["color", "size"]
-		    });
+		        // 여러 옵션을 가진 단일 상품의 모든 옵션 타입과 옵션 이름을 배열로 수집
+		        let singleOptionTypes = [];
+		        let singleOptionNames = [];
+		        $("input[name='optionType']").each(function() {
+		            singleOptionTypes.push($(this).val());
+		        });
+		        $("input[name='optionName']").each(function() {
+		            singleOptionNames.push($(this).val());
+		        });
+		        optionTypes.push(singleOptionTypes); // 옵션 타입 배열 추가
+		        optionNames.push(singleOptionNames); // 옵션 이름 배열 추가
 
-		    $("input[name='optionNames']").each(function() {
-		        optionNames.push($(this).val().split(",")); // 예: "blue,L" -> ["blue", "L"]
-		    });
-
-		    // 총액 계산 (프론트에서 필요 시)
-		    let totalAmount = individualPrices.reduce((sum, price, idx) => sum + (price * quantities[idx]), 0);
+		        totalAmount = individualPrices[0] * quantities[0];
+		    }
 		    
-
 		    // 수집된 데이터 반환
 		    let data = {
 		            recipientName,

@@ -34,7 +34,7 @@
         <input type="text" id="product_id" name="product_id" placeholder="${ProductId}" value="${ProductId}" readonly />
         
         <label for="product_name">상품명</label>
-        <input type="text" id="product_name" name="product_name" placeholder="상품명을 입력하세요." required />
+        <input type="text" id="product_name" name="product_name" placeholder="상품명을 입력하세요."  maxlength="50" required />
 
 		<div id="option-container">
 		    <div class="option-container">

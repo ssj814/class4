@@ -51,7 +51,7 @@
        					 <tr>
        					 	<td class="tdTopPosts"><img src="resources/img/trainerboard/recommend.png" alt="recommend" height=25 width=25></td>
             				<td class="trainerboard_topPosts"><a href="Retrieve/${post.postid}/${pDTO.curPage}"><strong>${post.title}</strong></a></td>
-           					 <td class="tdTopPosts">${post.userid}</td>
+           					<td class="tdTopPosts">${post.realUsername}</td>
             				<td class="tdTopPosts">${post.crdate}</td>
             				<td class="tdTopPosts">${post.viewcount}</td>
        					 </tr>
@@ -64,7 +64,7 @@
 							<tr>
 								<td class="trainerboard_postno">${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
 								<td class="trainerboard_content"><a href="Retrieve/${dto.postid}/${pDTO.curPage}">${dto.title}</a></td>
-								<td class="trainerboard_tbody">${dto.userid}</td>
+								<td class="trainerboard_tbody">${dto.realUsername}</td>
 								<td class="trainerboard_tbody" >${dto.crdate}</td>
 								<td class="trainerboard_tbody">${dto.viewcount}</td>
 							</tr>

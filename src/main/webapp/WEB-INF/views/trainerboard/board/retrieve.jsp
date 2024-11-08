@@ -80,7 +80,7 @@
             </tr>
             <tr>
                 <th>작성자</th>
-                <td>${dto.userid}</td>
+                <td>${dto.realUsername}</td>
             <tr>
                 <th>글제목</th>
                  <td>${dto.title}</td>

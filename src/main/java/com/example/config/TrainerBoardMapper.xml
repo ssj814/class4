@@ -21,7 +21,7 @@ WHERE ROWNUM &lt;= 5
 
 <select id="selectAll" resultType="BoardDTO" parameterType="hashmap">
 
-		select postid, title, userid,
+		select postid, title, userid, realUsername,
 		to_char(crdate,'YYYY-MM-DD')crdate,
 		viewcount
 		from

@@ -24,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.PageDTO;
 import com.example.dto.TrainerBoardCommentDTO;
 import com.example.dto.TrainerBoardDTO;
+import com.example.repository.UserRepository;
 import com.example.service.trainer.TrainerBoardCommentService;
 import com.example.service.trainer.TrainerBoardService;
 
@@ -36,6 +37,8 @@ public class TrainerBoardController {
 	TrainerBoardService service;
 	@Autowired
 	TrainerBoardCommentService coservice;
+	@Autowired
+	UserRepository UserRepository;
 
 	//메인화면출력
 	
@@ -110,10 +113,14 @@ public class TrainerBoardController {
 			if(!weightImage.isEmpty()) {
 				inputStream = weightImage.getInputStream(); //업로드된 파일의 내용을 읽기 위한 InputStream을 반환
 				String imgName = uuid + weightImage.getOriginalFilename(); //업로드된 파일의 원래 이름을 반환
+				//String userid2 = authentication.getName();
 				dto.setImagename(imgName);
 				dto.setTitle(title);
 				dto.setContent(content);
-				dto.setUserid(userid);
+				//dto.setUserid(userid);
+				dto.setRealUsername(userid);
+				
+				System.out.println("realUsername: " + dto.getRealUsername());
 				
 				weightImage.transferTo(new File(uploadDir + imgName)); //파일의 내용을 지정된 위치로 직접 저장
 			}

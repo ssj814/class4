@@ -36,12 +36,14 @@
                 
                 <!-- 옵션 표시 구역 -->
                 <p>
-                    <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
-                        <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
-                            ${type} : <c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />
-                        </div>
-                    </c:forEach>
-                </p>
+				    <c:if test="${not empty item.wish.option_type and not empty item.wish.option_name}">
+				        <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
+				            <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
+				                ${type} : <c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />
+				            </div>
+				        </c:forEach>
+				    </c:if>
+				</p>
                 
                 <p><fmt:formatNumber value="${item.product.product_price}" type="currency" currencySymbol="₩" /></p>
             </div>

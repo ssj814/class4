@@ -8,7 +8,7 @@ public class TrainerBoardDTO {
 
 	int postid; 
 	int categoryid; 
-	int userid; 
+	String userid; 
 	int trainerid; 
 	String title; 
 	String content; 
@@ -22,7 +22,7 @@ public class TrainerBoardDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-	public TrainerBoardDTO(int postid, int categoryid, int userid, int trainerid, String title, String content, String crdate,
+	public TrainerBoardDTO(int postid, int categoryid, String userid, int trainerid, String title, String content, String crdate,
 			String updatedate, int viewcount) {
 		super();
 		this.postid = postid;
@@ -59,11 +59,11 @@ public class TrainerBoardDTO {
 		this.categoryid = categoryid;
 	}
 
-	public int getUserid() {
+	public String getUserid() {
 		return userid;
 	}
 
-	public void setUserid(int userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 

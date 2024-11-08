@@ -81,7 +81,10 @@
 				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							href="/app/loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							<li class="nav-item"><a class="nav-link active"
+							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
+							 style="color: pink;">카카오로그아웃</a></li>
 					</ul>
 				</c:if>
 			</div>

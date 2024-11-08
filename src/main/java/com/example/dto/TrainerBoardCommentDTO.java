@@ -13,7 +13,7 @@ public class TrainerBoardCommentDTO {
 	
 	private int postid; //글고유번호
 	private int commId; //댓글고유번호
-	private int userId; //댓글작성자
+	private String userId; //댓글작성자
 	private String commContent; //댓글내용
 	private String comCrdate; //댓글작성일
 	private String comUpdate; //댓글수정일
@@ -22,7 +22,7 @@ public class TrainerBoardCommentDTO {
 	
 	
 	
-	public TrainerBoardCommentDTO(int postid, int commId, int userId, String commContent, String comCrdate,
+	public TrainerBoardCommentDTO(int postid, int commId, String userId, String commContent, String comCrdate,
 			String comUpdate, Integer tr_ParentId, int tr_RepIndent) {
 		super();
 		this.postid = postid;
@@ -59,10 +59,10 @@ public class TrainerBoardCommentDTO {
 	public void setCommId(int commId) {
 		this.commId = commId;
 	}
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getCommContent() {

@@ -76,4 +76,9 @@ public class UserService {
     public List<User> findAll(){
 		return userRepository.findAll();
 	}
+    
+    // 사용자 삭제
+    public void deleteUserById(int usernumber) {
+        userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
+    }
 }

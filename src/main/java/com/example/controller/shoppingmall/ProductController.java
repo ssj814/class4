@@ -60,6 +60,7 @@ public class ProductController {
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
 		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
+		System.out.println("noticePopupClosed : "+noticePopupClosed);
 	    if (noticePopupClosed == null || !noticePopupClosed) {
 	        List<NoticeDTO> popupNotices = nService.getPopupNotices();
 	        session.setAttribute("popupNotices", popupNotices);

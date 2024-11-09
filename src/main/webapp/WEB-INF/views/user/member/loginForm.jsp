@@ -49,8 +49,5 @@
 	    	<a href="http://localhost:8090/app/oauth2/authorization/naver?redirect_uri=http://localhost:8090/app&mode=login">
 	    	<button class="social-button">네이버 로그인</button>
 	    	</a>
-	    	<a href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=login">
-	    	<button class="social-button">카카오 로그인</button>
-	    	</a>
 	    </div>
 	</div>

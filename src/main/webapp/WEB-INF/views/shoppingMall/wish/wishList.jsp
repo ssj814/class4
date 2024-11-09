@@ -98,8 +98,9 @@ img {
 			                        ${item.product.product_name}
 			                    </a>
 			                </h2>
+			                
 			                <!-- 옵션 표시 구역 -->
-			                <c:if test="${not empty item.wish.option_type}">
+			                <c:if test="${not empty item.wish.option_type and not empty item.wish.option_name}">
 		                    <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
 		                        <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
 		                            ${type}&nbsp;:&nbsp;<c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />

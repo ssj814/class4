@@ -177,7 +177,6 @@ input[type="number"]::-webkit-inner-spin-button {
 					
 					<div class="row align-items-center pt-2" style="margin-bottom: 0.3px">
 						<div class="col-2">
-							<!-- <input type="button" id="btn-delete" class="cart-button btn h-25" value="삭제"> -->
 							<button id="btn-delete" class="btn cart-button">삭제</button>
 						</div>
 						<div class="col-6"></div>

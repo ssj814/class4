@@ -31,11 +31,11 @@ public class CustomSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	System.out.println("CustomSecurityConfig 로딩됨>>>>>>>>>");
+    	
     	http
     	//페이지 권한 설정
     	.authorizeHttpRequests(authorize -> authorize
     	.requestMatchers("/admin/**").hasRole("ADMIN")
-
     	.requestMatchers("/trainer/**").hasRole("TRAINER")
     	.requestMatchers("/user/**").authenticated() // /user/** 경로는 인증된 경우 접근 
 
@@ -76,6 +76,7 @@ public class CustomSecurityConfig {
         //)
         .csrf(csrf -> csrf.disable()); // test를 위해 CSRF 보호 비활성화
     	//.cors(cors -> cors.disable()); // test를 위해 CORS 보호 비활성화
+        // Content Security Policy 설정 추가
 		
     	
     return http.build(); // SecurityFilterChain 빌드

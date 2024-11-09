@@ -93,8 +93,8 @@ where postid=#{postid}
     FROM TRAINERBOARD_BOARD
     
     <where>
-    <if test="searchName=='user_id'">
-    userid like '%' ||#{searchValue}||'%'
+    <if test="searchName=='realUsername'">
+    realUsername like '%' ||#{searchValue}||'%'
     </if>
     <if test="searchName=='title'">
     title like '%'||#{searchValue}||'%'

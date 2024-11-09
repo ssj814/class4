@@ -80,8 +80,11 @@
 					</c:forEach>
 					<!-- 수량 선택 -->
 					<label>quantity</label>
-					<input type="number" min="1" class="product-quantity form-control" value="1">
-					
+					<div class="input-group">
+			            <input class="btn btn-dark decrease" type="button" value="-">
+						<input class="product-quantity form-control text-center" type="number" min="1" value="1">
+						<input class="btn btn-dark increase" type="button" value="+">
+					</div>	
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
@@ -117,9 +120,7 @@
 				
 			</div>
 		</div>
-		z
 	</div>
-	
 </div>
 
 <script>
@@ -128,6 +129,21 @@
 		
 		// 로그인 유저 정보
 		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		
+		// + 버튼 클릭 이벤트
+		$('.increase').click(function() {
+		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    console.log(input);
+		    var value = parseInt(input.val()) || 0;
+		    input.val(value + 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
+		});
+
+		// - 버튼 클릭 이벤트
+		$('.decrease').click(function() {
+		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    var value = parseInt(input.val()) || 0;
+		    if (value > 1) input.val(value - 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
+		});
 		
 		// total 계산
 		$(".product-quantity").on("change", function(){

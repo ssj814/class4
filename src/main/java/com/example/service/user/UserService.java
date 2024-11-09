@@ -2,7 +2,10 @@ package com.example.service.user;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import com.example.util.jwt.JwtUtil;
 
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository; // 사용자 레포지토리
@@ -52,7 +56,7 @@ public class UserService {
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
-        user.setEmail(userDto.getEmailusername()+"@"+userDto.getEmaildomain());
+        user.setEmail(userDto.getEmailusername() + "@" + userDto.getEmaildomain());
         user.setProvider(null);
         user.setProviderid(null);
 
@@ -64,6 +68,15 @@ public class UserService {
         User user = userRepository.findByUserid(userDto.getUserid())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials")); // 사용자 없음 예외 처리
 
+        // 상태 로그 추가
+        logger.info("User status for {}: {}", user.getUserid(), user.getStatus());
+
+        // 사용자 상태가 'WITHDRAWN'인지 확인
+        if ("WITHDRAWN".equals(user.getStatus())) {
+            logger.warn("Login attempt for withdrawn account: {}", user.getUserid());
+            throw new RuntimeException("Account has been withdrawn"); // 탈퇴된 계정은 로그인 불가
+        }
+
         // 입력한 비밀번호와 저장된 비밀번호 비교
         if (passwordEncoder.matches(userDto.getUserpw(), user.getUserpw())) {
             return user; // 로그인 성공 시 사용자 반환
@@ -71,14 +84,25 @@ public class UserService {
             throw new RuntimeException("Invalid credentials"); // 비밀번호 불일치 예외 처리
         }
     }
-    
-    //전체 출력
-    public List<User> findAll(){
-		return userRepository.findAll();
-	}
+
+    // 전체 출력
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
     
     // 사용자 삭제
     public void deleteUserById(int usernumber) {
         userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
+    }
+
+    // 사용자 비활성화 (탈퇴 처리)
+    public void deactivateUser(String userid) {
+        Optional<User> optionalUser = userRepository.findByUserid(userid);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setStatus("WITHDRAWN"); // 상태를 'WITHDRAWN'으로 설정
+            user.setUpdated(LocalDateTime.now());
+            userRepository.save(user);
+        }
     }
 }

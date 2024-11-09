@@ -8,11 +8,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <select id="selectTopPosts" resultType="BoardDTO">
 SELECT postid, title, userid,
           Crdate,
-           viewcount
+           viewcount, realUsername
 FROM (
     SELECT postid, title, userid,
            TO_CHAR(crdate, 'YYYY-MM-DD')Crdate,
-           viewcount
+           viewcount, realUsername
     FROM TRAINERBOARD_BOARD
     ORDER BY viewcount DESC
 )
@@ -21,14 +21,14 @@ WHERE ROWNUM &lt;= 5
 
 <select id="selectAll" resultType="BoardDTO" parameterType="hashmap">
 
-		select postid, title, userid,
+		select postid, title, userid, 
 		to_char(crdate,'YYYY-MM-DD')crdate,
-		viewcount
+		viewcount,  realUsername
 		from
 		TRAINERBOARD_BOARD
 		
 		<where>
-		<if test="searchName=='userid'">
+		<if test="searchName=='realUsername'">
 		userid like '%' ||#{searchValue}||'%'
 		</if>
 		<if test="searchName=='title'">
@@ -50,11 +50,11 @@ WHERE ROWNUM &lt;= 5
 		insert into TRAINERBOARD_BOARD
 		( categoryid,userid,trainerid, title,
 		content,
-		crdate,updatedate, viewcount, imagename)
+		crdate,updatedate, viewcount, imagename, realUsername)
 		values (
-		1, 1000, 9999, #{title},
+		1, #{userid}, 9999, #{title},
 		#{content},
-		sysdate, sysdate, #{viewcount}, #{imagename})
+		sysdate, sysdate, #{viewcount}, #{imagename},#{realUsername})
 
 	</insert>
 	

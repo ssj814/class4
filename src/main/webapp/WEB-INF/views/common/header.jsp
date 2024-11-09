@@ -49,14 +49,17 @@
 						data-bs-toggle="dropdown" aria-expanded="false"
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="/app/cookingTip">Cooking	Tip</a></li>
-							<li><a class="dropdown-item" href="/app/sicdan_list">Sicdan</a></li>
+							<li><a class="dropdown-item" href="/app/cookingTip_cooking">Cooking	Tip</a></li>
+							<li><a class="dropdown-item" href="/app/sicdan/list">Sicdan</a></li>
 							<li><a class="dropdown-item" href="/app/Chart">Chart</a></li>
 							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="/app/notice" style="color: beige;">Notice</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="Faq_allList" style="color: pink;">FAQ</a></li>
 				</ul>
+
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
@@ -78,7 +81,10 @@
 				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							href="/app/loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							<li class="nav-item"><a class="nav-link active"
+							href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=unlink"
+							 style="color: pink;">카카오로그아웃</a></li>
 					</ul>
 				</c:if>
 			</div>

@@ -52,7 +52,6 @@ public class TrainerBoardController {
 		//검색필드 전달값으로 작성자, 제목, 내용 으로 검색할 수 있게 함
 		PageDTO pDTO = service.select(searchName, searchValue, curPage);
 		System.out.println(pDTO);
-		
 		// 상위 5개 게시글 조회
 	    List<TrainerBoardDTO> topPosts = service.selectTopPosts();
 		

@@ -100,15 +100,13 @@ img {
 			                </h2>
 			                
 			                <!-- 옵션 표시 구역 -->
-			                <p>
-				                <c:if test="${not empty item.wish.option_type and not empty item.wish.option_name}">
-							        <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
-							            <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
-							                ${type} : <c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />
-							            </div>
-							        </c:forEach>
-							    </c:if>
-						    </p>
+			                <c:if test="${not empty item.wish.option_type and not empty item.wish.option_name}">
+		                    <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
+		                        <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
+		                            ${type}&nbsp;:&nbsp;<c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />
+		                        </div>
+		                    </c:forEach>
+		                    </c:if>
 			            </div>
 			            <div class="col-2">
 			            	<p class="mb-0"><fmt:formatNumber value="${item.product.product_price}" type="currency" currencySymbol="₩ " /></p>

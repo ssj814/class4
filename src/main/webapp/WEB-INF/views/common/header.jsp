@@ -71,7 +71,7 @@
 						<li class="nav-item"><a class="nav-link active"
 							href="/app/user/cartList" style="color: pink;">CART</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="#" style="color: pink;">MY</a></li>
+							href="/app/mypage" style="color: pink;">MY</a></li>
 						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
         					<li class="nav-item"><a class="nav-link active"
 								href="${pageContext.request.contextPath}/admin/view" style="color: pink;">ADMIN</a></li>

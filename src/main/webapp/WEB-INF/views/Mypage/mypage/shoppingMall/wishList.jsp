@@ -80,14 +80,15 @@ img {
 	<div class="section-box">
 		<div class="section-header d-flex align-items-center pe-2">
 			<span>상품 정보</span>
-			<button type="button" class="btn-allDel btn btn-outline-dark text-end ms-auto" >전체삭제</button>
+			<button type="button" class="btn-allDel btn btn-outline-dark text-end ms-auto">전체삭제</button>
+			<!-- 이거 버튼말고 그냥 text 클릭하는거로 바꾸고 싶어..... -->
 		</div>
 		<hr style="border: solid 1px black; opacity: inherit; ">
 		<div class="form-group-inline">
 			<div class="wish-items">
 				<c:forEach var="item" varStatus="status" items="${wishProductList}">
 					<div id="wish-${item.wish.wish_id}" class="wish-item row justify-content-between align-items-center" data-wishid="${item.wish.wish_id}">						
-						<div class="col-2" style="width:100px; padding:10px;">
+						<div class="col-2" style="width:100px; padding:5px;">
 							<a href="/app/shopDetail?productId=${item.wish.product_id}"  style="text-decoration: none;">
 			                	<img src="<c:url value='/images/shoppingMall_product/${item.product.product_imagename}'/>" alt="Image">
 			              	</a>
@@ -98,9 +99,8 @@ img {
 			                        ${item.product.product_name}
 			                    </a>
 			                </h2>
-			                
 			                <!-- 옵션 표시 구역 -->
-			                <c:if test="${not empty item.wish.option_type and not empty item.wish.option_name}">
+			                <c:if test="${not empty item.wish.option_type}">
 		                    <c:forEach var="type" items="${fn:split(item.wish.option_type, ',')}" varStatus="status">
 		                        <div class="option-info" data-type="${type}" data-name="${fn:split(item.wish.option_name, ',')[status.index]}">
 		                            ${type}&nbsp;:&nbsp;<c:out value="${fn:split(item.wish.option_name, ',')[status.index]}" />
@@ -131,7 +131,7 @@ img {
 	
 		// 전체삭제
 		$(".btn-allDel").on("click", function(){
-			var delCheck = confirm("전체상품 삭제하시겠습니까?");
+			var delCheck = confirm("선택된 상품을 삭제하시겠어요?");
 			var wishIdList = [];
 			$(".wish-item").each(function(idx,data) {
 				wishIdList.push($(this).data('wishid'));

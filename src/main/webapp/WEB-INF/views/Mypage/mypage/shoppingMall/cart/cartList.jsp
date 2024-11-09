@@ -66,14 +66,6 @@ img {
 	max-height: 70px; 
 	width: 70px;
 }
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-
 </style>
 
 
@@ -102,7 +94,7 @@ input[type="number"]::-webkit-inner-spin-button {
 			<hr style="border: solid 1px black; opacity: inherit; ">
 			<div class="form-group-inline">
 				<div class="cart-items">
-					<c:forEach var="product" varStatus="status" items="${ProductList}">
+					<c:forEach var="product" varStatus="status" items="${cartItems}">
 						<div class="row align-items-center cart-item"
 							style="margin-bottom: 0.3px">
 							<input type="hidden" class="product-id" value="${product.getProduct_id()}">
@@ -155,17 +147,12 @@ input[type="number"]::-webkit-inner-spin-button {
 							</div>
 
 							<div class="col-2">
-								<div class="input-group">
-						            <button class="btn btn-outline-dark decrease" type="button">-</button>
-									<input name="product-count-${product.getCart_id()}"
-										class="product-count form-control text-center"
-										id="count-${product.getCart_id()}"
-										data-id="${product.getCart_id()}" type="number" min="1"
-										value="${product.getQuantity()}">
-									<button class="btn btn-outline-dark increase" type="button">+</button>
-								</div>	
+								<input name="product-count-${product.getCart_id()}"
+									class="product-count form-control"
+									id="count-${product.getCart_id()}"
+									data-id="${product.getCart_id()}" type="number" min="1"
+									value="${product.getQuantity()}">
 							</div>
-							
 							<div class="col-2">
 								<input name="product-totalPrice-${product.getCart_id()}"
 									id="total-${product.getCart_id()}" class="total form-control"
@@ -177,6 +164,7 @@ input[type="number"]::-webkit-inner-spin-button {
 					
 					<div class="row align-items-center pt-2" style="margin-bottom: 0.3px">
 						<div class="col-2">
+							<!-- <input type="button" id="btn-delete" class="cart-button btn h-25" value="삭제"> -->
 							<button id="btn-delete" class="btn cart-button">삭제</button>
 						</div>
 						<div class="col-6"></div>
@@ -202,20 +190,6 @@ input[type="number"]::-webkit-inner-spin-button {
 <script>
 	$(document).ready(
 			function() {
-				
-				//+,- 버튼
-				$('.increase').click(function() {
-				    var input = $(this).closest('.input-group').find('.product-count'); 
-				    console.log(input);
-				    var value = parseInt(input.val()) || 0; 
-				    input.val(value + 1).trigger('change');;
-				});
-				
-				$('.decrease').click(function() {
-				    var input = $(this).closest('.input-group').find('.product-count');
-				    var value = parseInt(input.val()) || 0;
-				    if (value > 1) input.val(value - 1).trigger('change');; 
-				});
 				
 				//개별 상품 total 통화기호 표시
 				$('.total').each(function() {
@@ -311,7 +285,7 @@ input[type="number"]::-webkit-inner-spin-button {
 				        return;
 				    }
 						    
-					$("form").attr("action","orderpayment?cartIdList="+ cartIdList);
+					$("form").attr("action","/app/user/orderpayment?cartIdList="+ cartIdList);
 				});
 
 

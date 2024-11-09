@@ -96,7 +96,6 @@
 	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 <!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
 		</div>
-		
 		 		<hr>
 
 <div id="total-replyForm">
@@ -188,9 +187,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 				var curPage = ${curPage}; // JavaScript 변수로 currentPage 값 설정
-		
-				console.log(`${dto.realUsername}`);
-				console.log(`${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}`);
 				
 				// 댓글 작성 폼의 textarea에 포커스
 			    $('#comment-textarea').on('focus', function() {

@@ -24,6 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.PageDTO;
 import com.example.dto.TrainerBoardCommentDTO;
 import com.example.dto.TrainerBoardDTO;
+import com.example.entity.User;
+import com.example.repository.UserRepository;
 import com.example.service.trainer.TrainerBoardCommentService;
 import com.example.service.trainer.TrainerBoardService;
 
@@ -36,6 +38,8 @@ public class TrainerBoardController {
 	TrainerBoardService service;
 	@Autowired
 	TrainerBoardCommentService coservice;
+	@Autowired
+	UserRepository UserRepository;
 
 	//메인화면출력
 	
@@ -73,9 +77,9 @@ public class TrainerBoardController {
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
-		System.out.println("1"+dto);
+		System.out.println("111 "+dto);
 		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
-		System.out.println(comments);
+		System.out.println("222 "+comments);
 		m.addAttribute("comments", comments);
 
 		
@@ -96,6 +100,11 @@ public class TrainerBoardController {
 			HttpSession session,Model m, MultipartFile weightImage, TrainerBoardDTO dto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userid = authentication.getName();
+
+		User user = UserRepository.findByUserid(userid).orElse(null);
+		//회원db에 있는 정보 전체 꺼내오기
+		String realUsername=user.getRealusername();
+		//회원db에있는 user 전체 가져와서 내 dto의 realUsername에 담기
 		
 		String uploadDir = "C:/images/trainerboard_image/";	 //이미지 저장 경로:C에 images폴더에 trainerboard_images에 저장
 		File uploadDirectory = new File(uploadDir); // uploadDir로 지정된 경로에 대한 File 객체를 생성
@@ -110,11 +119,13 @@ public class TrainerBoardController {
 			if(!weightImage.isEmpty()) {
 				inputStream = weightImage.getInputStream(); //업로드된 파일의 내용을 읽기 위한 InputStream을 반환
 				String imgName = uuid + weightImage.getOriginalFilename(); //업로드된 파일의 원래 이름을 반환
+				//String userid2 = authentication.getName();
 				dto.setImagename(imgName);
 				dto.setTitle(title);
 				dto.setContent(content);
 				dto.setUserid(userid);
-				
+				dto.setRealUsername(realUsername);
+
 				weightImage.transferTo(new File(uploadDir + imgName)); //파일의 내용을 지정된 위치로 직접 저장
 			}
 			
@@ -278,7 +289,12 @@ public class TrainerBoardController {
     	
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
-    	
+
+		User user = UserRepository.findByUserid(userId).orElse(null);
+		//회원db에 있는 정보 전체 꺼내오기
+		String realUsername=user.getRealusername();
+		//회원db에있는 user 전체 가져와서 내 dto의 realUsername에 담기
+
 	    // 로그인하지 않은 경우 (익명 사용자)
 	    if (userId.equals("anonymousUser")) {
 	        return "로그인이 필요합니다.";  // 익명 사용자 (로그인하지 않은 경우)
@@ -305,11 +321,11 @@ public class TrainerBoardController {
        
         // 로그인된 사용자 ID를 댓글 DTO에 설정
         commentDTO.setUserId(userId);
-        
-        System.out.println("TrainerBoardCommentDTO 후: "+commentDTO);
+        commentDTO.setRealUsername(realUsername);
+
         // 댓글 저장 로직 호출 (서비스 계층으로 위임)
         coservice.addComment(commentDTO);
-        System.out.println("TrainerBoardCommentDTO 추가 완료=============");
+
         // 성공적으로 저장 후 응답
         return "success";
     }

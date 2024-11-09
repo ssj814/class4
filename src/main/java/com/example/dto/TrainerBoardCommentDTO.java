@@ -21,7 +21,6 @@ public class TrainerBoardCommentDTO {
 	private int tr_RepIndent; //댓글들여쓰기기준
 	private String realUsername;
 	
-	
 	public TrainerBoardCommentDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -30,6 +29,7 @@ public class TrainerBoardCommentDTO {
 
 	public TrainerBoardCommentDTO(int postid, int commId, String userId, String commContent, String comCrdate,
 			String comUpdate, Integer tr_ParentId, int tr_RepIndent, String realUsername) {
+
 		super();
 		this.postid = postid;
 		this.commId = commId;
@@ -61,12 +61,10 @@ public class TrainerBoardCommentDTO {
 	public void setCommId(int commId) {
 		this.commId = commId;
 	}
-
-
+  
 	public String getUserId() {
 		return userId;
 	}
-
 
 	public void setUserId(String userId) {
 		this.userId = userId;

@@ -24,9 +24,9 @@ public class TrainerBoardDTO {
 		// TODO Auto-generated constructor stub
 	}
 
-
 	public TrainerBoardDTO(int postid, int categoryid, String userid, int trainerid, String title, String content,
 			String crdate, String updatedate, int viewcount, String imagename, String realUsername) {
+
 		super();
 		this.postid = postid;
 		this.categoryid = categoryid;
@@ -61,11 +61,9 @@ public class TrainerBoardDTO {
 		this.categoryid = categoryid;
 	}
 
-
 	public String getUserid() {
 		return userid;
 	}
-
 
 	public void setUserid(String userid) {
 		this.userid = userid;

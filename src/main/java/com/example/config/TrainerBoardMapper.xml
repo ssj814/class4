@@ -29,7 +29,7 @@ WHERE ROWNUM &lt;= 5
 		
 		<where>
 		<if test="searchName=='realUsername'">
-		userid like '%' ||#{searchValue}||'%'
+		realUsername like '%' ||#{searchValue}||'%'
 		</if>
 		<if test="searchName=='title'">
 		title like '%'||#{searchValue}||'%'

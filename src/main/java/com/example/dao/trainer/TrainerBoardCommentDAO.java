@@ -37,6 +37,10 @@ public class TrainerBoardCommentDAO {
     	template.delete("TrainerBoardCommentMapper.deleteComment", postid);
     }
 
+	public TrainerBoardCommentDTO selectCommentByPostId(int commId) {
+		return template.selectOne("TrainerBoardCommentMapper.selectCommentByPostId", commId);
+	}
+
 
 
 

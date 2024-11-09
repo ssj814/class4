@@ -46,7 +46,6 @@ public class OAuth2LogoutHandler implements LogoutSuccessHandler {
         // 각 서비스의 로그아웃 URL 설정
         String naverLogoutUrl = "https://nid.naver.com/nidlogin.logout?returnUrl=" + encodedTargetUrl;
         String googleLogoutUrl = "https://accounts.google.com/Logout?continue=" + encodedTargetUrl;
-        String kakaoLogoutUrl = "https://kauth.kakao.com/oauth/logout?redirect_uri=" + encodedTargetUrl;
 
         // 여기서 원하는 로그아웃 URL을 선택할 수 있습니다.
         // 예를 들어, 주석을 해제하고 아래 라인 중 하나를 선택합니다.

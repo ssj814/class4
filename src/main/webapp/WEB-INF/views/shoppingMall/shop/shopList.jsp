@@ -109,7 +109,7 @@
 				</div>
 				<!-- 관리자 영역-->
 				<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
-					<button onclick="location.href='<c:url value='/product'/>'">상품등록버튼</button>
+					<button class="btn btn-dark" onclick="location.href='<c:url value='/product'/>'">상품등록버튼</button>
 				</c:if>
 			</div>
 

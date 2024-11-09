@@ -1,28 +1,55 @@
-
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+<%@ page import="java.util.*"%>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>게시글 조회</title>
- 	<link rel="stylesheet" href="../../resources/css/trainerboard_css/tb.css">
+ 	<link rel="stylesheet" href="resources/css/trainerboard_css/tb.css">
  	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/trainerboard_css/tb.css">
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/main.css">
  	<script
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
      <script>
-        function confirmDelete(postid) {
-            if (confirm("삭제하시겠습니까?")) {
-                // 폼을 사용하여 삭제 요청을 전송합니다.
-                var form = document.getElementById('deleteForm');
-                form.action = '/app/delete?postid=' + encodeURIComponent(postid); // encodeURIComponent 추가
-                form.method = 'post'; // Make sure the method is POST
-                form.submit();
-            }
-        }
+     
+     // 서버에서 전달한 로그인 상태 값을 JavaScript 변수로 받기
+     var loggedInUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}`;
+     var isLoggedIn = loggedInUser !== "anonymousUser" && loggedInUser !== "";  // 로그인 여부 확인
+     
+     console.log(loggedInUser);
+     
+/* 	    // 로그인 여부 체크 함수 gpt가 만들어줬으나 불필요 - loggedInUser로 조건문 확인
+	    function isLoggedIn() {
+	        return loggedInUser !== "anonymousUser" && loggedInUser !== "";
+	    } */
+
+	    // 댓글 작성 전, 로그인 상태 확인
+	    function checkLoginBeforeComment() {
+	        if (!loggedInUser) { //  if (!isLoggedIn()) { 였으나 익명이 넘어오지않아서 로그인 여부 확인해서 alert창 띄움
+	            alert("로그인 후 댓글을 작성하실 수 있습니다.");
+	            window.location.href = "/app/login";  // 로그인 페이지로 리다이렉트
+	            return false;  // 댓글 작성 폼 제출을 막음
+	        }
+	        
+	        return true;  // 로그인한 경우 댓글을 작성할 수 있도록
+	    }
+     
+	     function confirmDelete(postid) {
+	            if (confirm("삭제하시겠습니까?")) {
+	                // 폼을 사용하여 삭제 요청을 전송합니다.
+	                var form = document.getElementById('deleteForm');
+	                form.action = '/app/trainer/delete?postid=' + encodeURIComponent(postid); // encodeURIComponent 추가
+	                form.method = 'post'; // Make sure the method is POST
+	                form.submit();
+	            }
+	        }
+   
+	    
     </script>
     
 </head>
@@ -30,16 +57,6 @@
 
 <div class="container" style="margin-top:20px; ">
     <main>
-        
-      
-         <!--   BoardDTO dto = (BoardDTO) request.getAttribute("dto");
-            
-          
-            int postid = dto.getPostid();
-            String title = dto.getTitle();
-            String content = dto.getContent();
-            int userid = dto.getUserid();
-        -->
 <br>
 
         <table border="1" id="retrieveForm">
@@ -53,7 +70,7 @@
             </tr>
             <tr>
                 <th>작성자</th>
-                <td>${dto.userid}</td>
+                <td>${dto.realUsername}</td>
             <tr>
                 <th>글제목</th>
                  <td>${dto.title}</td>
@@ -71,20 +88,45 @@
         </table>
         <br>
         <div class="button">
+         <c:if test="${dto.userid == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name && fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'TRAINER')}">
+         <!-- 세션에 저장된 글쓴이 userid와 dto에 저장된 userid가 같은ㄴ지 && TRAINER권한으로 된 사람인지 확인 -->
       <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
+	</c:if>
 	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 <!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
-</div>
-        <hr>
+		</div>
+		 		<hr>
 
-		<div id="reply">
+<div id="total-replyForm">
+
+<div class="comment-container">
+			<div class="comment-header">
+				<h7>댓글</h7>
+			</div>
+			<div class="comment-body">
+				<form class="replyForm">
+					<input type="hidden" name="postid" value="${dto.postid}">
+					<textarea id="comment-textarea" name="commContent"
+						placeholder="댓글을 입력하세요" rows="5"></textarea>
+					<button type="submit" id="submit-comment" class="hidden" onclick="checkLoginBeforeComment()">
+						등록</button>
+				</form>
+			</div>
+		</div>
+
+		<div id="reply" >
 			<c:forEach var="comment" items="${comments}">
 				<div class="reply-container"
 					style="margin-left: ${comment.tr_RepIndent * 20}px;">
 					<table class="reply-table">
 						<tr class="reply">
-							<td class="reply-userid" colspan="2">${comment.userId}</td>
+							<td class="reply-userid" colspan="2" 
+							<c:if test="${dto.userid == comment.userId}">
+							style="background-color: black; color:pink";
+							</c:if>>
+							${comment.realUsername}</td>
+						<!-- comment.userid와 로그인한 user가 같으면 black배경에 pink글자색  -->
 						</tr>
 						<tr class="reply">
 							<td class="reply-content" colspan="2">
@@ -93,8 +135,10 @@
 		                        <div class="edit-content-container" style="display:none;">
 		                            <textarea class="edit-content-textarea">${comment.commContent}</textarea>
 		                            <div class="edit-buttons">
-		                                <button class="save-edit-button" data-id="${comment.commId}">수정</button>
-		                                <button class="cancel-edit-button">취소</button>
+			                            <c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
+			                                <button class="save-edit-button" data-id="${comment.commId}">수정</button>
+			                                <button class="cancel-edit-button">취소</button>
+			                            </c:if>
 		                            </div>
 		                        </div>		                        
                        		</td>
@@ -102,9 +146,12 @@
 						<tr class="reply">
 							<td class="reply-createdate">${comment.comCrdate}</td>
 							<td class="reply-button">
-								<input type="button" class="edit-button" value="수정" data-id="${comment.commId}">
-								<input type="button" class="delete-button" value="삭제" data-id="${comment.commId}"> 
-								<input type="button" class="reply-reply-button" value="답글" data-parentid="${comment.commId}">
+								<c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
+									<input type="button" class="edit-button" value="수정" data-id="${comment.commId}">
+									<input type="button" class="delete-button" value="삭제" data-id="${comment.commId}"> 
+								</c:if>	
+									<input type="button" class="reply-reply-button" value="댓글" data-parentid="${comment.commId} onclick="checkLoginBeforeComment()">
+								
 							</td>
 						</tr>
 					</table>
@@ -116,12 +163,12 @@
 							<input type="hidden" name="tr_ParentId" value="${comment.commId}">
 							<input type="hidden" name="tr_RepIndent"
 								value="${comment.tr_RepIndent + 1}">
-							<input type="hidden" name="userId" value="${dto.userid}">
+							<input type="hidden" name="realUsername" value="${comment.realUsername}">
 							
 							<div class="reply-textarea-container">
 					            <textarea name="commContent" placeholder="대댓글을 입력하세요" rows="3"></textarea>
 					            <div class="submit-reply-button-container">
-					                <button type="submit">댓글 작성</button>
+					                <button type="submit" onclick="checkLoginBeforeComment()">등록</button>
 					            </div>
 					        </div>
 							
@@ -131,22 +178,7 @@
 			</c:forEach>
 		</div>
 
-
-		<div class="comment-container">
-			<div class="comment-header">
-				<h5>댓글 작성</h5>
-			</div>
-			<div class="comment-body">
-				<form class="replyForm">
-					<input type="hidden" name="postid" value="${dto.postid}">
-					<input type="hidden" name="userid" value="${dto.userid}">
-					<textarea id="comment-textarea" name="commContent"
-						placeholder="댓글을 입력하세요" rows="5"></textarea>
-					<button type="submit" id="submit-comment" class="hidden">댓글
-						작성</button>
-				</form>
-			</div>
-		</div>
+</div>	
 <!-- 삭제 요청을 위한 숨겨진 폼 -->
 <form id="deleteForm" method="post" style="display:none;"></form>
 
@@ -155,7 +187,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 				var curPage = ${curPage}; // JavaScript 변수로 currentPage 값 설정
-
 				
 				// 댓글 작성 폼의 textarea에 포커스
 			    $('#comment-textarea').on('focus', function() {
@@ -265,6 +296,9 @@
 		});
 	});
 </script>
+</main>
+</div>
+
 
 </body>
 </html>

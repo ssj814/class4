@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ page import="java.util.*"%>
 
@@ -17,7 +18,7 @@
 		<main>
 		<form action="TrainerBoard" method="get" id="search">
 			<select name="searchName">
-				<option value="userid">작성자</option>
+				<option value="realUsername">작성자</option>
 				<option value="title">제목</option>
 				<option value="content">내용</option>
 			</select>
@@ -50,7 +51,7 @@
        					 <tr>
        					 	<td class="tdTopPosts"><img src="resources/img/trainerboard/recommend.png" alt="recommend" height=25 width=25></td>
             				<td class="trainerboard_topPosts"><a href="Retrieve/${post.postid}/${pDTO.curPage}"><strong>${post.title}</strong></a></td>
-           					 <td class="tdTopPosts">${post.userid}</td>
+           					<td class="tdTopPosts">${post.realUsername}</td>
             				<td class="tdTopPosts">${post.crdate}</td>
             				<td class="tdTopPosts">${post.viewcount}</td>
        					 </tr>
@@ -63,7 +64,7 @@
 							<tr>
 								<td class="trainerboard_postno">${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
 								<td class="trainerboard_content"><a href="Retrieve/${dto.postid}/${pDTO.curPage}">${dto.title}</a></td>
-								<td class="trainerboard_tbody">${dto.userid}</td>
+								<td class="trainerboard_tbody">${dto.realUsername}</td>
 								<td class="trainerboard_tbody" >${dto.crdate}</td>
 								<td class="trainerboard_tbody">${dto.viewcount}</td>
 							</tr>
@@ -94,9 +95,12 @@
 
 		<br>
 
+		<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'TRAINER')}">
+		<!-- TRAINER로 권한 설정된 회원만 글쓰기 보이게 -->
 		<div class="button">
 			<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/trainerboardWrite'">글쓰기</button>
 		</div>
+		</c:if>
 
 		</main>
 	</div>

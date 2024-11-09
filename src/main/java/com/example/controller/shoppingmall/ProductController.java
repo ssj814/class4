@@ -149,7 +149,7 @@ public class ProductController {
 
 	    // 최근 본 상품 목록 조회 및 이미지 정보 추가
 	    List<Map<String, Object>> recentProductWithImages = getRecentImages(user_id);
-		
+	    
 		//selectReviewList용 map 생성
 		Map<String, Object> map = new HashMap<>();
 		map.put("productId", productId);

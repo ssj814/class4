@@ -20,8 +20,8 @@
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
 <link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>">
-<title>Insert title here</title>
-
+<link rel="icon" href="<c:url value='/images/logo.png'/>" type="image/x-icon">
+<title>PKDB</title>
 </head>
 <body> 
 <header>

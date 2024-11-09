@@ -11,9 +11,13 @@
 		SELECT count(*)
 		FROM product_cart
 		WHERE user_id=#{user_id}
-		AND product_Id=#{product_Id}
-		AND option_type=#{option_type}
-		AND option_name=#{option_name}
+		AND product_Id=#{product_Id} 
+		<if test="option_type != null and option_type != ''">
+        AND option_type = #{option_type}
+      	</if>
+      	<if test="option_name != null and option_name != ''">
+        AND option_name = #{option_name}
+      	</if>
 	</select>
 
 	<insert id="cartInsert" parameterType="hashmap">
@@ -37,8 +41,12 @@
 		update product_cart set quantity = quantity + #{quantity}
 		WHERE user_id=#{user_id}
 		AND product_Id=#{product_Id}
-		AND option_type=#{option_type}
-		AND option_name=#{option_name}
+		<if test="option_type != null and option_type != ''">
+        AND option_type = #{option_type}
+      	</if>
+      	<if test="option_name != null and option_name != ''">
+        AND option_name = #{option_name}
+      	</if>
 	</update>
 
 	<select id="selectProductOptions" parameterType="hashmap"

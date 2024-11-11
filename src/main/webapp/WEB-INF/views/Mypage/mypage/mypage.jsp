@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <title>마이페이지</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* 사이드바 레이아웃 스타일 */
         .sidebar {
@@ -86,7 +85,5 @@
         <jsp:include page="mainContent.jsp" />
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

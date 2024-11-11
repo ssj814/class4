@@ -58,7 +58,7 @@
         
         <label for="product_image">상품 이미지</label>
         <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')"/>
-        <img id="preview1" class="image-preview" style="display: none;" />
+        <img id="preview1" class="image-preview" style="display: block;" src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>"/>
         
         <label for="product_inventory">재고 수량</label>
         <input type="text" id="product_inventory" name="product_inventory" value="${product.getProduct_inventory()}" required/><br/>

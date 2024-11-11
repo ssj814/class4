@@ -78,7 +78,11 @@
 
 <div class="main-title-container">
     <span>주문완료</span>
-    <span style="font-size: 18px;">01 주문/결제 &gt; 02 주문완료</span>
+    <span style="font-size: 18px;">
+    	<span style="color:gray;">00 장바구니 &gt;</span>
+    	<span style="color:gray;">01 주문/결제 &gt;</span>
+    	02 주문완료
+    </span>
 </div>
 
 <div class="main-content-container">

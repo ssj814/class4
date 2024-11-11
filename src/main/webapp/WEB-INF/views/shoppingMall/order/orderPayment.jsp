@@ -256,6 +256,11 @@
 					                <fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
 					            </span>
 					        </div>
+					        <input type="hidden" name="productIds" value="${product.product_id}">
+				            <input type="hidden" name="quantities" value="${item.quantity}">
+				            <input type="hidden" name="individualPrices" value="${product.product_price}">
+				            <input type="hidden" name="optionTypes" value="${item.option_type}">
+				            <input type="hidden" name="optionNames" value="${item.option_name}">
 					    </c:forEach>
 					</c:if>
 					
@@ -274,6 +279,13 @@
 					            <fmt:formatNumber value="${product.product_price * quantity}" type="currency" currencySymbol="₩ " />
 					        </span>
 					    </div>
+					    <input type="hidden" name="productId" value="${product.product_id}">
+				        <input type="hidden" name="quantity" value="${quantity}">
+				        <input type="hidden" name="individualPrice" value="${product.product_price}">
+				        <c:forEach var="option" items="${options}">
+				            <input type="hidden" name="optionType" value="${option['type']}">
+				            <input type="hidden" name="optionName" value="${option['name']}">
+				        </c:forEach>
 					</c:if>
 									
 				    <!-- 총액 계산 -->
@@ -296,6 +308,7 @@
 				            <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="₩ " />
 				        </span>
 				    </div>
+				    
 					<!-- 결제 버튼 -->
 					<button type="button" class="btn payment-button btn-lg"
 						onclick="validateAndSubmitForm()">결제하기</button>

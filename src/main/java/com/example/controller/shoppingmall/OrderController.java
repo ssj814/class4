@@ -52,6 +52,7 @@ public class OrderController {
 	public String orderPayment(@RequestParam String[] cartIdList, Model m) {
 	    System.out.println("결제 정보 입력 페이지 이동 (여러 상품)");
 
+	    System.out.println("cartIdList :"+cartIdList.toString());
 	    List<CartDTO> cartList = new ArrayList<>();
 	    List<ProductDTO> productList = new ArrayList<>();
 
@@ -66,7 +67,7 @@ public class OrderController {
 	        ProductDTO pDTO = pService.selectDetailproduct(cDTO.getProduct_id());
 	        productList.add(pDTO);
 	    }
-
+	    System.out.println("cartList :"+cartList);
 	    addCommonAttributes(m);
 	    m.addAttribute("cartList", cartList);
 	    m.addAttribute("productList", productList);

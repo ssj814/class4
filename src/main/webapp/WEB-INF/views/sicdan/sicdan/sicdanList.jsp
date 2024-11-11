@@ -68,9 +68,9 @@
             </tr>
         </thead>
         <tbody>
-            <c:forEach var="sicdan" items="${list}">
+            <c:forEach var="sicdan" items="${list}" varStatus="status">
                 <tr>
-                    <td>${sicdan.sic_num}</td>
+                    <td>${totalCount-(status.index+(currentPage-1)*pageSize)}</td>
                     <td><a href="<c:url value='/sicdan_retrieve?num=${sicdan.sic_num}&currentPage=${currentPage}' />">${sicdan.sic_title}</a></td>
                     <td>${sicdan.user_id}</td>
                     <td>${sicdan.writeday}</td>

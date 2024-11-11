@@ -289,7 +289,7 @@
 				                    <c:set var="totalPrice" value="${totalPrice + itemTotal}" />
 				                </c:forEach>
 				            </c:if>
-				            <c:if test="${not empty product}">
+				            <c:if test="${not empty product && empty cartList}">
 				                <!-- 단일 상품 총액 계산 -->
 				                <c:set var="totalPrice" value="${product.product_price * quantity}" />
 				            </c:if>

@@ -78,11 +78,12 @@ public class OrderController {
 	public String singleOrderPayment(
 	    @RequestParam("productId") int productId,
 	    @RequestParam("quantity") int quantity,
-	    @RequestParam("optionType") List<String> optionTypes,
+	    @RequestParam(value = "optionType", required = false) List<String> optionTypes,
 	    @RequestParam Map<String, String> params, // 각 옵션 이름을 담기 위한 Map
 	    Model m) {
 
 	    System.out.println("결제 정보 입력 페이지 이동 (단일 상품)"+ params);
+	    System.out.println("optionTypes :"+optionTypes);
 
 	    ProductDTO product = pService.selectDetailproduct(productId);
 	    if (product == null) {
@@ -91,15 +92,15 @@ public class OrderController {
 
 	    // 옵션 데이터 추출
 	    List<Map<String, String>> options = new ArrayList<>();
-	    for (String optionType : optionTypes) {
-	        Map<String, String> option = new HashMap<>();
-	        option.put("type", optionType);
-	        option.put("name", params.get("optionName_" + optionType)); // optionType에 맞는 옵션 이름 가져오기
-	        options.add(option);
+	    if (optionTypes != null) {
+	        for (String optionType : optionTypes) {
+	            Map<String, String> option = new HashMap<>();
+	            option.put("type", optionType);
+	            option.put("name", params.get("optionName_" + optionType)); // optionType에 맞는 옵션 이름 가져오기
+	            options.add(option);
+	        }
 	    }
 
-	    System.out.println("product"+product);
-	    System.out.println("options"+options);
 	    // 모델에 데이터 추가
 	    addCommonAttributes(m);
 	    m.addAttribute("product", product);

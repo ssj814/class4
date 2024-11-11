@@ -54,6 +54,8 @@ public class NoticeController {
 		m.addAttribute("category", "notice");
 		m.addAttribute("currentPage", currentPage);
 		m.addAttribute("totalPages", totalPages);
+		m.addAttribute("totalCount", totalCount);
+		m.addAttribute("pageSize", pageSize);
 		m.addAttribute("search", map);
 
 		return "notice/list";

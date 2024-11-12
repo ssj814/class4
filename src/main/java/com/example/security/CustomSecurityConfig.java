@@ -9,12 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.example.oauth2.handler.OAuth2AuthenticationFailureHandler;
-import com.example.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-import com.example.oauth2.handler.OAuth2LogoutHandler;
-import com.example.oauth2.service.CustomOAuth2UserService;
-
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -22,12 +16,6 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 public class CustomSecurityConfig {
 	
-	private final CustomOAuth2UserService customOAuth2UserService;
-    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-    private final OAuth2LogoutHandler OAuth2LogoutHandler;
-    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     	System.out.println("CustomSecurityConfig 로딩됨>>>>>>>>>");
@@ -51,21 +39,11 @@ public class CustomSecurityConfig {
             .permitAll() // 모든 사용자에게 로그인 페이지 허용
     	)
         .logout(logout -> logout
-        		.logoutSuccessHandler(OAuth2LogoutHandler)
                 .invalidateHttpSession(true) // 세션 무효화
                 .deleteCookies("JSESSIONID", "YOUR_COOKIE_NAME", "REDIRECT_URI_PARAM_COOKIE_NAME", "MODE_PARAM_COOKIE_NAME") // 필요한 쿠키 삭제
                 .permitAll()
         )
-        .oauth2Login(configure -> // OAuth2 로그인 설정
-        	configure
-        		.loginPage("/user/loginForm") //커스텀로그인 페이지로 이동
-    			.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
-    				config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
-    			.userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
-    				config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
-				.successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
-				.failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
-        )
+        
         // status code 핸들링
         .exceptionHandling(exception -> exception
                 .accessDeniedPage("/loginCancel") // 접근 거부 시 이동할 페이지

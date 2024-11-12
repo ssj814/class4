@@ -4,11 +4,11 @@
 </main>
 <footer class="bg-dark text-white text-center py-4 mt-auto">
     <div class="container">
-        <p class="mb-0">© 2024 Your Company Name. All rights reserved.</p>
+        <p class="mb-0">© 2024 Pink Dumbbell Company . All rights reserved.</p>
         <ul class="list-inline mt-2">
-            <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
-            <li class="list-inline-item"><a href="#" class="text-white">Terms of Service</a></li>
-            <li class="list-inline-item"><a href="#" class="text-white">Contact Us</a></li>
+            <li class="list-inline-item"><a class="text-white">Privacy Policy</a></li>
+            <li class="list-inline-item"><a class="text-white">Terms of Service</a></li>
+            <li class="list-inline-item"><a class="text-white">Contact Us</a></li>
         </ul>
     </div>
 </footer>

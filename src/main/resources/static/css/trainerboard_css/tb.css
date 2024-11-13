@@ -12,7 +12,7 @@
 }
 
  #content {
-  width: 80%; /* 전체 폭을 사용 */
+  width: 100%; /* 전체 폭을 사용 */
  height: 200px; /* 높이 지정 */
  padding: 10px; /* 내용과 경계 사이에 여백 추가 */
  border: 1px solid #ccc; /* 테두리 스타일 */
@@ -48,6 +48,7 @@ table#retrieveForm td {
 table#retrieveForm th {
   background-color: #f4f4f4; /* 헤더 배경 색상 */
   text-align: center;
+  font-size: 16px;
 }
 
 
@@ -82,11 +83,10 @@ form#search input[type="submit"] {
   font-weight: bold;
   padding: 0.3rem 0.5rem;
   border-radius: 5px;
+  font-size: 14px;
 }
 
-form#search input[type="submit"]:hover {
-  background-color: #555;
-}
+
 
 /* 테이블 스타일링 */
 table#listForm {
@@ -146,7 +146,7 @@ form#writeForm textarea {
     white-space: pre-wrap; /* 줄바꿈과 공백을 유지 */
 }
 
-form#writeForm button {
+form#writeForm writesubmit {
     background-color: #333;
     color: #ffffff;
     cursor: pointer;
@@ -154,10 +154,6 @@ form#writeForm button {
     font-weight: bold;
    padding: 0.3rem 0.5rem;
     border-radius: 5px;
-}
-
-form#writeForm button:hover {
-    background-color: #555;
 }
 
 form#updateForm {
@@ -182,9 +178,6 @@ form#updateForm textarea {
     border-radius: 5px;
     border: 1px solid #ccc;
     margin-bottom: 1rem;
-    
-    
-    
 }
 
 
@@ -194,56 +187,29 @@ form#updateForm button {
     cursor: pointer;
     border: none;
     font-weight: bold;
-    padding: 0.3rem 0.5rem;
     border-radius: 5px;
+    font-size: 13px;
 }
 
-form#updateForm button:hover {
-    background-color: #555;
-}
 
 button.buttonmulti {
-	
-	margin: 20px auto;
+	font-size:14px;
+	margin: 10px auto;
     background-color: #333;
     color: #ffffff;
-    padding: 0.3rem 0.5rem;
     border-radius: 5px;
     text-decoration: none;
     font-weight: bold;
 }
 
-.buttonmulti:hover {
-    background-color: #555;
-}
-
-div.comments{
-	 width: 80%;
-   margin:auto;
-	
-}
-
-#commentbutton{
-	background-color: #333;
+button.writeSubmit {
+	font-size:14px;
+	margin: 10px auto;
+    background-color: #333;
     color: #ffffff;
-    padding: 0.05rem 0.3rem;
     border-radius: 5px;
     text-decoration: none;
-    /* font-weight: bold; */
-}
-
-#commentbutton:hover{
-	background-color:#555;
-}
-
-div.commentbox { /* commentbox textarea 설정*/
-    
-	padding: 10px auto;
-    margin-bottom: 1rem;
-   border-collapse: collapse; /* 테두리 겹침 방지 */
-     margin: 20px auto;
-	
-    margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 
@@ -279,12 +245,6 @@ div.commentbox { /* commentbox textarea 설정*/
     border: 1px solid #007bff; /* 링크에 테두리 추가 */
     border-radius: 4px; /* 링크의 모서리를 둥글게 */
     font-size: 14px; /* 폰트 크기 */
-}
-
-.page-link:hover {
-    background-color: #555; /* 호버 시 배경 색상 변경 */
-    color: white; /* 호버 시 텍스트 색상 변경 */
-    border-color: #007bff; /* 호버 시 테두리 색상 변경 */
 }
 
 div.button{
@@ -346,36 +306,235 @@ div.label{
 	 background-color: beige; 
 }
 
-        .summernote {
-            height: 300px;
-            border-radius: 6px;
-        }
+/* 써머노트 */
+.summernote {
+     height: 300px;
+}
 
-        label {
-            font-weight: bold;
-            font-size: 1.2rem;
-            color: #333;
-        }
+label {
+     font-weight: bold;
+     font-size: 1.2rem;
+     color: #333;
+}
        
-        .note-editor.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 1050;
-            background-color: #fff;
-            overflow: hidden;
-        }
+.note-editor.fullscreen {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100vh;
+     z-index: 1050;
+     background-color: #fff;
+     overflow: hidden;
+}
 
-        .note-toolbar {
-            position: relative;
-            z-index: 1051;
-        }
+.note-toolbar {
+     position: relative;
+     z-index: 1051;
+}
 
-        .note-editable {
-            height: calc(100vh - 120px) !important;
-            overflow-y: auto;
-            background-color: white;
-        }
+.note-editable {
+	 text-align: left; 
+     height: calc(100vh - 120px) !important;
+     overflow-y: auto;
+     background-color: white;
+}
+
+/* 댓글 */
+
+#reply{
+	width: 80%;
+	margin: 20px auto;
+	/* padding: 20px; */
+}
+
+.reply-container {
+	margin: 20px auto;
+	padding: 10px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	margin-bottom: 15px;
+}
+
+.reply-table {
+
+ 	 margin: 20px auto;
+	width: 80%;
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+.reply-userid {
+	background-color: beige;
+	display: inline-block; /* 글자 길이에 맞춰 배경색 지정 */
+	font-weight: bold;
+	font-size: 15px;
+	border-bottom: 1px solid #ddd;
+	/* padding: 3px 10px; */
+	border-radius: 4px; /* 모서리 둥글게 */
+}
+
+.reply-content {
+	font-size: 14px;
+	border-bottom: 1px solid #ddd;
+	padding: 10px;
+	
+}
+
+.reply-createdate {
+	font-size: 10px;
+	color: gray;
+	padding: 5px;
+}
+
+.reply-button {
+	text-align: right;
+	padding-right: 10px;
+	font-size: 12px;
+}
+
+.reply-button input {
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	padding: 0.5px 1px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-top: 10px;
+	transition: background-color 0.3s;
+}
+
+/* textarea와 버튼을 감싸는 컨테이너 */
+.reply-textarea-container {
+    position: relative;
+    margin-top: 10px;
+}
+
+/* textarea 스타일 */
+.reply-textarea-container textarea {
+    width: 80%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	height: 80px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	font-size: 13px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+
+/* submit 버튼을 포함하는 컨테이너 */
+.submit-reply-button-container {
+    position: absolute;
+    bottom: 10px;
+    text-align: right;
+    display: inline-block;
+    margin-left: 20px;
+    
+    
+}
+
+/* 버튼 스타일 */
+.submit-reply-button-container button {
+	text-align: right;
+	padding-right: 10px;
+	font-size: 12px;
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	padding: 0.5px 1px;
+	border-radius: 4px;
+	cursor: pointer;
+	margin-top: 10px;
+	transition: background-color 0.3s;
+
+}
+
+/* asdf */
+.comment-container {
+	width: 80%;
+	margin: 0 auto;
+	background-color: #ffffff;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 20px;
+}
+
+.comment-header {
+	margin-bottom: 15px;
+	border-bottom: 1px solid #ddd;
+	font-size: 15px;
+}
+
+.comment-body {
+	position: relative; /* 부모 컨테이너를 기준으로 자식 요소의 위치를 설정 */
+	margin-bottom: 10px;
+}
+
+#comment-textarea {
+	width: 100%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	padding: 10px;
+	font-size: 13px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+
+#submit-comment {
+	position: absolute;
+	bottom: 15px; /* 텍스트 에리어 내부의 오른쪽 아래 위치 */
+	right: 10px;
+	background-color: #838383;
+	color: #ffffff;
+	border: none;
+	border-radius: 5px;
+	padding: 5px;
+	font-size: 10px;
+	cursor: pointer;
+}
+
+.hidden {
+	display: none; /* 기본적으로 숨겨진 상태 */
+}
+
+/* textarea와 버튼을 포함하는 컨테이너 */
+.edit-content-container {
+	position: relative;
+	margin-top: 10px;
+}
+
+.edit-content-textarea {
+	width: 80%; /* 부모의 너비에 맞추고 padding만큼을 빼줍니다 */
+	height: 80px;
+	border: 1px solid #ddd;
+	padding: 10px;
+	font-size: 14px;
+	resize: none;
+	box-sizing: border-box; /* padding과 border를 포함한 크기로 계산 */
+}
+/* 버튼 컨테이너 */
+.edit-buttons {
+	text-align: right;
+    padding-right: 10px;
+    font-size: 11px;
+	border: none;
+	color: #fff;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+/* 저장 및 취소 버튼 스타일 */
+.edit-buttons button {
+	border: none;
+	background-color: #838383;
+	color: #fff;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+
 

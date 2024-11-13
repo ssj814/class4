@@ -58,6 +58,8 @@ public class SicdanController {
         model.addAttribute("list", list);
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("pageSize", pageSize);
 
         return "sicdan/sicdanList"; // sicdanList.jsp로 이동
     }

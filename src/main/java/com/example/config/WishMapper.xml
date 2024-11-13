@@ -18,19 +18,23 @@
 	    FROM product_wish 
 	    WHERE user_id = #{user_id} 
 	    AND product_Id = #{product_Id} 
-	    AND option_type = #{option_type} 
-	    AND option_name = #{option_name}
+	    <if test="option_type != null and option_type != ''">
+        AND option_type = #{option_type}
+      	</if>
+      	<if test="option_name != null and option_name != ''">
+        AND option_name = #{option_name}
+      	</if>
 	</select>
 	
 	<delete id="wishDelete" parameterType="hashmap">
-		DELETE FROM product_wish WHERE user_id=#{user_id} and product_Id=#{product_Id}
+		DELETE FROM product_wish WHERE user_id=#{user_id} and WISH_ID=#{wish_id}
 	</delete>
 	
 	<delete id="AllwishDelete" parameterType="hashmap">
 		DELETE FROM product_wish
 		WHERE user_id=#{user_id}
-		and product_Id
-		<foreach collection="productIdList" item="item" open="IN(" separator="," close=")">
+		and WISH_ID
+		<foreach collection="wishIdList" item="item" open="IN(" separator="," close=")">
 			#{item}
 		</foreach>
 	</delete>

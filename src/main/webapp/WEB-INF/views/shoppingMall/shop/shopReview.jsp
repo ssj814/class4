@@ -3,7 +3,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-
 <!-- 상품 리뷰사진용 모달 -->
 <div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -89,6 +88,8 @@
 		
 		// 로그인 유저 정보
 		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		const isAdmin =  ${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')};
+		
 		
 		//화면 최초 랜더링시 리뷰조회
 		var nowReviewPage = 0;
@@ -390,9 +391,9 @@
 		        }
 		    }
 		    
-		    // 작성 유저에게만 수정, 삭제 버튼 노출
-		    let delUpdateHTML = '';
-		    if (productReview.user_id == loginUser){
+		    // 작성 유저에게만 수정, 삭제 버튼 노출 + admin
+		    let delUpdateHTML = '';	    
+		    if (productReview.user_id == loginUser || isAdmin){		    	
 		    	delUpdateHTML += '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
 						        '<i class="fa-solid fa-pen-to-square"></i>' +
 						        '</button>' +

@@ -80,8 +80,11 @@
 					</c:forEach>
 					<!-- 수량 선택 -->
 					<label>quantity</label>
-					<input type="number" min="1" class="product-quantity form-control" value="1">
-					
+					<div class="input-group">
+			            <input class="btn btn-dark decrease" type="button" value="-">
+						<input class="product-quantity form-control text-center" type="number" min="1" value="1">
+						<input class="btn btn-dark increase" type="button" value="+">
+					</div>	
 					<hr class="container pb-0">
 					<p class="product_description">${product.getProduct_description()}</p>
 				</div>
@@ -100,13 +103,24 @@
 	            </button>   
 	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
 	            	<i class="fa-solid fa-cart-shopping "></i>
-	            </button>			
-	            <button class="mt-3 w-100" onclick="#">구매하기</button>		
+	            </button>
+	            
+	            <form id="orderForm" action="user/singleOrderPayment" method="post">
+				    <input type="hidden" name="productId" value="${product.getProduct_id()}">
+				    <input type="hidden" name="quantity" class="product-quantity" value="1">
+				    
+				    <!-- 옵션 타입과 옵션 이름을 담을 hidden inputs -->
+				    <c:forEach var="option" items="${options}">
+				        <input type="hidden" name="optionType" value="${option.option_type}">
+				        <input type="hidden" name="optionName_${option.option_type}" class="hidden-option-name">
+				    </c:forEach>
+				    
+				    <button type="button" class="btn-buy mt-3 w-100">구매하기</button>
+				</form>
+				
 			</div>
 		</div>
-		<div class="col-0"></div>
 	</div>
-	
 </div>
 
 <script>
@@ -115,6 +129,21 @@
 		
 		// 로그인 유저 정보
 		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		
+		// + 버튼 클릭 이벤트
+		$('.increase').click(function() {
+		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    console.log(input);
+		    var value = parseInt(input.val()) || 0;
+		    input.val(value + 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
+		});
+
+		// - 버튼 클릭 이벤트
+		$('.decrease').click(function() {
+		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    var value = parseInt(input.val()) || 0;
+		    if (value > 1) input.val(value - 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
+		});
 		
 		// total 계산
 		$(".product-quantity").on("change", function(){
@@ -127,7 +156,7 @@
 				$(".total-price").html("₩ "+totalPrice);
 			}
 		});
-
+		
 		// wish 이동버튼
 		$(".btn-wish").on("click", function(){
 			
@@ -197,7 +226,7 @@
 			}
 		        $.ajax({
 		            type: "POST",
-		            url: "cart",
+		            url: "user/cart",
 		            dataType: "json",
 		            contentType: "application/json",
 		            data: JSON.stringify({
@@ -224,7 +253,36 @@
 		
 		const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 		const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-	
+		
 	});
 	
+	$(document).ready(function() {
+		// 구매하기 버튼 클릭 시, 선택된 옵션 값을 hidden inputs에 설정
+		$(".btn-buy").on("click", function() {
+			$(".product-option-container").each(function() {
+	            // 옵션 타입과 선택된 옵션 이름을 가져옵니다.
+	            let optionType = $(this).find("label").text().trim();
+	            const optionName = $(this).find("select").val();
+
+	            const selector = "input[name='optionName_" + optionType + "']";
+	            console.log("Selector:", selector);
+
+	            const hiddenInput = $(selector);
+	            console.log("hidden input : ", hiddenInput);
+	            if (hiddenInput.length > 0) {
+	                // hidden input에 옵션 이름 설정 (attr와 val 모두 사용)
+	                hiddenInput.attr('value', optionName);
+	                hiddenInput.val(optionName);
+	                
+	                console.log(`Successfully set hidden input value for ${optionType}: ${hiddenInput.val()}`);
+	                console.log(`Hidden input attr value for ${optionType}: ${hiddenInput.attr('value')}`);
+	            } else {
+	                console.error(`Hidden input not found for option type: ${optionType}`);
+	            }
+	        });
+            /* event.preventDefault(); */
+            // 폼 전송
+             $("#orderForm").submit(); 
+        });
+    });
 </script>

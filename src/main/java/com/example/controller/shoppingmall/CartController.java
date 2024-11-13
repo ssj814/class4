@@ -3,6 +3,8 @@ package com.example.controller.shoppingmall;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -52,7 +54,7 @@ public class CartController {
 		return "shoppingMall/cartList";
 	}
 	
-	@PostMapping("/cart")
+	@PostMapping("/user/cart")
 	@ResponseBody
 	public Map<String,String> cartInsert(@RequestBody Map<String, Object> requestMap) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -103,7 +105,12 @@ public class CartController {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
-	    cartIds.forEach(cartId -> {
+		
+		List<Integer> validCartIds = cartIds.stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+		
+		validCartIds.forEach(cartId -> {
 	        CartDTO dto = new CartDTO();
 	        dto.setUser_id(userId);
 	        dto.setCart_id(cartId);

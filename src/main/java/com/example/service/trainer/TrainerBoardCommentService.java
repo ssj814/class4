@@ -75,6 +75,13 @@ public class TrainerBoardCommentService {
 	        dao.deleteTrainerboardComment(commid);
 	    }
 
+		public TrainerBoardCommentDTO getCommentByPostId(int commId) {
+			 return dao.selectCommentByPostId(commId);
+		}
+
+		
+
+	
 	
 	
 		

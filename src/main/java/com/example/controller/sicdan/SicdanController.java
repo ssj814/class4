@@ -1,6 +1,5 @@
 package com.example.controller.sicdan;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,9 +10,15 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -59,7 +64,7 @@ public class SicdanController {
         model.addAttribute("currentPage", currentPage); // 현재 페이지 번호를 모델에 추가
         model.addAttribute("totalPages", totalPages); // 총 페이지 수를 모델에 추가
         model.addAttribute("totalCount", totalCount); // 총 게시물 수를 모델에 추가
-
+        model.addAttribute("pageSize",pageSize);
         return "sicdan/sicdanList"; // 게시물 목록 페이지 반환
     }
 
@@ -74,7 +79,12 @@ public class SicdanController {
     public String sicdanForm(@RequestParam(value = "num", required = false) Integer sic_num,
                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              Model model) {
+    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+  
+
         SicdanDTO dto = new SicdanDTO();
+        dto.setUser_id(user_id);
         if (sic_num != null) { // 수정하는 경우
             dto = sicdanService.selectByNum(sic_num); // 게시물 번호로 해당 게시물 조회
             model.addAttribute("isUpdate", true); // 수정 모드 설정

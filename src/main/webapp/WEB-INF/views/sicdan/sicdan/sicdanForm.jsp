@@ -16,8 +16,8 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+  
+    
     
     <!-- Summernote JS -->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
@@ -50,7 +50,7 @@
 
         <div class="form-group">
             <label for="user_id">작성자:</label>
-            <input type="text" class="form-control" id="user_id" name="user_id" value="${dto.user_id}">
+            <input type="text" class="form-control" id="user_id" name="user_id" value="${dto.user_id}" readonly>
         </div>
 
         <div class="form-group">

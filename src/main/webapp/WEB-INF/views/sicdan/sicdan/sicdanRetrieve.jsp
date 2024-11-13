@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,10 +61,14 @@
         <p>${retrive.content}</p>
     </div>
 
-    <div class="mb-3" id="boardArticle_footer">
+    <div class="mb-3" id="boardArticle_footer">  
+    	<c:if test="${retrive.user_id == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name 
+    		|| fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
         <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.sic_num}&currentPage=${currentPage}' />'">수정</button>
         <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.sic_num}&currentPage=${currentPage}' />'">삭제</button>
+        </c:if>
         <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
+    	
     </div>
 </div>
 

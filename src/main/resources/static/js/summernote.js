@@ -12,7 +12,7 @@ const imageDeleteUrl = "/app/sicdan/imageDelete";
                 ['table', ['table']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
-                ['insert', ['picture', 'link', 'video']],
+                ['insert', ['picture']],
                 ['view', ['fullscreen', 'help']]
             ],
             callbacks: {

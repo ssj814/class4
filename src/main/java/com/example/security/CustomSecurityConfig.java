@@ -8,14 +8,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-
 import lombok.RequiredArgsConstructor;
 
 @Configuration
 @EnableWebSecurity
 public class CustomSecurityConfig {
-	
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -24,6 +21,7 @@ public class CustomSecurityConfig {
     	//페이지 권한 설정
     	.authorizeHttpRequests(authorize -> authorize
     	.requestMatchers("/admin/**").hasRole("ADMIN")
+
     	.requestMatchers("/trainer/**").hasRole("TRAINER")
     	.requestMatchers("/user/**").authenticated() // /user/** 경로는 인증된 경우 접근 
 
@@ -32,7 +30,7 @@ public class CustomSecurityConfig {
     	.anyRequest().permitAll() // 나머지 요청 허용
     	 )
         .formLogin(form -> form
-            .loginPage("/login") // 로그인 페이지 설정
+            .loginPage("/user/loginForm") // 로그인 페이지 설정. UserController의 loginForm 경로로 변경
             .usernameParameter("userid") // submit할 아디이
             .passwordParameter("userpw") // submit할 비밀번호
             .defaultSuccessUrl("/", true) // 로그인 성공 후 이동할 URL
@@ -46,16 +44,6 @@ public class CustomSecurityConfig {
                 .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉션할 페이지 설정
                 .permitAll()
         )
-//        .oauth2Login(configure -> // OAuth2 로그인 설정
-//        	configure
-//        		.loginPage("/user/loginForm") //커스텀로그인 페이지로 이동
-//    			.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
-//    				config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
-//    			.userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
-//    				config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
-//				.successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
-//				.failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
-//        )
         // status code 핸들링
         .exceptionHandling(exception -> exception
                 .accessDeniedPage("/loginCancel") // 접근 거부 시 이동할 페이지

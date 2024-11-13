@@ -21,15 +21,15 @@
 <%
     } else if ("orderList".equals(currentPage)) {
 %>
-        <jsp:include page="shoppingMall/cart/cartList.jsp" />
+        <jsp:include page="../../cart/shoppingMall/cartList.jsp" />
 <%
     } else if ("returns".equals(currentPage)) {
 %>
-        <jsp:include page="shoppingMall/returns.jsp" />
+        <jsp:include page="../../shoppingMall/returns.jsp" />
 <%
     } else if ("wishlist".equals(currentPage)) {
 %>
-        <jsp:include page="shoppingMall/wishList.jsp" />
+        <jsp:include page="../../shoppingMall/wishList.jsp" />
 <%
     } else {
 %>

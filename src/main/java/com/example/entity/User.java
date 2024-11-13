@@ -95,9 +95,6 @@ public class User {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "STATUS")
-    private String status;
-
     @Enumerated(EnumType.STRING) // Enum 타입으로 역할을 정의
     private Role role;
 
@@ -129,11 +126,10 @@ public class User {
         }
         return "";
     }
-    
+
     //마이바티스의 경우 컬럼 디폴트로 대체 가능
     @PrePersist // 해당 초기값 DB에 저장
     public void prePersist(){
-    	
     	
         if(this.role == null) {
         	this.role = Role.USER;

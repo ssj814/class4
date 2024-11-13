@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class UserDTO {
 	private int usernumber; // 필수, 사용자 번호
 	private String realusername; // 필수, 실명
     private String userid; // 필수, 사용자 ID
     private String userpw; // 필수, 비밀번호
-    private String passwordconfirm; // 비밀번호 확인
-    private String emailusername; // 필수, 이메일 사용자 이름
-    private String emaildomain; // 필수, 이메일 도메인
+    private String userpwConfirm; // 비밀번호 확인
+    private String emailUsername; // 필수, 이메일 사용자 이름
+    private String emailDomain; // 필수, 이메일 도메인
     private String birthdate; // 필수, 생년월일
     private String gender; // 필수, 성별
     private int emailverified; // 이메일 인증 여부 (0 또는 1)

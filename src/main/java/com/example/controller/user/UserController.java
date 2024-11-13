@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.dto.user.UserDto;
 import com.example.entity.User;
+import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
 import com.example.service.user.UserService;
 
@@ -87,22 +88,33 @@ public class UserController {
 		return "error/403";
 	}
     
-	////////예외처리
-	@RequestMapping("/admin/view")
-	@PreAuthorize("hasRole('ADMIN')")
-	public String managerView(Model m) { 
-		System.out.println("/admin/view");
-		List<User> users= userRepository.findAll();
-		System.out.println("users" + users);
-		m.addAttribute("users", users);
-		return "user/adminView";
-	}
+    @RequestMapping("/admin/view")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String managerView(Model m) {
+        System.out.println("/admin/view");
+
+        // 오름차순으로 정렬된 사용자 목록 가져오기
+        List<User> users = userService.findAllSortedByUsernumber();
+        System.out.println("users: " + users);
+
+        // 정렬된 사용자 목록을 모델에 추가하여 JSP로 전달
+        m.addAttribute("users", users);
+
+        return "user/adminView"; // 사용자 목록 페이지
+    }
 	
 	//삭제
 	 @RequestMapping("/admin/delete/{usernumber}")
 	    public String deleteUser(@PathVariable("usernumber") int usernumber) {
 	        userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
 	        return "redirect:/admin/view";  // 삭제 후 목록 페이지로 리다이렉트
+	    }
+	 
+	 // 역할 변경 처리
+	    @RequestMapping("/admin/changeRole/{usernumber}")
+	    public String changeRole(@PathVariable("usernumber") int usernumber, Role newRole) {
+	        userService.updateUserRole(usernumber, newRole);  // 역할 변경 서비스 호출
+	        return "redirect:/admin/view";  // 변경 후 목록 페이지로 리다이렉트
 	    }
 
 }

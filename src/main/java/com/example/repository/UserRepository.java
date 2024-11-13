@@ -1,7 +1,9 @@
 package com.example.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,8 @@ public interface UserRepository  extends JpaRepository<User, Integer>{
 	
 	Optional<User> findByUserid(String userid);// 아이디로 사용자 조회
 	Optional<User> findByEmail(String email);// 이메일로 사용자 조회
+	
+	// usernumber 기준으로 오름차순 정렬된 사용자 목록을 반환하는 메서드
+    List<User> findAll(Sort sort);
 	
 }

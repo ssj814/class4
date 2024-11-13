@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <title>게시물 작성/수정</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <%-- 이미지 업로드 URL을 JSP 상단에서 설정 --%>
+    <c:set var="imageUploadUrl" value="${pageContext.request.contextPath}/sicdan/imageUpload" />
     
     <!-- Summernote CSS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
@@ -25,18 +25,13 @@
     <!-- Summernote 한국어 설정 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/lang/summernote-ko-KR.min.js"></script>
 
-    <!-- 모듈화된 Summernote 설정 파일 포함 -->
-    <script src="resources/js/summernote.js"></script>
-	<link rel="stylesheet" href="resources/css/sicdan/sicdanForm.css">
+    <link rel="stylesheet" href="resources/css/sicdan/sicdanForm.css">
     <style>
         body {
             background-color: #f5f7fa;
             font-family: 'Helvetica Neue', Arial, sans-serif;
         }
-
-        /* 기타 스타일 */
     </style>
-
 </head>
 <body>
 
@@ -66,8 +61,9 @@
         <input type="submit" class="btn btn-primary" value="${isUpdate ? '수정' : '발행'}">
         <button type="button" class="btn btn-secondary" onclick="location.href='<c:url value='/sicdan_list' />'">목록 보기</button>
     </form>
-
 </div>
+
+<script src="resources/js/summernote.js"></script>
 
 </body>
 </html>

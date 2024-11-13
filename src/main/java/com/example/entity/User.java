@@ -66,8 +66,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(nullable = false)
-    private String status; // 상태 필드 추가
+    
 
     public enum Role {
         USER, ADMIN, TRAINER
@@ -101,9 +100,7 @@ public class User {
         if (this.role == null) {
             this.role = Role.USER;
         }
-        if (this.status == null) {
-            this.status = "ACTIVE"; // 기본 상태 설정
-        }
+        
         if (this.created == null) {
             this.created = LocalDateTime.now();
         }

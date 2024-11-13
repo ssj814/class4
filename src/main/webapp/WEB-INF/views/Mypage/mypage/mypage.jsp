@@ -70,8 +70,8 @@
                 </h2>
                 <div id="collapseShopping" class="accordion-collapse collapse" aria-labelledby="headingShopping" data-bs-parent="#accordionSidebar">
                     <div class="accordion-body">
-                        <a href="${pageContext.request.contextPath}/mypage?page=orderList" class="nav-link">주문목록/배송조회</a>
-                        <a href="${pageContext.request.contextPath}/mypage?page=returns" class="nav-link">취소반품교환내역</a>
+                        <a href="${pageContext.request.contextPath}/user/cartList" class="nav-link">장바구니</a>
+                    
                         <a href="${pageContext.request.contextPath}/mypage?page=wishlist" class="nav-link">위시리스트</a>
                     </div>
                 </div>

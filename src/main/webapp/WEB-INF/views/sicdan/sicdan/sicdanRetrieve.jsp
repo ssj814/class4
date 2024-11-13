@@ -60,7 +60,7 @@
         <p>${retrive.content}</p>
     </div>
 
-    <div id="boardArticle_footer">
+    <div class="mb-3" id="boardArticle_footer">
         <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.sic_num}&currentPage=${currentPage}' />'">수정</button>
         <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.sic_num}&currentPage=${currentPage}' />'">삭제</button>
         <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>

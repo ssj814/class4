@@ -39,7 +39,7 @@ public class SecurityUserDetailService  implements UserDetailsService {
 	    System.out.println("UserDetailService: user===" + user);
 
 	    // 사용자 상태가 'WITHDRAWN'인지 확인하여 로그인 차단
-	    if ("WITHDRAWN".equals(user.getStatus())) {
+	    if (0==(user.getIsactive())) {
 	        throw new UsernameNotFoundException("탈퇴된 계정입니다. 로그인할 수 없습니다.");
 	    }
 

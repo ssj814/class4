@@ -2,8 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<!-- 부트스트랩 CSS 추가 -->
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <script type="text/javascript">
     $(function(){
@@ -48,10 +46,10 @@
                             <label for="userpw">비밀번호</label>
                             <input type="password" id="userpw" name="userpw" class="form-control" placeholder="비밀번호를 입력하세요">
                         </div>
-                        <button type="submit" class="btn btn-dark btn-block">로그인</button>
+                        <button type="submit" class="btn btn-dark btn-block mt-2" style="width: 100%">로그인</button>
                     </form>
                     <!-- 회원가입 버튼 -->
-                    <button id="member" class="btn btn-outline-dark btn-block" style="margin-top: 5px;">회원가입</button>
+                    <button id="member" class="btn btn-outline-dark btn-block" style="margin-top: 5px; width: 100%;">회원가입</button>
                 </div>
             </div>
             <!-- 소셜 로그인 -->
@@ -80,8 +78,3 @@
         </div>
     </div>
 </div>
-
-<!-- 부트스트랩 JS 및 의존성 JS 추가 -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

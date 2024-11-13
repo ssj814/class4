@@ -7,11 +7,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.dto.user.UserDto;
 import com.example.entity.User;
+import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
 import com.example.util.jwt.JwtUtil;
 
@@ -85,6 +87,12 @@ public class UserService {
         }
     }
 
+    // 사용자 목록을 오름차순으로 반환하는 메서드 추가
+    public List<User> findAllSortedByUsernumber() {
+        // usernumber 기준으로 오름차순 정렬
+        return userRepository.findAll(Sort.by(Sort.Order.asc("usernumber")));
+}
+
     // 전체 출력
     public List<User> findAll() {
         return userRepository.findAll();
@@ -94,6 +102,19 @@ public class UserService {
     public void deleteUserById(int usernumber) {
         userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
     }
+    
+    // 역할 변경 메서드
+    public void updateUserRole(int usernumber, Role newRole) {
+        User user = userRepository.findById(usernumber)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 새로운 역할 설정
+        user.setRole(newRole);
+        
+        // 변경된 사용자 저장
+        userRepository.save(user);
+    }
+}
 
     // 사용자 비활성화 (탈퇴 처리)
     public void deactivateUser(String userid) {

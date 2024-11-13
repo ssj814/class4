@@ -30,7 +30,7 @@ public class CustomSecurityConfig {
     	.anyRequest().permitAll() // 나머지 요청 허용
     	 )
         .formLogin(form -> form
-            .loginPage("/user/loginForm") // 로그인 페이지 설정. UserController의 loginForm 경로로 변경
+            .loginPage("/login") // 로그인 페이지 설정. UserController의 loginForm 경로로 변경
             .usernameParameter("userid") // submit할 아디이
             .passwordParameter("userpw") // submit할 비밀번호
             .defaultSuccessUrl("/", true) // 로그인 성공 후 이동할 URL

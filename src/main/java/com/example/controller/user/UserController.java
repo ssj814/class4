@@ -1,5 +1,6 @@
 package com.example.controller.user;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.user.UserDTO;
 import com.example.dto.user.ValidationUserDTO;
@@ -26,6 +29,8 @@ import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
 import com.example.service.user.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @Controller
@@ -146,7 +151,7 @@ public class UserController {
         if (user != null) {
             model.addAttribute("login", user);
             System.out.println("login user"+user);
-            return "main"; // 로그인 성공 후 이동할 페이지
+            return "redirect:/"; // 로그인 성공 후 이동할 페이지
         } else {
             model.addAttribute("mesg", "아이디 또는 비밀번호가 잘못되었습니다."); // 오류 메시지
             return "user/loginForm"; // 로그인 실패 시 이동할 페이지

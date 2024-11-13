@@ -21,7 +21,6 @@
 	<!-- 필터 버튼 -->
 	<div class="filter-group">
 		<button class="btn filter-button" value="all">전체</button>
-		<button class="btn filter-button" value="웨이트">웨이트</button>
 		<button class="btn filter-button" value="재활">재활</button>
 		<button class="btn filter-button" value="다이어트">다이어트</button>
 		<button class="btn filter-button" value="대회준비">대회준비</button>
@@ -55,10 +54,10 @@
 						<a href="trainer_info?idx=${t.trainer_id}">${t.name}</a>
 					</div>
 					<div class="trainer-intro">${t.intro}</div>
-					<div class="trainer-spec">
-						<c:forTokens items="${t.field}" delims="," var="field">
-							<span class="badge badge-secondary">${field}</span>
-						</c:forTokens>
+					<div class="trainer-spec mb-1">
+						<c:forEach items="${t.field}"  var="field">
+				            <span class="badge bg-secondary">${field}</span>
+				        </c:forEach>
 					</div>
 					<div class="trainer-date text-muted">${t.reg_date}</div>
 				</div>

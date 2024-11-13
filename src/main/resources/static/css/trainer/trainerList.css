@@ -136,15 +136,10 @@ body {
 
 .trainerAdding a {
 	padding: 12px 20px;
-	background-color: #007bff; /* 모던한 파란색 */
+	background-color: gray; /* 모던한 파란색 */
 	color: white;
 	text-decoration: none;
 	border-radius: 50px; /* 둥근 버튼 */
 	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 	transition: background-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.trainerAdding a:hover {
-	background-color: #0056b3; /* 호버 시 더 진한 파란색 */
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }

@@ -1,13 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>운동 식단 게시판</title>
-  
+    
     <link rel="stylesheet" href="<c:url value='/resources/css/sicdan/sicdanList.css' />">
 </head>
 <body>
@@ -70,8 +70,9 @@
         <tbody>
             <c:forEach var="sicdan" items="${list}" varStatus="status">
                 <tr>
-                    <td>${totalCount-(status.index+(currentPage-1)*pageSize)}</td>
-                    <td><a href="<c:url value='/sicdan_retrieve?num=${sicdan.sic_num}&currentPage=${currentPage}' />">${sicdan.sic_title}</a></td>
+                    <!-- 게시글 번호 계산: 각 페이지마다 번호 일관성 유지 -->
+                  <td>${totalCount - ((currentPage - 1) * pageSize + status.index)}</td>
+					 <td><a href="<c:url value='/sicdan_retrieve?num=${sicdan.sic_num}&currentPage=${currentPage}' />">${sicdan.sic_title}</a></td>
                     <td>${sicdan.user_id}</td>
                     <td>${sicdan.writeday}</td>
                     <td>${sicdan.readCnt}</td>
@@ -111,7 +112,9 @@
         </div>
 
         <div id="write-btn">
+          <c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
             <button type="button" onclick="resetAlertFlags(); location.href='<c:url value='/sicdan_form' />'">글쓰기</button>
+            </c:if>
         </div>
     </div>
 </div>

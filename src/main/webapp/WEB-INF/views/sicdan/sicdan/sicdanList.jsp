@@ -112,7 +112,7 @@
         </div>
 
         <div id="write-btn">
-          <c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'USER')}">
+          <c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
             <button type="button" onclick="resetAlertFlags(); location.href='<c:url value='/sicdan_form' />'">글쓰기</button>
             </c:if>
         </div>

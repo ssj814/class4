@@ -55,7 +55,6 @@ public class UserService {
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
         user.setEmail(userDto.getEmailUsername() + "@" + userDto.getEmailDomain());
-        user.setStatus("ACTIVE");
 
         return userRepository.save(user); // 사용자 저장
     }
@@ -64,6 +63,15 @@ public class UserService {
     public User login(UserDTO userDto) { // UserDto를 인자로 받는 로그인 메서드
         User user = userRepository.findByUserid(userDto.getUserid())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials")); // 사용자 없음 예외 처리
+
+        // 상태 로그 추가
+        //logger.info("User status for {}: {}", user.getUserid(), user.getIsactive());
+      System.out.println("이거시발 왜안됨 ?"+user.getIsactive());
+        // 사용자 상태가 '0'인지 확인
+        if (0==(user.getIsactive())) {
+            //logger.warn("Login attempt for withdrawn account: {}", user.getUserid());
+            throw new RuntimeException("Account has been withdrawn"); // 탈퇴된 계정은 로그인 불가
+        }	
 
         // 입력한 비밀번호와 저장된 비밀번호 비교
         if (passwordEncoder.matches(userDto.getUserpw(), user.getUserpw())) {
@@ -128,7 +136,7 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findByUserid(userid);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setStatus("WITHDRAWN"); // 상태를 'WITHDRAWN'으로 설정
+            user.setIsactive(0); 
             user.setUpdated(LocalDateTime.now());
             userRepository.save(user);
         }
@@ -148,7 +156,6 @@ public class UserService {
         user.setStreetaddress(validationUserDTO.getStreetaddress());
         user.setDetailedaddress(validationUserDTO.getDetailedaddress());
         user.setTermsagreed(validationUserDTO.getTermsagreed());
-        user.setStatus("ACTIVE");
         
         // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
         if (validationUserDTO.getRole() != null) {

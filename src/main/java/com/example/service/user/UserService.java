@@ -40,7 +40,6 @@ public class UserService {
         user.setEmailDomain(userDto.getEmailDomain());
         user.setBirthdate(userDto.getBirthdate());
         user.setGender(userDto.getGender());
-        user.setEmailverified(userDto.getEmailverified());
         user.setTermsagreed(userDto.getTermsagreed());
         user.setPhone1(userDto.getPhone1());
         user.setPhone2(userDto.getPhone2());
@@ -50,17 +49,13 @@ public class UserService {
         user.setDetailedaddress(userDto.getDetailedaddress());
         user.setNickname(userDto.getNickname());
         user.setProfilepicture(userDto.getProfilepicture());
-        user.setMileage(userDto.getMileage());
-        user.setSocialprovider(userDto.getSocialprovider());
-        user.setIpaddress(userDto.getIpaddress());
         user.setIsactive(1); // 기본적으로 활성화된 계정
         user.setCreated(LocalDateTime.now());
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
         user.setEmail(userDto.getEmailUsername() + "@" + userDto.getEmailDomain());
-        user.setProvider(null);
-        user.setProviderid(null);
+        user.setStatus("ACTIVE");
 
         return userRepository.save(user); // 사용자 저장
     }
@@ -112,7 +107,7 @@ public class UserService {
         // 변경된 사용자 저장
         userRepository.save(user);
     }
-}
+
 
  // ValidationUserDTO를 사용한 회원가입 메서드
     public void registerWithValidation(@Valid ValidationUserDTO validationUserDTO) {
@@ -128,6 +123,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    // 사용자 비활성화 (탈퇴 처리)
+    public void deactivateUser(String userid) {
+        Optional<User> optionalUser = userRepository.findByUserid(userid);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            user.setStatus("WITHDRAWN"); // 상태를 'WITHDRAWN'으로 설정
+            user.setUpdated(LocalDateTime.now());
+            userRepository.save(user);
+        }
+    }
     // ValidationUserDTO를 User 엔티티로 변환하는 메서드
     private User toUserEntity(ValidationUserDTO validationUserDTO) {
         User user = new User();
@@ -143,6 +148,7 @@ public class UserService {
         user.setStreetaddress(validationUserDTO.getStreetaddress());
         user.setDetailedaddress(validationUserDTO.getDetailedaddress());
         user.setTermsagreed(validationUserDTO.getTermsagreed());
+        user.setStatus("ACTIVE");
         
         // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
         if (validationUserDTO.getRole() != null) {

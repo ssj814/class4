@@ -53,9 +53,6 @@ public class User {
     @Column(name = "GENDER")
     private String gender; // 성별
 
-    @Column(name = "EMAILVERIFIED")
-    private int emailverified; // 이메일 인증 여부 (0 또는 1)
-
     @Column(name = "TERMSAGREED")
     private int termsagreed; // 약관 동의 여부 (0 또는 1)
 
@@ -83,15 +80,6 @@ public class User {
     @Column(name = "PROFILEPICTURE")
     private String profilepicture; // 프로필 사진 URL
 
-    @Column(name = "MILEAGE")
-    private Integer mileage; // 포인트
-
-    @Column(name = "SOCIALPROVIDER")
-    private String socialprovider; // 소셜 로그인 제공자
-
-    @Column(name = "IPADDRESS")
-    private String ipaddress; // 사용자 접속 IP
-
     @Column(name = "ISACTIVE")
     private int isactive; // 계정 활성 여부 (0 또는 1)
 
@@ -107,11 +95,8 @@ public class User {
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "PROVIDER")
-    private String provider;
-
-    @Column(name = "PROVIDERID")
-    private String providerid;
+    @Column(name = "STATUS")
+    private String status;
 
     @Enumerated(EnumType.STRING) // Enum 타입으로 역할을 정의
     private Role role;
@@ -150,9 +135,6 @@ public class User {
     public void prePersist(){
     	
     	
-        if(this.mileage == null) {
-        	this.mileage = 0;
-        }
         if(this.role == null) {
         	this.role = Role.USER;
         }

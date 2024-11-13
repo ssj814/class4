@@ -17,9 +17,8 @@ import com.example.dto.CartDTO;
 import com.example.dto.CartProductDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
-import com.example.dto.ProductReviewDTO;
 import com.example.dto.ProductWishDTO;
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 import com.example.service.Mypage.MyPageServiceImpl;
 import com.example.service.shoppingmall.CartService;
 import com.example.service.shoppingmall.ProductService;
@@ -52,7 +51,7 @@ public class MyPageController {
 
         // 페이지별 데이터 처리
         if ("userInfo".equals(page)) {
-            UserDto userInfo = myPageService.getUserInfo(userId);
+            UserDTO userInfo = myPageService.getUserInfo(userId);
             model.addAttribute("userInfo", userInfo);
 
         } else if ("editInfo".equals(page)) {
@@ -95,7 +94,7 @@ public class MyPageController {
 
         } else {
             // 기본 마이페이지 설정 (userInfo 기본 설정)
-            UserDto userInfo = myPageService.getUserInfo(userId);
+            UserDTO userInfo = myPageService.getUserInfo(userId);
             model.addAttribute("userInfo", userInfo);
         }
 

@@ -24,6 +24,8 @@ session.removeAttribute("mesg");
 <%-- <jsp:include page="../common/header.jsp" flush="true" />  --%>
 <%-- <jsp:include page="../common/header.jsp" flush="true"></jsp:include> --%>
 <div style="height: 150px;"></div>
+<jsp:include page="../common/header.jsp" flush="true"></jsp:include>
 <jsp:include page="member/loginForm.jsp" flush="true"></jsp:include>
+<jsp:include page="../common/footer.jsp" flush="true"></jsp:include>
 </body>
 </html>

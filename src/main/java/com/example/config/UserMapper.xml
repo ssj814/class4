@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="UserMapper"> <!-- 구별용 이름 -->
 
-	<select id="selectUserInfo" resultType="com.example.dto.user.UserDto">
+	<select id="selectUserInfo" resultType="com.example.dto.user.UserDTO">
     SELECT * FROM Users WHERE userid = #{userId}
 </select>
 

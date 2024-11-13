@@ -239,54 +239,55 @@
 					<hr style="border: solid 1px black; opacity: inherit; ">
 					<!-- 여러 상품 주문 -->
 				    <c:if test="${not empty cartList}">
-				        <c:forEach var="item" varStatus="status" items="${cartList}">
-				            <c:set var="product" value="${productList[status.index]}" />
-				            <div class="order-item d-flex justify-content-between align-items-center">
-				                <div>
-				                    <strong>${product.product_name}</strong> <br>
-				                    <small>
-				                        <c:forEach var="type" items="${fn:split(item.option_type, ',')}" varStatus="idx">
-				                            <c:set var="name" value="${fn:split(item.option_name, ',')[idx.index]}" />
-				                            ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
-				                        </c:forEach>
-				                    </small> × ${item.quantity}
-				                </div>
-				                <span>
-				                    <fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
-				                </span>
-				            </div>
-				            <input type="hidden" name="productIds" value="${product.product_id}">
+					    <c:forEach var="item" varStatus="status" items="${cartList}">
+					        <!-- 여러 상품 주문 -->
+					        <c:set var="product" value="${productList[status.index]}" />
+					        <div class="order-item d-flex justify-content-between align-items-center">
+					            <div>
+					                <strong>${product.product_name}</strong> <br>
+					                <small>
+					                    <c:forEach var="type" items="${fn:split(item.option_type, ',')}" varStatus="idx">
+					                        <c:set var="name" value="${fn:split(item.option_name, ',')[idx.index]}" />
+					                        ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
+					                    </c:forEach>
+					                </small> × ${item.quantity}
+					            </div>
+					            <span>
+					                <fmt:formatNumber value="${product.product_price * item.quantity}" type="currency" currencySymbol="₩ " />
+					            </span>
+					        </div>
+					        <input type="hidden" name="productIds" value="${product.product_id}">
 				            <input type="hidden" name="quantities" value="${item.quantity}">
 				            <input type="hidden" name="individualPrices" value="${product.product_price}">
 				            <input type="hidden" name="optionTypes" value="${item.option_type}">
 				            <input type="hidden" name="optionNames" value="${item.option_name}">
-				        </c:forEach>
-				    </c:if>
-				
-				    <!-- 단일 상품 주문 -->
-				    <c:if test="${not empty product}">
-				        <div class="order-item d-flex justify-content-between align-items-center">
-				            <div>
-				                <strong>${product.product_name}</strong> <br>
-				                <small>
-				                    <c:forEach var="option" items="${options}" varStatus="idx">
-				                        ${option['type']} : ${option['name']}<c:if test="${!idx.last}"> || </c:if>
-				                    </c:forEach> 
-				                </small> × ${quantity}
-				            </div>
-				            <span>
-				                <fmt:formatNumber value="${product.product_price * quantity}" type="currency" currencySymbol="₩ " />
-				            </span>
-				        </div>
-				        <input type="hidden" name="productId" value="${product.product_id}">
+					    </c:forEach>
+					</c:if>
+					
+					<!-- 단일 상품 주문, cartList가 비어있을 경우에만 출력 -->
+					<c:if test="${empty cartList && not empty product}">
+					    <div class="order-item d-flex justify-content-between align-items-center">
+					        <div>
+					            <strong>${product.product_name}</strong> <br>
+					            <small>
+					                <c:forEach var="option" items="${options}" varStatus="idx">
+					                    ${option['type']} : ${option['name']}<c:if test="${!idx.last}"> || </c:if>
+					                </c:forEach>
+					            </small> × ${quantity}
+					        </div>
+					        <span>
+					            <fmt:formatNumber value="${product.product_price * quantity}" type="currency" currencySymbol="₩ " />
+					        </span>
+					    </div>
+					    <input type="hidden" name="productId" value="${product.product_id}">
 				        <input type="hidden" name="quantity" value="${quantity}">
 				        <input type="hidden" name="individualPrice" value="${product.product_price}">
 				        <c:forEach var="option" items="${options}">
 				            <input type="hidden" name="optionType" value="${option['type']}">
 				            <input type="hidden" name="optionName" value="${option['name']}">
 				        </c:forEach>
-				    </c:if>
-				
+					</c:if>
+									
 				    <!-- 총액 계산 -->
 				    <div class="total-price text-end mt-3">
 				        Total: 
@@ -300,13 +301,14 @@
 				                    <c:set var="totalPrice" value="${totalPrice + itemTotal}" />
 				                </c:forEach>
 				            </c:if>
-				            <c:if test="${not empty product}">
+				            <c:if test="${not empty product && empty cartList}">
 				                <!-- 단일 상품 총액 계산 -->
 				                <c:set var="totalPrice" value="${product.product_price * quantity}" />
 				            </c:if>
 				            <fmt:formatNumber value="${totalPrice}" type="currency" currencySymbol="₩ " />
 				        </span>
 				    </div>
+				    
 					<!-- 결제 버튼 -->
 					<button type="button" class="btn payment-button btn-lg"
 						onclick="validateAndSubmitForm()">결제하기</button>

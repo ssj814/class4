@@ -28,7 +28,7 @@
 	<nav class="navbar navbar-expand-lg bg-dark border-body p-3"
 		style="position: fixed; top: 0; left: 0; right: 0; z-index: 999;">
 		<div class="container-fluid">
-			<a class="navbar-brand fs-4" href="/app"
+			<a class="navbar-brand fs-4" href="${pageContext.request.contextPath}"
 				style="color: pink; font-style: italic;">PKDB </a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
@@ -39,25 +39,25 @@
 			<div class="collapse navbar-collapse" id="navbarNavDropdown">
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/shopList" style="color: beige;">ShoppingMall</a></li>
+						href="${pageContext.request.contextPath}/shopList" style="color: beige;">ShoppingMall</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/trainer_list" style="color: beige;">For Trainer</a></li>
+						href="${pageContext.request.contextPath}/trainer_list" style="color: beige;">For Trainer</a></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/TrainerBoard" style="color: beige;">TrainerBoard</a></li>
+						href="${pageContext.request.contextPath}/TrainerBoard" style="color: beige;">TrainerBoard</a></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" role="button"
 						data-bs-toggle="dropdown" aria-expanded="false"
 						style="color: beige;">Meal Plan</a>
 						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="/app/cookingTip_cooking">Cooking	Tip</a></li>
-							<li><a class="dropdown-item" href="/app/sicdan_list">Sicdan</a></li>
-							<li><a class="dropdown-item" href="/app/Chart">Chart</a></li>
-							<li><a class="dropdown-item" href="/app/bmiForm">BmiForm</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/cookingTip_cooking">Cooking	Tip</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/sicdan_list">Sicdan</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/Chart">Chart</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/bmiForm">BmiForm</a></li>
 						</ul></li>
 					<li class="nav-item"><a class="nav-link active"
-						href="/app/notice" style="color: beige;">Notice</a></li>
+						href="${pageContext.request.contextPath}/notice" style="color: beige;">Notice</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="Faq_allList" style="color: pink;">FAQ</a></li>
+							href="${pageContext.request.contextPath}/Faq_allList" style="color: beige;">FAQ</a></li>
 				</ul>
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
 					<ul class="navbar-nav ms-auto">
@@ -66,11 +66,11 @@
 						<li class="nav-item"><a class="nav-link active"
 							href="${pageContext.request.contextPath}/logout" style="color: pink;">LOGOUT</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="/app/user/wishList" style="color: pink;">WISH</a></li>
+							href="${pageContext.request.contextPath}/user/wishList" style="color: pink;">WISH</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="/app/user/cartList" style="color: pink;">CART</a></li>
+							href="${pageContext.request.contextPath}/user/cartList" style="color: pink;">CART</a></li>
 						<li class="nav-item"><a class="nav-link active"
-							href="/app/mypage" style="color: pink;">MY</a></li>
+							href="${pageContext.request.contextPath}/mypage" style="color: pink;">MY</a></li>
 						<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
         					<li class="nav-item"><a class="nav-link active"
 								href="${pageContext.request.contextPath}/admin/view" style="color: pink;">ADMIN</a></li>

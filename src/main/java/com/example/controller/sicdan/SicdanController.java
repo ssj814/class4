@@ -59,13 +59,17 @@ public class SicdanController {
         int totalPages = (int) Math.ceil((double) totalCount / pageSize); // 총 페이지 수 계산
         totalPages = Math.max(totalPages, 1); // 최소 1페이지는 존재하도록 설정
 
-        List<SicdanDTO> list = sicdanService.listAll(map); // 검색 조건에 맞는 게시물 목록 가져오기
-        model.addAttribute("list", list); // 게시물 목록을 모델에 추가
-        model.addAttribute("currentPage", currentPage); // 현재 페이지 번호를 모델에 추가
-        model.addAttribute("totalPages", totalPages); // 총 페이지 수를 모델에 추가
-        model.addAttribute("totalCount", totalCount); // 총 게시물 수를 모델에 추가
-        model.addAttribute("pageSize",pageSize);
-        return "sicdan/sicdanList"; // 게시물 목록 페이지 반환
+        // 게시물 목록 가져오기
+        List<SicdanDTO> list = sicdanService.listAll(map);
+
+        // 모델에 데이터 저장
+        model.addAttribute("list", list);
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalCount", totalCount);
+        model.addAttribute("pageSize", pageSize);
+
+        return "sicdan/sicdanList"; // sicdanList.jsp로 이동
     }
 
     /**

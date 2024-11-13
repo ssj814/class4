@@ -18,12 +18,11 @@
 				</dl>
 			</div>
 			<div id="lists">
-				<c:forEach var="dto" items="${BoardList}">
+				<c:forEach var="dto" items="${BoardList}" varStatus="status">
 					<dl class="horizontal">
-						<dd class="postid">${dto.postid}</dd>
+						<dd class="postid">${totalCount-(status.index+(currentPage-1)*pageSize)}</dd>
 						<dd class="title">
-							<a
-								href="notice_content?postid=${dto.postid}&currentPage=${currentPage}">${dto.title}</a>
+							<a href="notice_content?postid=${dto.postid}&currentPage=${currentPage}">${dto.title}</a>
 						</dd>
 						<dd class="writer">${dto.writer}</dd>
 						<dd class="createdate">${dto.createdate}</dd>

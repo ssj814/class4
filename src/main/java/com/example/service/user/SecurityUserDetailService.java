@@ -36,7 +36,11 @@ public class SecurityUserDetailService  implements UserDetailsService {
 		//사용자가 없는 경우
 		User user = userRepository.findByUserid(userid)
                 .orElseThrow(() -> new UsernameNotFoundException(userid + " 사용자없음"));
+		if (user.getIsactive() == 0) {
+            throw new RuntimeException("Account has been withdrawn"); // 비활성화된 계정 로그인 불가
+        }
 		System.out.println("UserDetailServie: dto==="+ user);
+		
 		
 		 // User 객체를 UserDto로 변환
 	    UserDTO userdto = new UserDTO();

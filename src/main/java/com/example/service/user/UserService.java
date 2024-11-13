@@ -4,20 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
+import com.example.dto.user.ValidationUserDTO;
 import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.util.jwt.JwtUtil;
 
+import jakarta.validation.Valid;
+
 @Service
 public class UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository; // 사용자 레포지토리
@@ -29,13 +29,13 @@ public class UserService {
     private JwtUtil jwtUtil; // JWT 유틸리티
     
     // 회원가입 메서드
-    public User register(UserDto userDto) {
+    public User register(UserDTO userDto) {
         User user = new User();
         user.setUserid(userDto.getUserid());
         user.setUserpw(passwordEncoder.encode(userDto.getUserpw()));
         user.setRealusername(userDto.getRealusername());
-        user.setEmailusername(userDto.getEmailusername());
-        user.setEmaildomain(userDto.getEmaildomain());
+        user.setEmailUsername(userDto.getEmailUsername());
+        user.setEmailDomain(userDto.getEmailDomain());
         user.setBirthdate(userDto.getBirthdate());
         user.setGender(userDto.getGender());
         user.setEmailverified(userDto.getEmailverified());
@@ -56,7 +56,7 @@ public class UserService {
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setRole(userDto.getRole()); // 역할 저장
-        user.setEmail(userDto.getEmailusername() + "@" + userDto.getEmaildomain());
+        user.setEmail(userDto.getEmailUsername() + "@" + userDto.getEmailDomain());
         user.setProvider(null);
         user.setProviderid(null);
 
@@ -64,18 +64,9 @@ public class UserService {
     }
 
     // 로그인 메서드
-    public User login(UserDto userDto) { // UserDto를 인자로 받는 로그인 메서드
+    public User login(UserDTO userDto) { // UserDto를 인자로 받는 로그인 메서드
         User user = userRepository.findByUserid(userDto.getUserid())
                 .orElseThrow(() -> new RuntimeException("Invalid credentials")); // 사용자 없음 예외 처리
-
-        // 상태 로그 추가
-        logger.info("User status for {}: {}", user.getUserid(), user.getStatus());
-
-        // 사용자 상태가 'WITHDRAWN'인지 확인
-        if ("WITHDRAWN".equals(user.getStatus())) {
-            logger.warn("Login attempt for withdrawn account: {}", user.getUserid());
-            throw new RuntimeException("Account has been withdrawn"); // 탈퇴된 계정은 로그인 불가
-        }
 
         // 입력한 비밀번호와 저장된 비밀번호 비교
         if (passwordEncoder.matches(userDto.getUserpw(), user.getUserpw())) {
@@ -84,25 +75,69 @@ public class UserService {
             throw new RuntimeException("Invalid credentials"); // 비밀번호 불일치 예외 처리
         }
     }
-
-    // 전체 출력
-    public List<User> findAll() {
-        return userRepository.findAll();
+    
+    // 아이디 중복 확인 메서드
+    public boolean isUserIdAvailable(String userid) {
+        Optional<User> user = userRepository.findByUserid(userid);
+        //System.out.println("조회된 사용자: " + user);
+        return user.isEmpty();  // 값이 없으면 true 반환, 중복이 없다는 의미
     }
+
+    
+    //전체 출력
+    public List<User> findAll(){
+		return userRepository.findAll();
+	}
     
     // 사용자 삭제
     public void deleteUserById(int usernumber) {
         userRepository.deleteById(usernumber);  // usernumber로 사용자 삭제
     }
 
-    // 사용자 비활성화 (탈퇴 처리)
-    public void deactivateUser(String userid) {
-        Optional<User> optionalUser = userRepository.findByUserid(userid);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setStatus("WITHDRAWN"); // 상태를 'WITHDRAWN'으로 설정
-            user.setUpdated(LocalDateTime.now());
-            userRepository.save(user);
+ // ValidationUserDTO를 사용한 회원가입 메서드
+    public void registerWithValidation(@Valid ValidationUserDTO validationUserDTO) {
+        // 비밀번호 확인 로직
+        if (!validationUserDTO.getUserpw().equals(validationUserDTO.getUserpwConfirm())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
+        // ValidationUserDTO를 User 엔티티로 변환
+        User user = toUserEntity(validationUserDTO);
+
+        // 사용자 저장
+        userRepository.save(user);
+    }
+
+    // ValidationUserDTO를 User 엔티티로 변환하는 메서드
+    private User toUserEntity(ValidationUserDTO validationUserDTO) {
+        User user = new User();
+        user.setUserid(validationUserDTO.getUserid());
+        user.setUserpw(passwordEncoder.encode(validationUserDTO.getUserpw())); // 비밀번호 암호화
+        user.setRealusername(validationUserDTO.getRealusername());
+        user.setEmailUsername(validationUserDTO.getEmailUsername());
+        user.setEmailDomain(validationUserDTO.getEmailDomain());
+        user.setPhone1(validationUserDTO.getPhone1());
+        user.setPhone2(validationUserDTO.getPhone2());
+        user.setPhone3(validationUserDTO.getPhone3());
+        user.setPostalcode(validationUserDTO.getPostalcode());
+        user.setStreetaddress(validationUserDTO.getStreetaddress());
+        user.setDetailedaddress(validationUserDTO.getDetailedaddress());
+        user.setTermsagreed(validationUserDTO.getTermsagreed());
+        
+        // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
+        if (validationUserDTO.getRole() != null) {
+            user.setRole(validationUserDTO.getRole());
+        } else {
+            user.setRole(User.Role.USER);  // 기본값 설정
+        }
+
+        // 기타 필드 설정
+        user.setIsactive(1); // 기본적으로 활성화된 계정
+        user.setCreated(LocalDateTime.now());
+        user.setUpdated(LocalDateTime.now());
+        user.setLastlogin(null); // 초기 로그인 시간
+        user.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
+
+        return user;
     }
 }

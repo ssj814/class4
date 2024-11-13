@@ -3,7 +3,7 @@ package com.example.security;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 
 public class SecurityUser extends User{
 
@@ -12,9 +12,9 @@ public class SecurityUser extends User{
 //	public SecurityUser(Member member) {
 //		super(member.getId(), "{noop}"+member.getPassword(), AuthorityUtils.createAuthorityList(member.getRole().toString()));
 //	}
-
+	
 	//암호화 사용
-	public SecurityUser(UserDto userdto) {
+	public SecurityUser(UserDTO userdto) {
 		super(userdto.getUserid(), userdto.getUserpw(), AuthorityUtils.createAuthorityList("ROLE_" + userdto.getRole()));
 		// 시큐리티에서 ROLE_**로 데이터 값을 사용하기때문에 "ROLE_" + userdto.getRole()로 설정해야함
 	}

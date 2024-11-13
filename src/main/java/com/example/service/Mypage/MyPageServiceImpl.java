@@ -1,12 +1,14 @@
 package com.example.service.Mypage;
 
 import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.example.dto.CartProductDTO;
 import com.example.dto.ProductReviewDTO;
-import com.example.dto.user.UserDto;
+import com.example.dto.user.UserDTO;
 
 @Service
 public class MyPageServiceImpl {
@@ -15,7 +17,7 @@ public class MyPageServiceImpl {
     private SqlSession sqlSession;
 
     // 사용자 정보 가져오기
-    public UserDto getUserInfo(String userId) {
+    public UserDTO getUserInfo(String userId) {
         return sqlSession.selectOne("UserMapper.selectUserInfo", userId);
     }
 

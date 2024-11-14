@@ -73,9 +73,19 @@
     }
 </script>
 
-<form action="<c:url value='/user/updateProfile'/>" method="post" modelAttribute="validationUserDTO">
-    <b>[ 회원 정보 수정 ]</b>
+<form action="<c:url value='/mypage?page=editInfo'/>" method="post"  enctype="multipart/form-data">
+    <h1><b>[ 회원 정보 수정 ]</b></h1>
+    <hr>
     <table border="1">
+         <tr>
+            <td>프로필 사진:</td>
+            <td>
+                <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*">
+                <c:if test="${not empty validationUserDTO.profilePictureUrl}">
+                    <img src="${validationUserDTO.profilePictureUrl}" alt="프로필 사진" width="100" height="100">
+                </c:if>
+            </td>
+        </tr>
         <tr>
             <td>아이디:</td>
             <td>

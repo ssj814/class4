@@ -168,6 +168,7 @@ public class UserService {
         user.setDetailedaddress(validationUserDTO.getDetailedaddress());
         user.setUpdated(LocalDateTime.now());
         user.setGender(validationUserDTO.getGender());
+        user.setProfilepicture(validationUserDTO.getProfilePictureUrl());
         // 변경된 사용자 정보 저장
         userRepository.save(user);
     }
@@ -194,7 +195,9 @@ public class UserService {
         } else {
             user.setRole(User.Role.USER);  // 기본값 설정
         }
-
+        if (validationUserDTO.getProfilePictureUrl() != null && !validationUserDTO.getProfilePictureUrl().isEmpty()) {
+            user.setProfilepicture(validationUserDTO.getProfilePictureUrl());
+        }
         // 기타 필드 설정
         user.setIsactive(1); // 기본적으로 활성화된 계정
         user.setCreated(LocalDateTime.now());

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script type="text/javascript">
 function checkUserId() {
@@ -52,15 +53,21 @@ function checkUserId() {
 
 
 
-    function checkPasswordMatch() {
-        var userpw = document.getElementById("userpw").value;
-        var userpwConfirm = document.getElementById("userpwConfirm").value;
-        if (userpw !== userpwConfirm) {
-            document.getElementById("passwordStatus").innerHTML = "비밀번호가 일치하지 않습니다.";
-        } else {
-            document.getElementById("passwordStatus").innerHTML = "";
-        }
-    }
+	function checkPasswordMatch() {
+	    var password = document.getElementById("userpw").value; // 수정된 부분
+	    var confirmPassword = document.getElementById("confirm_password").value;
+	    
+	    if (password !== confirmPassword) {
+	        document.getElementById("passwordMatchStatus").textContent = "비밀번호가 일치하지 않습니다.";
+	        document.getElementById("passwordMatchStatus").style.color = "red";
+	        
+	    } else {
+	        document.getElementById("passwordMatchStatus").textContent = "비밀번호가 일치합니다.";
+	        document.getElementById("passwordMatchStatus").style.color = "green";
+	    }
+	}
+
+
 
     function openPostcode() {
         new daum.Postcode({
@@ -73,7 +80,9 @@ function checkUserId() {
 
     function togglePasswordVisibility(passwordFieldId) {
         var passwordField = document.getElementById(passwordFieldId);
-        var toggleIconId = 'toggleUserpw' + (passwordFieldId === 'userpw' ? '' : 'Confirm') + 'Icon';
+        
+        // 비밀번호와 비밀번호 확인을 구별하여 아이콘 ID를 설정
+        var toggleIconId = (passwordFieldId === 'userpw') ? 'toggleUserpwIcon' : 'toggleConfirmPasswordIcon';
         var toggleIcon = document.getElementById(toggleIconId);
 
         if (!toggleIcon) {
@@ -81,22 +90,23 @@ function checkUserId() {
             return;
         }
 
+        // 비밀번호 필드 타입을 텍스트 또는 패스워드로 전환
         if (passwordField.type === "password") {
             passwordField.type = "text";
-            toggleIcon.textContent = "🙈";
+            toggleIcon.textContent = "🙈"; // 텍스트 모드로 전환
         } else {
             passwordField.type = "password";
-            toggleIcon.textContent = "👁️";
+            toggleIcon.textContent = "👁️"; // 패스워드 모드로 전환
         }
     }
+
 
     function checkPasswordStrength() {
         var password = document.getElementById("userpw").value;
         var strengthText = document.getElementById("passwordStrength");
-        var strengthBar = document.getElementById("strengthBar");
 
         var strength = "약함";
-        var className = "weak";
+        var colorClass = "text-danger";  // 기본적으로 약함은 빨강(경고)
 
         if (password.length >= 8) {
             let hasUpper = /[A-Z]/.test(password);
@@ -108,175 +118,173 @@ function checkUserId() {
 
             if (strengthCount === 4) {
                 strength = "강함";
-                className = "strong";
+                colorClass = "text-success";  // 강함은 초록색
             } else if (strengthCount === 3) {
                 strength = "보통";
-                className = "medium";
+                colorClass = "text-warning";  // 보통은 노랑(주황)
             }
         }
 
+        // 비밀번호 강도 텍스트 변경
         strengthText.textContent = "비밀번호 강도: " + strength;
-        strengthBar.className = "strengthBar " + className;
+
+        // 글자 색상만 변경
+        strengthText.className = "mt-2 " + colorClass;  // 강도에 따른 색상만 변경
     }
 
-    function showPasswordTooltip() {
-        var tooltip = document.getElementById("passwordTooltip");
-        tooltip.style.display = "block";
 
-        var input = document.getElementById("userpw");
-        var rect = input.getBoundingClientRect();
 
-        // 툴팁을 입력 필드 바로 아래에 위치
-        tooltip.style.top = (rect.bottom + window.scrollY + 5) + "px"; // 입력 필드 아래에 위치 (margin 추가)
-        tooltip.style.left = (rect.left + window.scrollX) + "px"; // 입력 필드의 왼쪽 위치
-    }
-
-    function hidePasswordTooltip() {
-        document.getElementById("passwordTooltip").style.display = "none";
-    }
 
 
 </script>
 
-<form action="<c:url value='/register'/>" method="post" modelAttribute="validationUserDTO">
-    <b>[ 회원 등록 ]</b>
-    <%= request.getContextPath() %>
-    <table border="1">
-        <tr>
-		    <td>아이디:</td>
-		    <td>
-		        <input type="text" id="userid" name="userid" required>
-		        <button type="button" onclick="checkUserId()">중복체크</button>
-		        <span>* 4~20자리 영문 소문자와 숫자만 사용 가능합니다.</span>
-		        <span id="userIdStatus"></span>
-		        <c:if test="${not empty validationUserDTO.useridError}">
-		            <span style="color:red;">${validationUserDTO.useridError}</span>
-		        </c:if>
-		    </td>
-		</tr>
-        <tr>
-		    <td>비밀번호:</td>
-		    <td>
-		        <div style="position: relative; display: inline-block;">
-		            <!-- 비밀번호 입력 필드 -->
-		            <input type="password" id="userpw" name="userpw" required style="padding-right: 30px;"
-		                   oninput="checkPasswordStrength()" onfocus="showPasswordTooltip()" onblur="hidePasswordTooltip()">
-		            
-		            <!-- 비밀번호 강도 툴팁 -->
-		            <div id="passwordTooltip">
-		                <div id="passwordStrength">비밀번호 강도: 약함</div>
-		                <div id="strengthBar" class="strengthBar"></div>
-		            </div>
-		
-		            <!-- 비밀번호 가시성 토글 아이콘 -->
-		            <span id="toggleUserpwIcon" onclick="togglePasswordVisibility('userpw')"
-		                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-		                👁️
-		            </span>
-		            <span>* 8~20자, 영문 대소문자, 숫자, 특수문자 포함</span>
-		
-		            <c:if test="${not empty validationUserDTO.userpwError}">
-		                <span style="color:red;">${validationUserDTO.userpwError}</span>
-		            </c:if>
-		        </div>
-		    </td>
-		</tr>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-		<tr>
-		    <td>비밀번호 확인:</td>
-		    <td>
-		        <div style="position: relative; display: inline-block;">
-		            <input type="password" id="userpwConfirm" name="userpwConfirm" onkeyup="checkPasswordMatch()" required style="padding-right: 30px;">
-		            <span id="toggleUserpwConfirmIcon" onclick="togglePasswordVisibility('userpwConfirm')" 
-		                  style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">
-		                👁️
-		            </span>
-		            <span id="passwordStatus"></span>
-		            
-		            <c:if test="${not empty validationUserDTO.userpwConfirmError}">
-		                <span style="color:red;">${validationUserDTO.userpwConfirmError}</span>
-		            </c:if>
-		        </div>
-		    </td>
-		</tr>
+<div class="container-fluid" style="max-width: 1300px;">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <form action="<c:url value='/register'/>" method="post" modelAttribute="validationUserDTO">
+                <h4 class="text-center my-4"> 회원가입 </h4>
+                <table class="table table-bordered mx-auto" style="font-size: 15px;">
+                    <tr>
+                        <tr>
+						    <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">아이디:</td>
+						    <td>
+						        <div class="input-group">
+						            <input type="text" id="userid" name="userid" class="form-control" style="font-size: 12px;" placeholder="4~20자리 영문 소문자와 숫자만 사용 가능합니다." required>
+						            <button type="button" class="btn btn-outline-secondary" style="font-size: 13px;" onclick="checkUserId()">중복체크</button>
+						        </div>
+						        <div id="userIdStatus" class="mt-1" style="min-height: 1.5em;"></div>
+						        <c:if test="${not empty validationUserDTO.useridError}">
+						            <span class="text-danger">${validationUserDTO.useridError}</span>
+						        </c:if>
+						    </td>
+						</tr>
+						
+						<tr>
+						    <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">비밀번호:</td>
+						    <td>
+						        <div class="position-relative">
+						            <input type="password" id="userpw" name="userpw" class="form-control" style="font-size: 12px;" placeholder="8~20자, 영문 대소문자, 숫자, 특수문자 포함" required oninput="checkPasswordStrength()">
+						            <span id="toggleUserpwIcon" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePasswordVisibility('userpw')">👁️</span>
+						        </div>
+						        <div id="passwordStrength" class="mt-2 text-muted" style="min-height: 1.5em;"></div>
+						        <c:if test="${not empty validationUserDTO.userpwError}">
+						            <span class="text-danger">${validationUserDTO.userpwError}</span>
+						        </c:if>
+						    </td>
+						</tr>
+						
+						<tr>
+						    <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">비밀번호 확인:</td>
+						    <td>
+						        <div class="position-relative">
+						            <input type="password" id="confirm_password" name="confirm_password" class="form-control" style="font-size: 12px;" placeholder="비밀번호를 다시 입력하세요" required oninput="checkPasswordMatch()">
+						            <span id="toggleConfirmPasswordIcon" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePasswordVisibility('confirm_password')">👁️</span>
+						        </div>
+						        <div id="passwordMatchStatus" class="mt-1" style="min-height: 1.5em;"></div>
+						        <c:if test="${not empty validationUserDTO.confirmPasswordError}">
+						            <span class="text-danger">${validationUserDTO.confirmPasswordError}</span>
+						        </c:if>
+						    </td>
+						</tr>
+						
+						<tr>
+						    <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">이메일:</td>
+						    <td>
+						        <div class="input-group">
+						            <input type="text" id="emailUsername" name="emailUsername" class="form-control" required> 
+						            <span class="input-group-text">@</span>
+						            <select id="emailDomain" name="emailDomain" class="form-select" required>
+						                <option value="" style="font-size: 13px;">선택하세요</option>
+						                <option value="gmail.com">gmail.com</option>
+						                <option value="naver.com">naver.com</option>
+						                <option value="daum.net">daum.net</option>
+						            </select>
+						        </div>
+						        <c:if test="${not empty validationUserDTO.emailUsernameError}">
+						            <span class="text-danger">${validationUserDTO.emailUsernameError}</span>
+						        </c:if>
+						    </td>
+						</tr>
+                    
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">전화번호:</td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" id="phone1" name="phone1" class="form-control" required> -
+                                <input type="text" id="phone2" name="phone2" class="form-control" required> -
+                                <input type="text" id="phone3" name="phone3" class="form-control" required>
+                            </div>
+                            <c:if test="${not empty validationUserDTO.phone1Error}">
+                                <span class="text-danger">${validationUserDTO.phone1Error}</span>
+                            </c:if>
+                        </td>
+                    </tr>
 
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">실명:</td>
+                        <td>
+                            <input type="text" id="realusername" name="realusername" class="form-control" required>
+                            <c:if test="${not empty validationUserDTO.realusernameError}">
+                                <span class="text-danger">${validationUserDTO.realusernameError}</span>
+                            </c:if>
+                        </td>
+                    </tr>
 
-        <tr>
-            <td>이메일:</td>
-            <td>
-                <input type="text" id="emailUsername" name="emailUsername" required> @ 
-                <select id="emailDomain" name="emailDomain" required>
-                    <option value="">선택하세요</option>
-                    <option value="gmail.com">gmail.com</option>
-                    <option value="naver.com">naver.com</option>
-                    <option value="daum.net">daum.net</option>
-                </select>
-                <c:if test="${not empty validationUserDTO.emailUsernameError}">
-                    <span style="color:red;">${validationUserDTO.emailUsernameError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>전화번호:</td>
-            <td>
-                <input type="text" id="phone1" name="phone1" required> - 
-                <input type="text" id="phone2" name="phone2" required> - 
-                <input type="text" id="phone3" name="phone3" required>
-                <c:if test="${not empty validationUserDTO.phone1Error}">
-                    <span style="color:red;">${validationUserDTO.phone1Error}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>실명:</td>
-            <td>
-                <input type="text" id="realusername" name="realusername" required>
-                <c:if test="${not empty validationUserDTO.realusernameError}">
-                    <span style="color:red;">${validationUserDTO.realusernameError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>우편번호:</td>
-            <td>
-                <input type="text" id="postalcode" name="postalcode" readonly required>
-                <button type="button" onclick="openPostcode()">주소 찾기</button>
-                <c:if test="${not empty validationUserDTO.postalcodeError}">
-                    <span style="color:red;">${validationUserDTO.postalcodeError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>도로명 주소:</td>
-            <td>
-                <input type="text" id="streetaddress" name="streetaddress" readonly required>
-                <c:if test="${not empty validationUserDTO.streetaddressError}">
-                    <span style="color:red;">${validationUserDTO.streetaddressError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>상세 주소:</td>
-            <td>
-                <input type="text" id="detailedaddress" name="detailedaddress" required>
-                <c:if test="${not empty validationUserDTO.detailedaddressError}">
-                    <span style="color:red;">${validationUserDTO.detailedaddressError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td>약관 동의:</td>
-            <td>
-                <input type="checkbox" id="termsagreed" name="termsagreed" value="1" required> 동의합니다
-                <c:if test="${not empty validationUserDTO.termsagreedError}">
-                    <span style="color:red;">${validationUserDTO.termsagreedError}</span>
-                </c:if>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <input type="submit" value="회원가입">
-            </td>
-        </tr>
-    </table>
-</form>
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">우편번호:</td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" id="postalcode" name="postalcode" class="form-control" readonly required>
+                                <button type="button" class="btn btn-outline-secondary" style="font-size: 13px;" onclick="openPostcode()">주소 찾기</button>
+                            </div>
+                            <c:if test="${not empty validationUserDTO.postalcodeError}">
+                                <span class="text-danger">${validationUserDTO.postalcodeError}</span>
+                            </c:if>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">도로명 주소:</td>
+                        <td>
+                            <input type="text" id="streetaddress" name="streetaddress" class="form-control" readonly required>
+                            <c:if test="${not empty validationUserDTO.streetaddressError}">
+                                <span class="text-danger">${validationUserDTO.streetaddressError}</span>
+                            </c:if>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">상세 주소:</td>
+                        <td>
+                            <input type="text" id="detailedaddress" name="detailedaddress" class="form-control" required>
+                            <c:if test="${not empty validationUserDTO.detailedaddressError}">
+                                <span class="text-danger">${validationUserDTO.detailedaddressError}</span>
+                            </c:if>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">약관 동의:</td>
+                        <td>
+                            <div class="form-check">
+                                <input type="checkbox" id="termsagreed" name="termsagreed" value="1" class="form-check-input" required>
+                                <label for="termsagreed" class="form-check-label">동의합니다</label>
+                            </div>
+                            <c:if test="${not empty validationUserDTO.termsagreedError}">
+                                <span class="text-danger">${validationUserDTO.termsagreedError}</span>
+                            </c:if>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2" class="text-center">
+                            <button type="submit" class="btn btn-primary">회원가입</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>

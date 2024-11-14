@@ -54,7 +54,7 @@
                 <div id="collapseUser" class="accordion-collapse collapse show" aria-labelledby="headingUser" data-bs-parent="#accordionSidebar">
                     <div class="accordion-body">
                         <a href="${pageContext.request.contextPath}/mypage?page=userInfo" class="nav-link">회원정보</a>
-                        <a href="${pageContext.request.contextPath}/mypage?page=editInfo" class="nav-link">회원정보수정</a>
+                        <a href="${pageContext.request.contextPath}/user/updateProfile" class="nav-link">회원정보수정</a>
                         <a href="${pageContext.request.contextPath}/mypage?page=deleteAccount" class="nav-link">회원탈퇴</a>
                     </div>
                 </div>

@@ -22,16 +22,16 @@ public class ValidationUserDTO {
     private String streetaddressError;
     private String detailedaddressError;
     private String termsagreedError;
-    
+
     @NotBlank(message = "아이디는 필수 입력값입니다.")
     @Pattern(regexp = "^[a-z0-9]{4,20}$", message = "아이디는 영문 소문자와 숫자 4~20자리여야 합니다.")
     private String userid;
-    
+
     @NotBlank(message = "비밀번호는 필수 입력값입니다.")
     @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", 
             message = "비밀번호는 영문 대소문자, 숫자, 특수기호가 포함된 8~20자여야 합니다.")
     private String userpw;
-    
+
     @NotBlank(message = "비밀번호 확인은 필수 입력값입니다.")
     private String userpwConfirm;
 
@@ -64,8 +64,9 @@ public class ValidationUserDTO {
 
     @NotNull(message = "약관에 동의해야 합니다.")
     private Integer termsagreed;
-    
-    private Role role;
-    
-}
 
+    @NotBlank(message = "성별은 필수 입력값입니다.")
+    private String gender; // 추가된 성별 필드
+
+    private Role role;
+}

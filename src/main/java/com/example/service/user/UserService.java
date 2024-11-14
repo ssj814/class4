@@ -141,6 +141,37 @@ public class UserService {
             userRepository.save(user);
         }
     }
+    
+ // ValidationUserDTO를 사용한 회원 정보 수정 메서드
+    public void updateUserWithValidation(@Valid ValidationUserDTO validationUserDTO) {
+        // 비밀번호 확인 로직 (비밀번호 수정 시에만 적용)
+        if (validationUserDTO.getUserpw() != null && !validationUserDTO.getUserpw().isEmpty()) {
+            if (!validationUserDTO.getUserpw().equals(validationUserDTO.getUserpwConfirm())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+        }
+
+        // 기존 사용자 정보 조회
+        User user = userRepository.findByUserid(validationUserDTO.getUserid())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 수정할 필드 업데이트
+        if (validationUserDTO.getUserpw() != null && !validationUserDTO.getUserpw().isEmpty()) {
+            user.setUserpw(passwordEncoder.encode(validationUserDTO.getUserpw()));
+        }
+        user.setEmailUsername(validationUserDTO.getEmailUsername());
+        user.setEmailDomain(validationUserDTO.getEmailDomain());
+        user.setPhone1(validationUserDTO.getPhone1());
+        user.setPhone2(validationUserDTO.getPhone2());
+        user.setPhone3(validationUserDTO.getPhone3());
+        user.setStreetaddress(validationUserDTO.getStreetaddress());
+        user.setDetailedaddress(validationUserDTO.getDetailedaddress());
+        user.setUpdated(LocalDateTime.now());
+        user.setGender(validationUserDTO.getGender());
+        // 변경된 사용자 정보 저장
+        userRepository.save(user);
+    }
+
     // ValidationUserDTO를 User 엔티티로 변환하는 메서드
     private User toUserEntity(ValidationUserDTO validationUserDTO) {
         User user = new User();

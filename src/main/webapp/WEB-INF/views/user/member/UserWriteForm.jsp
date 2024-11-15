@@ -179,7 +179,7 @@ function checkUserId() {
 						    <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">비밀번호 확인:</td>
 						    <td>
 						        <div class="position-relative">
-						            <input type="password" id="confirm_password" name="confirm_password" class="form-control" style="font-size: 12px;" placeholder="비밀번호를 다시 입력하세요" required oninput="checkPasswordMatch()">
+						            <input type="password" id="userpwConfirm" name="userpwConfirm" class="form-control" style="font-size: 12px;" placeholder="비밀번호를 다시 입력하세요" required oninput="checkPasswordMatch()">
 						            <span id="toggleConfirmPasswordIcon" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer;" onclick="togglePasswordVisibility('confirm_password')">👁️</span>
 						        </div>
 						        <div id="passwordMatchStatus" class="mt-1" style="min-height: 1.5em;"></div>
@@ -212,7 +212,7 @@ function checkUserId() {
                         <td style="vertical-align: middle; white-space: nowrap; min-height: 1.5em;">전화번호:</td>
                         <td>
                             <div class="input-group">
-                                <input type="text" id="phone1" name="phone1" class="form-control" required> -
+                                <input type="text" id="phone1" name="phone1" class="form-control" value="010" required readonly> -
                                 <input type="text" id="phone2" name="phone2" class="form-control" required> -
                                 <input type="text" id="phone3" name="phone3" class="form-control" required>
                             </div>

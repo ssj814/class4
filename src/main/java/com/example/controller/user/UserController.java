@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -66,8 +67,9 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     
     @PostMapping("/register")
-    public String register(@Valid ValidationUserDTO validationUserDTO, BindingResult bindingResult) {
-        logger.info("회원가입 요청 받음"); // 로그 추가
+    public String register(@Valid @ModelAttribute("validationUserDTO") ValidationUserDTO validationUserDTO,
+                           BindingResult bindingResult, Model model) {
+        logger.info("회원가입 요청 받음");
 
         // 중복된 아이디 체크
         System.out.println("중복 아이디 체크 시작: " + validationUserDTO.getUserid());
@@ -83,11 +85,15 @@ public class UserController {
 
         // 중복된 이메일 체크
         String email = validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain();
+        System.out.println("중복 이메일 체크 시작: " + email);
         if (userRepository.findByEmail(email).isPresent()) {
-            bindingResult.rejectValue("email", "error.email", "이미 존재하는 이메일입니다.");
+            bindingResult.rejectValue("emailUsername", "error.email", "이미 존재하는 이메일입니다.");
+            System.out.println("이메일 중복됨");
+        } else {
+            System.out.println("이메일 중복 아님");
         }
 
-        // 유효성 검사 실패 시 폼으로 돌아가기
+        // 유효성 검사 실패 시 다시 폼으로 이동
         if (bindingResult.hasErrors()) {
             logger.error("유효성 검사 실패, 오류들: ");
             bindingResult.getAllErrors().forEach(error -> {
@@ -98,13 +104,17 @@ public class UserController {
                     logger.error("일반 오류 메시지: " + error.getDefaultMessage());
                 }
             });
+            model.addAttribute("validationUserDTO", validationUserDTO);
+            System.out.println("유효성 검사 실패, 다시 폼으로 이동");
             return "user/UserWriteForm";
         }
 
         // 유효성 검사 통과 시 회원 등록 로직
         userService.registerWithValidation(validationUserDTO);
-        return "redirect:/loginForm"; // 회원가입 후 로그인 페이지로 리다이렉트
+        System.out.println("회원가입 성공, 로그인 페이지로 리다이렉트");
+        return "redirect:/loginForm";
     }
+
 
     
 //    @GetMapping("/checkUserId")

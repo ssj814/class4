@@ -22,6 +22,7 @@ public class ValidationUserDTO {
     private String streetaddressError;
     private String detailedaddressError;
     private String termsagreedError;
+    private String confirmPasswordError;
     
     @NotBlank(message = "아이디는 필수 입력값입니다.")
     @Pattern(regexp = "^[a-z0-9]{4,20}$", message = "아이디는 영문 소문자와 숫자 4~20자리여야 합니다.")
@@ -45,12 +46,15 @@ public class ValidationUserDTO {
     private String phone1;
 
     @NotBlank(message = "전화번호는 필수 입력값입니다.")
+    @Pattern(regexp = "^\\d{4}$", message = "전화번호 가운데 자리는 숫자 4자리여야 합니다.")
     private String phone2;
 
     @NotBlank(message = "전화번호는 필수 입력값입니다.")
+    @Pattern(regexp = "^\\d{4}$", message = "전화번호 끝자리는 숫자 4자리여야 합니다.")
     private String phone3;
 
     @NotBlank(message = "실명은 필수 입력값입니다.")
+    @Pattern(regexp = "^[가-힣]+$", message = "실명은 한글로만 입력해야 합니다.")
     private String realusername;
 
     @NotBlank(message = "우편번호는 필수 입력값입니다.")

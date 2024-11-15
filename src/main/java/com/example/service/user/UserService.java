@@ -204,7 +204,8 @@ public class UserService {
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
-
+        user.setGender(validationUserDTO.getGender());
+        
         return user;
     }
 }

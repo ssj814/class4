@@ -17,12 +17,12 @@
     <p>실명: ${userInfo.realusername}</p>
     <p>사용자 ID: ${userInfo.userid}</p>
     <p>이메일: ${userInfo.emailUsername}@${userInfo.emailDomain}</p>
-    <p>생년월일: ${userInfo.birthdate}</p>
+   <%--  <p>생년월일: ${userInfo.birthdate}</p> --%>
     <p>성별: ${userInfo.gender}</p>
     <p>전화번호: ${userInfo.phone1}-${userInfo.phone2}-${userInfo.phone3}</p>
     <p>우편번호: ${userInfo.postalcode}</p>
     <p>주소: ${userInfo.streetaddress} ${userInfo.detailedaddress}</p>
-    <p>닉네임: ${userInfo.nickname}</p>
+   <%--  <p>닉네임: ${userInfo.nickname}</p> --%>
     <p>계정 활성 여부: ${userInfo.isactive}</p>
     <p>최근 로그인: ${userInfo.lastlogin}</p>
 </body>

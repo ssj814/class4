@@ -80,7 +80,7 @@
 				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							href="${pageContext.request.contextPath}/loginForm" style="color: pink;">LOGIN/JOIN</a></li>
 					</ul>
 				</c:if>
 			</div>

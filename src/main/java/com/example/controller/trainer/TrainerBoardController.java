@@ -166,14 +166,6 @@ public class TrainerBoardController {
 	    // 콘텐츠 줄 바꿈을 <br>로 변환
 	    dto.setContent(dto.getContent().replace("\r\n", "<br>"));
 	    
-	 // 수정하려는 게시글의 작성자와 로그인된 사용자가 일치하는지 확인
-        TrainerBoardDTO existingDto = service.retrieve(dto.getPostid());
-        if (existingDto == null || !existingDto.getUserid().equals(userid)) {
-            // 작성자가 다르면 수정 불가 처리
-        	System.out.println(userid + "==="+existingDto);
-            return "redirect:/TrainerBoard"; // 권한이 없으므로 메인 페이지로 리다이렉트
-        }
-        
 	    try {
 	        // 기존 이미지가 있을 경우
 	        if (dto.getImagename() != null) { 
@@ -253,11 +245,6 @@ public class TrainerBoardController {
 	    try {
             // 게시글 정보 조회
             TrainerBoardDTO dto = service.retrieve(postid);
-            if (dto == null || !dto.getUserid().equals(userid)) {
-                // 작성자가 다르면 삭제 불가 처리
-                redirectAttributes.addFlashAttribute("message", "권한이 없습니다.");
-                return "redirect:/TrainerBoard";
-            }
 	        String imgName = dto.getImagename();
 	        
 	        // 이미지 파일 삭제
@@ -345,15 +332,10 @@ public class TrainerBoardController {
         // 댓글 수정 서비스 호출
         coservice.updateTrainerboardComment(commentDTO);
         
-     // 댓글 작성자와 로그인된 사용자가 일치하는지 확인
-        if (commentDTO != null && commentDTO.getUserId() != null && commentDTO.getUserId().equals(userid)) {
-            commentDTO.setCommContent(commContent);  // 수정된 댓글 내용 설정
-            coservice.updateTrainerboardComment(commentDTO);  // 댓글 수정
+        commentDTO.setCommContent(commContent);  // 수정된 댓글 내용 설정
+        coservice.updateTrainerboardComment(commentDTO);  // 댓글 수정
 
-            return "success";
-        } else {
-            return "권한이 없습니다.";  // 작성자만 수정 가능
-        }
+        return "success";
     }
     
 
@@ -368,14 +350,9 @@ public class TrainerBoardController {
     	    // 해당 댓글을 가져옵니다.
     	    TrainerBoardCommentDTO commentDTO = coservice.getCommentByPostId(commId); // commId로 댓글 조회
 
-    	    // 댓글이 존재하고 작성자와 로그인된 사용자가 일치하는지 확인
-    	    if (commentDTO != null && commentDTO.getUserId().equals(userId)) {
-    	        // 댓글 및 대댓글 삭제
-    	        coservice.deleteTrainerboardComment(commId); // 댓글 삭제
-    	        return "success"; // 삭제 성공
-    	    } else {
-    	        return "권한이 없습니다."; // 작성자만 삭제 가능
-    	    }
+	        // 댓글 및 대댓글 삭제
+	        coservice.deleteTrainerboardComment(commId); // 댓글 삭제
+	        return "success"; // 삭제 성공
     	}
     
 

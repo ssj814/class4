@@ -51,30 +51,33 @@
                     <!-- 회원가입 버튼 -->
                     <button id="member" class="btn btn-outline-dark btn-block" style="margin-top: 5px; width: 100%;">회원가입</button>
                 </div>
-            </div>
-            <!-- 소셜 로그인 -->
-            <!--
-            <div class="social-login mt-4">
-                <h5 class="text-center">간편 로그인</h5>
-                <div class="row">
-                    <div class="col-4">
-                        <a href="http://localhost:8090/app/oauth2/authorization/google?redirect_uri=http://localhost:8090/app&mode=login">
-                            <button class="btn btn-danger btn-block">구글 로그인</button>
-                        </a>
+                <!-- 소셜 로그인 -->
+                <div class="social-login mt-4">
+                    <!-- 간편 로그인 위 점선 추가 -->
+                    <div class="text-center mb-3">
+                        <hr style="border-top: 2px dashed #007bff; width: 50%; margin: 0 auto;">
                     </div>
-                    <div class="col-4">
-                        <a href="http://localhost:8090/app/oauth2/authorization/naver?redirect_uri=http://localhost:8090/app&mode=login">
-                            <button class="btn btn-success btn-block">네이버 로그인</button>
-                        </a>
-                    </div>
-                    <div class="col-4">
-                        <a href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=login">
-                            <button class="btn btn-warning btn-block">카카오 로그인</button>
-                        </a>
+                    <h5 class="text-center mb-4">간편 로그인</h5>
+                    <!-- 소셜 로그인 버튼 중앙 정렬 및 동일 크기 -->
+                    <div class="d-flex flex-column align-items-center">
+                        <div class="text-center mb-4">
+                            <a href="http://localhost:8090/app/oauth2/authorization/google?redirect_uri=http://localhost:8090/app&mode=login">
+                                <button class="btn btn-danger btn-block">구글 로그인</button>
+                            </a>
+                        </div>
+                        <div class="text-center mb-4">
+                            <a href="http://localhost:8090/app/oauth2/authorization/naver?redirect_uri=http://localhost:8090/app&mode=login">
+                                <button class="btn btn-success btn-block">네이버 로그인</button>
+                            </a>
+                        </div>
+                        <div class="text-center mb-4">
+                            <a href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=login">
+                                <button class="btn btn-warning btn-block">카카오 로그인</button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            -->
         </div>
     </div>
 </div>

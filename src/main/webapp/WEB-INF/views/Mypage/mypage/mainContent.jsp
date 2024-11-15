@@ -13,7 +13,7 @@
 <%
     } else if ("editInfo".equals(currentPage)) {
 %>
-        <jsp:include page="../../user/member/UserWriteForm.jsp" />
+        <jsp:include page="../../user/member/updateuser.jsp" />
 <%
     } else if ("deleteAccount".equals(currentPage)) {
 %>

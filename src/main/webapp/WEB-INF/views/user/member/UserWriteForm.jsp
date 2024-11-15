@@ -237,6 +237,23 @@ function checkUserId() {
             </td>
         </tr>
         <tr>
+            <td>성별:</td>
+            <td>
+                <input type="radio" id="male" name="gender" value="M" ${validationUserDTO.gender == 'M' ? 'checked' : ''}>
+                <label for="male">남성</label>
+                
+                <input type="radio" id="female" name="gender" value="F" ${validationUserDTO.gender == 'F' ? 'checked' : ''}>
+                <label for="female">여성</label>
+                
+                <input type="radio" id="other" name="gender" value="O" ${validationUserDTO.gender == 'O' ? 'checked' : ''}>
+                <label for="other">기타</label>
+                
+                <c:if test="${not empty validationUserDTO.genderError}">
+                    <span style="color:red;">${validationUserDTO.genderError}</span>
+                </c:if>
+            </td>
+        </tr>
+        <tr>
             <td>우편번호:</td>
             <td>
                 <input type="text" id="postalcode" name="postalcode" readonly required>

@@ -8,11 +8,25 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+
+import com.example.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.example.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.example.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.example.oauth2.handler.OAuth2LogoutHandler;
+import com.example.oauth2.service.CustomOAuth2UserService;
+
 import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 public class CustomSecurityConfig {
+	
+	private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final OAuth2LogoutHandler OAuth2LogoutHandler;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -21,7 +35,8 @@ public class CustomSecurityConfig {
     	//페이지 권한 설정
     	.authorizeHttpRequests(authorize -> authorize
     	.requestMatchers("/admin/**").hasRole("ADMIN")
-    	.requestMatchers("/trainer/**").hasAnyRole("TRAINER", "ADMIN")
+
+    	.requestMatchers("/trainer/**").hasRole("TRAINER")
     	.requestMatchers("/user/**").authenticated() // /user/** 경로는 인증된 경우 접근 
 
     	//추후 트레이너 페이지 추가 시
@@ -29,7 +44,7 @@ public class CustomSecurityConfig {
     	.anyRequest().permitAll() // 나머지 요청 허용
     	 )
         .formLogin(form -> form
-            .loginPage("/login") // 로그인 페이지 설정. UserController의 loginForm 경로로 변경
+            .loginPage("/login") // 로그인 페이지 설정
             .usernameParameter("userid") // submit할 아디이
             .passwordParameter("userpw") // submit할 비밀번호
             .defaultSuccessUrl("/", true) // 로그인 성공 후 이동할 URL
@@ -37,11 +52,20 @@ public class CustomSecurityConfig {
             .permitAll() // 모든 사용자에게 로그인 페이지 허용
     	)
         .logout(logout -> logout
-        		//.logoutSuccessHandler(OAuth2LogoutHandler) //오스관련 로그아웃핸들러
+        		.logoutSuccessHandler(OAuth2LogoutHandler)
                 .invalidateHttpSession(true) // 세션 무효화
                 .deleteCookies("JSESSIONID") // 필요한 쿠키 삭제
-                .logoutSuccessUrl("/") // 로그아웃 성공 후 리다이렉션할 페이지 설정
                 .permitAll()
+        )
+        .oauth2Login(configure -> // OAuth2 로그인 설정
+        	configure
+        		.loginPage("/login") //커스텀로그인 페이지로 이동
+    			.authorizationEndpoint(config -> // 인증 요청 엔드포인트 설정
+    				config.authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)) // OAuth2 요청 저장소 설정
+    			.userInfoEndpoint(config -> // 사용자 정보 엔드포인트 설정
+    				config.userService(customOAuth2UserService)) // 사용자 정보 처리 서비스 설정
+				.successHandler(oAuth2AuthenticationSuccessHandler) // OAuth2 인증 성공 시 핸들러
+				.failureHandler(oAuth2AuthenticationFailureHandler) // OAuth2 인증 실패 시 핸들러
         )
         // status code 핸들링
         .exceptionHandling(exception -> exception

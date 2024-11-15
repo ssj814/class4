@@ -101,19 +101,19 @@
 				<!-- toggle list-->
 				<ul class="collapse list-group list-group-flush" id="extra-items2"
 					style="margin-left: 20px;">
-					<li class="list-group-item fst-italic"><a href="#"
-						class="text-secondary" style="text-decoration: none">Find a Trainer</a></li>
+					<li class="list-group-item fst-italic"><a href="${pageContext.request.contextPath}/trainer_list"
+						class="text-secondary" style="text-decoration: none">Find Trainer</a></li>
 					<li class="list-group-item fst-italic"
 						style="border-bottom: 1px solid rgba(0, 0, 0, 0.125);"><a
-						href="#" class="text-secondary" style="text-decoration: none">Trainer
+						href="${pageContext.request.contextPath}/TrainerBoard" class="text-secondary" style="text-decoration: none">Trainer
 							Tips</a></li>
 				</ul>
 				<li class="list-group-item list-group-item-action fw-bolder">
-					<a href="#" class="text-dark" style="text-decoration: none">
+					<a href="${pageContext.request.contextPath}/sicdan_list" class="text-dark" style="text-decoration: none">
 						<i class="fa-solid fa-utensils"></i> Meal Plan
 					</a></li>
 				<li class="list-group-item list-group-item-action fw-bolder"><a
-					href="#" class="text-dark" style="text-decoration: none">
+					href="${pageContext.request.contextPath}/notice" class="text-dark" style="text-decoration: none">
 					<i class="fa-solid fa-check"></i> Notice</a></li>
 			</ul>
 		</div>

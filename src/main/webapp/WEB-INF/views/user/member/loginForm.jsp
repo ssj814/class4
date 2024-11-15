@@ -70,11 +70,11 @@
                                 <button class="btn btn-success btn-block">네이버 로그인</button>
                             </a>
                         </div>
-                        <div class="text-center mb-4">
+                        <!-- <div class="text-center mb-4">
                             <a href="http://localhost:8090/app/oauth2/authorization/kakao?redirect_uri=http://localhost:8090/app&mode=login">
                                 <button class="btn btn-warning btn-block">카카오 로그인</button>
                             </a>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

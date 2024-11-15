@@ -30,13 +30,7 @@
             left: 0;
             width: 100%;
         }
-        footer a {
-            color: #ffffff;
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
+
     </style>
 </head>
 <body>

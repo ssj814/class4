@@ -88,7 +88,7 @@
         </table>
         <br>
         <div class="button">
-         <c:if test="${dto.userid == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name && fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'TRAINER')}">
+         <c:if test="${dto.userid == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name || fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
          <!-- 세션에 저장된 글쓴이 userid와 dto에 저장된 userid가 같은ㄴ지 && TRAINER권한으로 된 사람인지 확인 -->
       <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
 	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
@@ -146,7 +146,7 @@
 						<tr class="reply">
 							<td class="reply-createdate">${comment.comCrdate}</td>
 							<td class="reply-button">
-								<c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
+								<c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name || fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
 									<input type="button" class="edit-button" value="수정" data-id="${comment.commId}">
 									<input type="button" class="delete-button" value="삭제" data-id="${comment.commId}"> 
 								</c:if>	

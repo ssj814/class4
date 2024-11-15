@@ -8,8 +8,11 @@
 </head>
 <body>
     <h1>회원 정보</h1>
-    
-    <p class="mt-3"><img src="<c:url value='/images/mypage/default.webp'/>" alt="프로필 사진" style="width: 100px; height: 100px"></p>
+
+
+<p class="mt-3">
+      <img src="<c:url value='${userInfo.profilepicture}' />" alt="프로필 사진" style="width: 100px; height: 100px">
+</p>
     <p>회원 번호: ${userInfo.usernumber}</p>
     <p>실명: ${userInfo.realusername}</p>
     <p>사용자 ID: ${userInfo.userid}</p>

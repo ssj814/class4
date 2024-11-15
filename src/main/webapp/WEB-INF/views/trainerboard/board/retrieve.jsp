@@ -135,7 +135,7 @@
 		                        <div class="edit-content-container" style="display:none;">
 		                            <textarea class="edit-content-textarea">${comment.commContent}</textarea>
 		                            <div class="edit-buttons">
-			                            <c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
+			                            <c:if test="${comment.userId == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name || fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
 			                                <button class="save-edit-button" data-id="${comment.commId}">수정</button>
 			                                <button class="cancel-edit-button">취소</button>
 			                            </c:if>

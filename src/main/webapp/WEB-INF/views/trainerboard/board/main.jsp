@@ -95,7 +95,8 @@
 
 		<br>
 
-		<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'TRAINER')}">
+		<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'TRAINER') 
+			or fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
 		<!-- TRAINER로 권한 설정된 회원만 글쓰기 보이게 -->
 		<div class="button">
 			<button class="buttonmulti" onclick="location.href='${pageContext.request.contextPath}/trainerboardWrite'">글쓰기</button>

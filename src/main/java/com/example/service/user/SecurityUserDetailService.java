@@ -39,7 +39,9 @@ public class SecurityUserDetailService  implements UserDetailsService {
 		if (user.getIsactive() == 0) {
 			throw new RuntimeException("Account has been withdrawn"); // 비활성화된 계정 로그인 불가
 		}
+
 		System.out.println("UserDetailServie: dto==="+ user);
+		
 		
 		 // User 객체를 UserDto로 변환
 	    UserDTO userdto = new UserDTO();

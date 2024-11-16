@@ -75,7 +75,7 @@
     </div>
 
     <!-- 메인 콘텐츠 -->
-    <div class="content">
+    <div class="content" style="margin-bottom: 150px;">
         <jsp:include page="mainContent.jsp" />
     </div>
 

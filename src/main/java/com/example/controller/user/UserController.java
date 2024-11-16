@@ -93,18 +93,72 @@ public class UserController {
             System.out.println("이메일 중복 아님");
         }
 
-        // 유효성 검사 실패 시 다시 폼으로 이동
+     // 유효성 검사 실패 시 다시 폼으로 이동
         if (bindingResult.hasErrors()) {
             logger.error("유효성 검사 실패, 오류들: ");
+            
+            
+         // 약관 동의 여부 체크 (약관 동의하지 않으면 0으로 설정)
+//            if (validationUserDTO.getTermsagreed() == null) {
+//                validationUserDTO.setTermsagreed("0"); // 약관 동의를 하지 않으면 0으로 설정
+//            }
+            
+            // 유효성 검사 실패 시 validationUserDTO를 모델에 추가
+            model.addAttribute("validationUserDTO", validationUserDTO);
+            
+            // 오류들 로그로 출력
             bindingResult.getAllErrors().forEach(error -> {
                 if (error instanceof FieldError) {
                     FieldError fieldError = (FieldError) error;
-                    logger.error("오류 필드: " + fieldError.getField() + ", 메시지: " + fieldError.getDefaultMessage());
+                    String fieldName = fieldError.getField();
+                    String errorMessage = fieldError.getDefaultMessage();
+                    
+                    // 오류 필드에 맞게 validationUserDTO의 오류 필드를 설정
+                    switch (fieldName) {
+                        case "userid":
+                            validationUserDTO.setUseridError(errorMessage);  // useridError 필드에 메시지 할당
+                            break;
+                        case "userpw":
+                            validationUserDTO.setUserpwError(errorMessage);  // userpwError 필드에 메시지 할당
+                            break;
+                        case "userpwConfirm":
+                            validationUserDTO.setUserpwConfirmError(errorMessage);  // userpwConfirmError 필드에 메시지 할당
+                            break;
+                        case "emailUsername":
+                            validationUserDTO.setEmailUsernameError(errorMessage);  // emailUsernameError 필드에 메시지 할당
+                            break;
+                        case "phone1":
+                            validationUserDTO.setPhone1Error(errorMessage);  // phone1Error 필드에 메시지 할당
+                            break;
+                        case "phone2":
+                            validationUserDTO.setPhone2Error(errorMessage);  // phone2Error 필드에 메시지 할당
+                            break;
+                        case "phone3":
+                            validationUserDTO.setPhone3Error(errorMessage);  // phone3Error 필드에 메시지 할당
+                            break;
+                        case "realusername":
+                            validationUserDTO.setRealusernameError(errorMessage);  // realusernameError 필드에 메시지 할당
+                            break;
+                        case "postalcode":
+                            validationUserDTO.setPostalcodeError(errorMessage);  // postalcodeError 필드에 메시지 할당
+                            break;
+                        case "streetaddress":
+                            validationUserDTO.setStreetaddressError(errorMessage);  // streetaddressError 필드에 메시지 할당
+                            break;
+                        case "detailedaddress":
+                            validationUserDTO.setDetailedaddressError(errorMessage);  // detailedaddressError 필드에 메시지 할당
+                            break;
+                        case "termsagreed":
+                            validationUserDTO.setTermsagreedError(errorMessage);  // termsagreedError 필드에 메시지 할당
+                            break;
+                        default:
+                            break;
+                    }
                 } else {
                     logger.error("일반 오류 메시지: " + error.getDefaultMessage());
                 }
             });
-            model.addAttribute("validationUserDTO", validationUserDTO);
+
             System.out.println("유효성 검사 실패, 다시 폼으로 이동");
             return "user/UserWriteForm";
         }
@@ -116,36 +170,47 @@ public class UserController {
     }
 
 
-    
-//    @GetMapping("/checkUserId")
-//    public ResponseEntity<String> checkUserId(@RequestParam String userid) {
-//    	System.out.println("아이디 중복 체크 요청: " + userid);  // 요청 받은 아이디 출력
-//    	
-//        boolean isAvailable = userService.isUserIdAvailable(userid);
-//        System.out.println("아이디 사용 가능 여부: " + isAvailable);
-//        
-//        if (isAvailable) {
-//        	System.out.println("아이디 사용 가능: " + userid);  // 아이디가 사용 가능한 경우 출력
-//            return ResponseEntity.ok("Available");  // 사용 가능한 아이디
-//        } else {
-//        	System.out.println("아이디 중복: " + userid);  // 아이디가 이미 사용 중인 경우 출력
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");  // 409 상태 코드와 함께 해당 메시지 반환
-//        }
-//    }
-
     @GetMapping("/checkUserId")
     public ResponseEntity<String> checkUserId(@RequestParam String userid) {
+    	System.out.println("아이디 중복 체크 요청: " + userid);  // 요청 받은 아이디 출력
         boolean isAvailable = userService.isUserIdAvailable(userid);
         
         if (isAvailable) {
+        	System.out.println("아이디 사용 가능: " + userid);  // 아이디가 사용 가능한 경우 출력
             return ResponseEntity.ok("Available");  // 사용 가능한 아이디
         } else {
+        	System.out.println("아이디 중복: " + userid);  // 아이디가 이미 사용 중인 경우 출력
             return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.");  // 409 상태 코드와 함께 해당 메시지 반환
+        }
+    }
+    
+    @GetMapping("/checkEmail")
+    public ResponseEntity<String> checkEmail(@RequestParam String emailUsername, @RequestParam String emailDomain) {
+        String email = emailUsername + "@" + emailDomain;
+        System.out.println("이메일 중복 체크 요청: " + email);
+        
+        boolean isAvailable = userService.isEmailAvailable(email);
+        
+        if (isAvailable) {
+            System.out.println("이메일 사용 가능: " + email);
+            return ResponseEntity.ok("Available");
+        } else {
+            System.out.println("이메일 중복: " + email);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 존재하는 이메일입니다.");
         }
     }
 
     
 
+    @ModelAttribute("validationUserDTO")
+    public ValidationUserDTO createValidationUserDTO() {
+        return new ValidationUserDTO();
+    }
+    
+    @GetMapping("/termsAgreed")
+    public String showTerms() {
+        return "user/member/termsAgreed";  // "termsAgreed.jsp"를 반환
+    }
 
     @GetMapping("/login")
     public String showLoginForm() {

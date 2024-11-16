@@ -87,6 +87,13 @@ public class UserService {
         //System.out.println("조회된 사용자: " + user);
         return user.isEmpty();  // 값이 없으면 true 반환, 중복이 없다는 의미
     }
+    
+    // 이메일 중복 확인 메서드
+    public boolean isEmailAvailable(String email) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        return !existingUser.isPresent();  // 이메일이 존재하지 않으면 사용 가능
+    }
+
 
     // 사용자 목록을 오름차순으로 반환하는 메서드 추가
     public List<User> findAllSortedByUsernumber() {
@@ -119,6 +126,11 @@ public class UserService {
 
  // ValidationUserDTO를 사용한 회원가입 메서드
     public void registerWithValidation(@Valid ValidationUserDTO validationUserDTO) {
+        // 약관 동의 여부 체크 (약관 동의하지 않으면 "0"으로 설정)
+        if (validationUserDTO.getTermsagreed() == null) {
+            validationUserDTO.setTermsagreed("0"); // 약관 동의를 하지 않으면 "0" 설정
+        }
+
         // 비밀번호 확인 로직
         if (!validationUserDTO.getUserpw().equals(validationUserDTO.getUserpwConfirm())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");

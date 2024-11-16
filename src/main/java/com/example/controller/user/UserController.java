@@ -402,6 +402,27 @@ public class UserController {
                              @ModelAttribute("user") ValidationUserDTO validationUserDTO, 
                              Model model) {
     	System.out.println("서비스 전 ");
+    	try {
+    	MultipartFile profilePictureFile = validationUserDTO.getProfilePictureFile();
+        if (profilePictureFile != null && !profilePictureFile.isEmpty()) {
+            String fileName = UUID.randomUUID().toString() + "_" + profilePictureFile.getOriginalFilename();
+            File directory = new File(uploadPath);
+            
+            if (!directory.exists()) {
+                boolean dirCreated = directory.mkdirs();
+                if (!dirCreated) {
+                    logger.error("디렉토리 생성 실패: " + uploadPath);
+                    model.addAttribute("errorMessage", "프로필 사진 저장 중 오류가 발생했습니다.");
+                    return "Mypage/mypage";
+                }
+            }
+
+            Path filePath = Paths.get(uploadPath + fileName);
+            Files.copy(profilePictureFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            validationUserDTO.setProfilePictureUrl("/images/user/" + fileName);
+        }
+    	} catch (Exception e) {
+		}
         User user = userService.updateUser(usernumber, validationUserDTO);  // 회원 정보 수정 처리
         System.out.println("서비스 후 ");
         model.addAttribute("user", user);  // 수정된 회원 정보 모델에 추가

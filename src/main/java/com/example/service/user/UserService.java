@@ -216,14 +216,39 @@ public class UserService {
     }
 
     // 사용자 정보 수정
-    public User updateUser(int usernumber, User updatedUser) {
+    public User updateUser(int usernumber, ValidationUserDTO validationUserDTO) {
         User existingUser = userRepository.findById(usernumber)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user number: " + usernumber));
         
-        existingUser.setUserid(updatedUser.getUserid());
-        existingUser.setRole(updatedUser.getRole());
-        existingUser.setUpdated(LocalDateTime.now());  // 수정일 업데이트
-
+        existingUser.setUserid(validationUserDTO.getUserid());
+        existingUser.setUserpw(passwordEncoder.encode(validationUserDTO.getUserpw())); // 비밀번호 암호화
+        existingUser.setRealusername(validationUserDTO.getRealusername());
+        existingUser.setEmailUsername(validationUserDTO.getEmailUsername());
+        existingUser.setEmailDomain(validationUserDTO.getEmailDomain());
+        existingUser.setPhone1(validationUserDTO.getPhone1());
+        existingUser.setPhone2(validationUserDTO.getPhone2());
+        existingUser.setPhone3(validationUserDTO.getPhone3());
+        existingUser.setPostalcode(validationUserDTO.getPostalcode());
+        existingUser.setStreetaddress(validationUserDTO.getStreetaddress());
+        existingUser.setDetailedaddress(validationUserDTO.getDetailedaddress());
+        existingUser.setTermsagreed(validationUserDTO.getTermsagreed());
+        
+        // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
+        if (validationUserDTO.getRole() != null) {
+        	existingUser.setRole(validationUserDTO.getRole());
+        } else {
+        	existingUser.setRole(User.Role.USER);  // 기본값 설정
+        }
+        if (validationUserDTO.getProfilePictureUrl() != null && !validationUserDTO.getProfilePictureUrl().isEmpty()) {
+        	existingUser.setProfilepicture(validationUserDTO.getProfilePictureUrl());
+        }
+        // 기타 필드 설정
+        existingUser.setIsactive(1); // 기본적으로 활성화된 계정
+        existingUser.setUpdated(LocalDateTime.now());
+        existingUser.setLastlogin(null); // 초기 로그인 시간
+        existingUser.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
+        existingUser.setGender(validationUserDTO.getGender());
+        
         return userRepository.save(existingUser);  // 수정된 사용자 정보를 저장
     }
 }

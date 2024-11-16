@@ -38,6 +38,8 @@ public class CustomSecurityConfig {
 
     	.requestMatchers("/trainer/**").hasAnyRole("TRAINER", "ADMIN")
     	.requestMatchers("/user/**").authenticated() // /user/** 경로는 인증된 경우 접근 
+    	.requestMatchers("/user/member/termsAgreed").permitAll() // 약관 페이지는 인증 없이 접근 가능
+    	
 
     	//추후 트레이너 페이지 추가 시
     	.requestMatchers("/oracle/**").permitAll() // 오라클 콘솔 접근 허용

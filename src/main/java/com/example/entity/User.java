@@ -54,7 +54,7 @@ public class User {
     private String gender; // 성별
 
     @Column(name = "TERMSAGREED")
-    private int termsagreed; // 약관 동의 여부 (0 또는 1)
+    private String termsagreed; // 약관 동의 여부 (0 또는 1)
 
     @Column(name = "PHONE1")
     private String phone1; // 전화번호 1

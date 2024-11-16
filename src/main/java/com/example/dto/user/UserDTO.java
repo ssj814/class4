@@ -21,7 +21,7 @@ public class UserDTO {
     private String emailDomain; // 필수, 이메일 도메인
     private String birthdate; // 필수, 생년월일
     private String gender; // 필수, 성별
-    private int termsagreed; //약관동의
+    private String termsagreed; //약관동의
     
     private String phone1; // 전화번호 1
     private String phone2; // 전화번호 2

@@ -20,7 +20,7 @@
 	integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
 	crossorigin="anonymous">
 <link rel="stylesheet" href="<c:url value='/resources/css/main.css'/>">
-<title>Insert title here</title>
+<title>PKDB</title>
 
 </head>
 <body> 
@@ -40,10 +40,14 @@
 				<ul class="navbar-nav">
 					<li class="nav-item"><a class="nav-link active"
 						href="${pageContext.request.contextPath}/shopList" style="color: beige;">ShoppingMall</a></li>
-					<li class="nav-item"><a class="nav-link active"
-						href="${pageContext.request.contextPath}/trainer_list" style="color: beige;">For Trainer</a></li>
-					<li class="nav-item"><a class="nav-link active"
-						href="${pageContext.request.contextPath}/TrainerBoard" style="color: beige;">TrainerBoard</a></li>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" role="button"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="color: beige;">For Trainer</a>
+						<ul class="dropdown-menu">
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/trainer_list">Find Trainer</a></li>
+							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/TrainerBoard">TrainerBoard</a></li>
+						</ul></li>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" role="button"
 						data-bs-toggle="dropdown" aria-expanded="false"
@@ -80,7 +84,7 @@
 				<c:if test="${empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"><!-- 로그인 x -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"
-							href="loginForm" style="color: pink;">LOGIN/JOIN</a></li>
+							href="${pageContext.request.contextPath}/loginForm" style="color: pink;">LOGIN/JOIN</a></li>
 					</ul>
 				</c:if>
 			</div>

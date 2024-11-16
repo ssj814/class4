@@ -1,8 +1,17 @@
 package com.example.controller.user;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +30,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.ProductDTO;
+import com.example.dto.ProductWishDTO;
 import com.example.dto.user.UserDTO;
 import com.example.dto.user.ValidationUserDTO;
 import com.example.entity.User;
 import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
+import com.example.service.Mypage.MyPageServiceImpl;
+import com.example.service.shoppingmall.CartService;
+import com.example.service.shoppingmall.ProductService;
+import com.example.service.shoppingmall.WishService;
 import com.example.service.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,6 +58,21 @@ public class UserController {
     
     @Autowired
     private UserRepository userRepository;
+    
+    @Autowired
+    private CartService cartService;
+
+    @Autowired
+    private WishService wishService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private MyPageServiceImpl myPageService;
+    
+    private static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final String uploadPath = "C:/images/user/"; // 외부 파일 저장 경로
     
 //    @RequestMapping("/")
 //    public String main() {
@@ -63,8 +94,6 @@ public class UserController {
     public String showRegistrationForm() {
         return "user/UserWriteForm"; // 회원가입 폼 페이지
     }
-    
-    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
     
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("validationUserDTO") ValidationUserDTO validationUserDTO,
@@ -296,4 +325,181 @@ public class UserController {
         return "redirect:/login?logout"; // 로그아웃 후 로그인 페이지로 리다이렉트
     }
 
+    // 마이페이지 수정 메소드
+    @PostMapping("/Mypage/editInfo")
+    public String updateProfile(@Valid ValidationUserDTO validationUserDTO, BindingResult bindingResult, Principal principal, Model model) {
+        if (bindingResult.hasErrors()) {
+            // 유효성 검사 실패 시 수정 페이지로 돌아갑니다.
+            model.addAttribute("userInfo", validationUserDTO);
+            return "Mypage/editInfo";
+        }
+
+        try {
+            // 프로필 사진 업로드 및 저장
+            MultipartFile profilePictureFile = validationUserDTO.getProfilePictureFile();
+            if (profilePictureFile != null && !profilePictureFile.isEmpty()) {
+                String fileName = UUID.randomUUID().toString() + "_" + profilePictureFile.getOriginalFilename();
+                File directory = new File(uploadPath);
+                if (!directory.exists()) {
+                    directory.mkdirs(); // 디렉토리가 없는 경우 생성
+                }
+                Files.copy(profilePictureFile.getInputStream(), Paths.get(uploadPath + fileName), StandardCopyOption.REPLACE_EXISTING);
+                validationUserDTO.setProfilePictureUrl("/images/user/" + fileName); // 저장된 URL 경로 설정
+            }
+
+            // 사용자 정보를 업데이트합니다.
+            userService.updateUserWithValidation(validationUserDTO);
+            model.addAttribute("message", "정보가 성공적으로 수정되었습니다.");
+            return "redirect:/mypage?page=userInfo";
+        } catch (Exception e) {
+            logger.error("프로필 사진 업로드 중 오류 발생: ", e);
+            model.addAttribute("errorMessage", "프로필 사진 업로드 중 오류가 발생했습니다.");
+            return "Mypage/editInfo";
+        }
+    }
+    
+    // 마이페이지 조회
+ // 마이페이지 조회
+    @RequestMapping("/mypage")
+    public String myPage(
+            @RequestParam(value = "page", required = false) String page,
+            Model model,
+            Principal principal,
+            @ModelAttribute ValidationUserDTO validationUserDTO,
+            BindingResult bindingResult,
+            HttpServletRequest request) {
+
+        String userId = principal.getName();
+
+        if (page == null || page.isEmpty()) {
+            page = "userInfo";
+        }
+        System.out.println("page : "+page);
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            if ("userInfo".equals(page)) {
+                UserDTO userInfo = myPageService.getUserInfo(userId);
+                model.addAttribute("userInfo", userInfo);
+
+            } else if ("editInfo".equals(page)) {
+                User user = userRepository.findByUserid(userId).orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+                validationUserDTO.setUserid(user.getUserid());
+                validationUserDTO.setRealusername(user.getRealusername());
+                validationUserDTO.setEmailUsername(user.getEmailUsername());
+                validationUserDTO.setEmailDomain(user.getEmailDomain());
+                validationUserDTO.setPhone1(user.getPhone1());
+                validationUserDTO.setPhone2(user.getPhone2());
+                validationUserDTO.setPhone3(user.getPhone3());
+                validationUserDTO.setStreetaddress(user.getStreetaddress());
+                validationUserDTO.setDetailedaddress(user.getDetailedaddress());
+                validationUserDTO.setPostalcode(user.getPostalcode());
+                validationUserDTO.setTermsagreed(user.getTermsagreed());
+                validationUserDTO.setGender(user.getGender());
+                validationUserDTO.setProfilePictureUrl(user.getProfilepicture());
+
+                model.addAttribute("validationUserDTO", validationUserDTO);
+
+            } else if ("wishlist".equals(page)) {
+            	System.out.println("wishlist else if 옴");
+                // 위시리스트 페이지
+                List<ProductWishDTO> wishList = wishService.selectWishList(userId);
+                List<Map<String, Object>> wishProductList = new ArrayList<>();
+
+                // 위시리스트의 각 상품에 대해 상세 정보를 가져와 설정합니다.
+                for (ProductWishDTO wish : wishList) {
+                    ProductDTO product = productService.selectDetailproduct(wish.getProduct_id());
+                    
+                    Map<String, Object> wishProductMap = new HashMap<>();
+                    wishProductMap.put("wish", wish);
+                    wishProductMap.put("product", product);
+                    
+                    wishProductList.add(wishProductMap);
+                }
+
+                System.out.println("wishlist : " + wishList);
+                model.addAttribute("wishProductList", wishProductList);
+            }
+            else {
+                UserDTO userInfo = myPageService.getUserInfo(userId);
+                model.addAttribute("userInfo", userInfo);
+            }
+        } else if ("POST".equalsIgnoreCase(request.getMethod()) && "editInfo".equals(page)) {
+            if (bindingResult.hasErrors()) {
+                return "Mypage/mypage";
+            }
+
+            try {
+                MultipartFile profilePictureFile = validationUserDTO.getProfilePictureFile();
+                if (profilePictureFile != null && !profilePictureFile.isEmpty()) {
+                    String fileName = UUID.randomUUID().toString() + "_" + profilePictureFile.getOriginalFilename();
+                    File directory = new File(uploadPath);
+                    
+                    if (!directory.exists()) {
+                        boolean dirCreated = directory.mkdirs();
+                        if (!dirCreated) {
+                            logger.error("디렉토리 생성 실패: " + uploadPath);
+                            model.addAttribute("errorMessage", "프로필 사진 저장 중 오류가 발생했습니다.");
+                            return "Mypage/mypage";
+                        }
+                    }
+
+                    Path filePath = Paths.get(uploadPath + fileName);
+                    Files.copy(profilePictureFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                    validationUserDTO.setProfilePictureUrl("/images/user/" + fileName);
+                    logger.info("프로필 사진이 성공적으로 업로드 되었습니다: " + filePath.toString());
+                } else {
+                    logger.warn("프로필 사진 파일이 비어 있습니다.");
+                }
+
+                userService.updateUserWithValidation(validationUserDTO);
+                model.addAttribute("message", "정보가 성공적으로 수정되었습니다.");
+                return "redirect:/mypage?page=userInfo";
+            } catch (Exception e) {
+                logger.error("프로필 사진 업로드 중 오류 발생: ", e);
+                model.addAttribute("errorMessage", "프로필 사진 업로드 중 오류가 발생했습니다.");
+                return "Mypage/mypage";
+            }
+        } 
+        return "Mypage/mypage";
+    }
+    
+    // 특정 회원 정보 수정 페이지로 이동
+    @GetMapping("/admin/updateUser/{usernumber}")
+    public String getUserForUpdate(@PathVariable("usernumber") int usernumber, Model model) {
+        User user = userService.getUserById(usernumber);  // 특정 회원 정보 조회
+        model.addAttribute("user", user);  // 회원 정보 모델에 추가
+        return "user/adminUpdateuser";  // 회원 정보 수정 페이지 JSP (예: adminUpdateUser.jsp)
+    }
+
+    // 회원 정보 수정 처리
+    @PostMapping("/admin/updateUser/{usernumber}")
+    public String updateUser(@PathVariable("usernumber") int usernumber, 
+                             @ModelAttribute("user") ValidationUserDTO validationUserDTO, 
+                             Model model) {
+    	System.out.println("서비스 전 ");
+    	try {
+    	MultipartFile profilePictureFile = validationUserDTO.getProfilePictureFile();
+        if (profilePictureFile != null && !profilePictureFile.isEmpty()) {
+            String fileName = UUID.randomUUID().toString() + "_" + profilePictureFile.getOriginalFilename();
+            File directory = new File(uploadPath);
+            
+            if (!directory.exists()) {
+                boolean dirCreated = directory.mkdirs();
+                if (!dirCreated) {
+                    logger.error("디렉토리 생성 실패: " + uploadPath);
+                    model.addAttribute("errorMessage", "프로필 사진 저장 중 오류가 발생했습니다.");
+                    return "Mypage/mypage";
+                }
+            }
+
+            Path filePath = Paths.get(uploadPath + fileName);
+            Files.copy(profilePictureFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            validationUserDTO.setProfilePictureUrl("/images/user/" + fileName);
+        }
+    	} catch (Exception e) {
+		}
+        User user = userService.updateUser(usernumber, validationUserDTO);  // 회원 정보 수정 처리
+        System.out.println("서비스 후 ");
+        model.addAttribute("user", user);  // 수정된 회원 정보 모델에 추가
+        return "redirect:/admin/view";  // 수정 후 회원 목록 페이지로 리다이렉트
+    }
 }

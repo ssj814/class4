@@ -1,15 +1,15 @@
 package com.example.dto.user;
 
 import com.example.entity.User.Role;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class ValidationUserDTO {
-    
+
     private String useridError;
     private String userpwError;
     private String userpwConfirmError;
@@ -29,7 +29,7 @@ public class ValidationUserDTO {
     private String userid;
     
     @NotBlank(message = "비밀번호를 입력하세요.")
-    @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", 
+    @Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\W)(?=\\\\S+$).{8,20}", 
             message = "비밀번호는 영문 대소문자, 숫자, 특수기호가 포함된 8~20자여야 합니다.")
     private String userpw;
     
@@ -70,9 +70,13 @@ public class ValidationUserDTO {
     @Pattern(regexp = "^(1)$", message = "약관 동의는 반드시 체크해야 합니다.")
     private String termsagreed;
     
+    @NotBlank(message = "성별은 필수 입력값입니다.")
+    private String gender;
+
     private Role role;
-    
+
+    // 프로필 사진 필드 추가
+    private String profilePictureUrl; // 프로필 사진 URL
+    private MultipartFile profilePictureFile; // 프로필 사진 파일
+
 }
-
-
-

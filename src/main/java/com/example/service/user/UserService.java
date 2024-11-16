@@ -153,6 +153,38 @@ public class UserService {
             userRepository.save(user);
         }
     }
+    
+ // ValidationUserDTO를 사용한 회원 정보 수정 메서드
+    public void updateUserWithValidation(@Valid ValidationUserDTO validationUserDTO) {
+        // 비밀번호 확인 로직 (비밀번호 수정 시에만 적용)
+        if (validationUserDTO.getUserpw() != null && !validationUserDTO.getUserpw().isEmpty()) {
+            if (!validationUserDTO.getUserpw().equals(validationUserDTO.getUserpwConfirm())) {
+                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            }
+        }
+
+        // 기존 사용자 정보 조회
+        User user = userRepository.findByUserid(validationUserDTO.getUserid())
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+
+        // 수정할 필드 업데이트
+        if (validationUserDTO.getUserpw() != null && !validationUserDTO.getUserpw().isEmpty()) {
+            user.setUserpw(passwordEncoder.encode(validationUserDTO.getUserpw()));
+        }
+        user.setEmailUsername(validationUserDTO.getEmailUsername());
+        user.setEmailDomain(validationUserDTO.getEmailDomain());
+        user.setPhone1(validationUserDTO.getPhone1());
+        user.setPhone2(validationUserDTO.getPhone2());
+        user.setPhone3(validationUserDTO.getPhone3());
+        user.setStreetaddress(validationUserDTO.getStreetaddress());
+        user.setDetailedaddress(validationUserDTO.getDetailedaddress());
+        user.setUpdated(LocalDateTime.now());
+        user.setGender(validationUserDTO.getGender());
+        user.setProfilepicture(validationUserDTO.getProfilePictureUrl());
+        // 변경된 사용자 정보 저장
+        userRepository.save(user);
+    }
+
     // ValidationUserDTO를 User 엔티티로 변환하는 메서드
     private User toUserEntity(ValidationUserDTO validationUserDTO) {
         User user = new User();
@@ -175,14 +207,59 @@ public class UserService {
         } else {
             user.setRole(User.Role.USER);  // 기본값 설정
         }
-
+        if (validationUserDTO.getProfilePictureUrl() != null && !validationUserDTO.getProfilePictureUrl().isEmpty()) {
+            user.setProfilepicture(validationUserDTO.getProfilePictureUrl());
+        }
         // 기타 필드 설정
         user.setIsactive(1); // 기본적으로 활성화된 계정
         user.setCreated(LocalDateTime.now());
         user.setUpdated(LocalDateTime.now());
         user.setLastlogin(null); // 초기 로그인 시간
         user.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
-
+        user.setGender(validationUserDTO.getGender());
+        
         return user;
+    }
+    
+ // 특정 사용자 조회
+    public User getUserById(int usernumber) {
+        return userRepository.findById(usernumber)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user number: " + usernumber));
+    }
+
+    // 사용자 정보 수정
+    public User updateUser(int usernumber, ValidationUserDTO validationUserDTO) {
+        User existingUser = userRepository.findById(usernumber)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user number: " + usernumber));
+        
+        existingUser.setUserid(validationUserDTO.getUserid());
+        existingUser.setUserpw(passwordEncoder.encode(validationUserDTO.getUserpw())); // 비밀번호 암호화
+        existingUser.setRealusername(validationUserDTO.getRealusername());
+        existingUser.setEmailUsername(validationUserDTO.getEmailUsername());
+        existingUser.setEmailDomain(validationUserDTO.getEmailDomain());
+        existingUser.setPhone1(validationUserDTO.getPhone1());
+        existingUser.setPhone2(validationUserDTO.getPhone2());
+        existingUser.setPhone3(validationUserDTO.getPhone3());
+        existingUser.setPostalcode(validationUserDTO.getPostalcode());
+        existingUser.setStreetaddress(validationUserDTO.getStreetaddress());
+        existingUser.setDetailedaddress(validationUserDTO.getDetailedaddress());
+        
+        // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
+        if (validationUserDTO.getRole() != null) {
+        	existingUser.setRole(validationUserDTO.getRole());
+        } else {
+        	existingUser.setRole(User.Role.USER);  // 기본값 설정
+        }
+        if (validationUserDTO.getProfilePictureUrl() != null && !validationUserDTO.getProfilePictureUrl().isEmpty()) {
+        	existingUser.setProfilepicture(validationUserDTO.getProfilePictureUrl());
+        }
+        // 기타 필드 설정
+        existingUser.setIsactive(1);
+        existingUser.setTermsagreed("1");
+        existingUser.setUpdated(LocalDateTime.now());
+        existingUser.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
+        existingUser.setGender(validationUserDTO.getGender());
+        
+        return userRepository.save(existingUser);  // 수정된 사용자 정보를 저장
     }
 }

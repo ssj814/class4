@@ -9,17 +9,18 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>사원 목록 보기</h1>
+        <h1>회원 목록 보기</h1>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th class="text-nowrap">사원수</th>
-                    <th class="text-nowrap">사원번호</th>
+                    <th class="text-nowrap">회원수</th>
+                    <th class="text-nowrap">회원번호</th>
                     <th class="text-nowrap">아이디</th>
                     <th class="text-nowrap">가입날짜</th>
                     <th class="text-nowrap">수정일</th>
                     <th class="text-nowrap">마지막 로그인</th>
                     <th class="text-nowrap">권한 변경</th>
+                    <th class="text-nowrap">수정</th>
                     <th class="text-nowrap">삭제</th>
                 </tr>
             </thead>
@@ -48,8 +49,9 @@
                                 </div>
                             </form>
                         </td>
-
-                        <!-- 삭제 버튼을 일자로 정렬 -->
+						<td>
+                            <a href="/app/admin/updateUser/${user.usernumber}" class="btn btn-warning text-nowrap">수정</a>
+                        </td>
                         <td>
                             <a href="/app/admin/delete/${user.usernumber}" class="btn btn-danger text-nowrap">삭제</a>
                         </td>

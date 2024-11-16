@@ -37,8 +37,9 @@ public class SecurityUserDetailService  implements UserDetailsService {
 		User user = userRepository.findByUserid(userid)
                 .orElseThrow(() -> new UsernameNotFoundException(userid + " 사용자없음"));
 		if (user.getIsactive() == 0) {
-            throw new RuntimeException("Account has been withdrawn"); // 비활성화된 계정 로그인 불가
-        }
+			throw new RuntimeException("Account has been withdrawn"); // 비활성화된 계정 로그인 불가
+		}
+
 		System.out.println("UserDetailServie: dto==="+ user);
 		
 		

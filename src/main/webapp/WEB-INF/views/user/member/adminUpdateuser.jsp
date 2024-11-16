@@ -85,7 +85,6 @@
                     <c:if test="${not empty user.profilepicture}">
                         <img src="<c:url value='${user.profilepicture}' />" alt="프로필 사진" width="100" height="100" class="mt-2">
                     </c:if>
-                    ${user.profilepicture}
                 </td>
             </tr>
             <tr>

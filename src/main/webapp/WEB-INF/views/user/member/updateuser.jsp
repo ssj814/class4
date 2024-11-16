@@ -46,7 +46,7 @@
                 <td>
                     <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*" class="form-control" style="width: 40%;">
                     <c:if test="${not empty validationUserDTO.profilePictureUrl}">
-                        <img src="${validationUserDTO.profilePictureUrl}" alt="프로필 사진" width="100" height="100" class="mt-2">
+                        <img src="<c:url value='${validationUserDTO.profilePictureUrl}' />" alt="프로필 사진" width="100" height="100" class="mt-2">
                     </c:if>
                 </td>
             </tr>

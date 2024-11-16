@@ -208,4 +208,22 @@ public class UserService {
         
         return user;
     }
+    
+ // 특정 사용자 조회
+    public User getUserById(int usernumber) {
+        return userRepository.findById(usernumber)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user number: " + usernumber));
+    }
+
+    // 사용자 정보 수정
+    public User updateUser(int usernumber, User updatedUser) {
+        User existingUser = userRepository.findById(usernumber)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user number: " + usernumber));
+        
+        existingUser.setUserid(updatedUser.getUserid());
+        existingUser.setRole(updatedUser.getRole());
+        existingUser.setUpdated(LocalDateTime.now());  // 수정일 업데이트
+
+        return userRepository.save(existingUser);  // 수정된 사용자 정보를 저장
+    }
 }

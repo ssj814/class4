@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-5">
-        <h1>사원 목록 보기</h1>
+        <h1>회원 목록 보기</h1>
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>

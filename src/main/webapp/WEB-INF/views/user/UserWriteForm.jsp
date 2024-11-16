@@ -5,7 +5,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="resources/css/login/userWriteForm.css?ver=2">
 <title>Insert title here</title>
 <%
    String mesg = (String)session.getAttribute("mesg");
@@ -20,6 +19,9 @@ session.removeAttribute("mesg");
 %>
 </head>
 <body>
+<div style="height: 150px;"></div>
+<jsp:include page="../common/header.jsp" flush="true"/>
 <jsp:include page="member/UserWriteForm.jsp" flush="true" />
+<jsp:include page="../common/footer.jsp" flush="true"/>
 </body>
 </html>

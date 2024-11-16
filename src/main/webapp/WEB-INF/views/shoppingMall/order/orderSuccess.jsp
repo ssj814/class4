@@ -110,6 +110,7 @@
                     </c:choose>
                 </td>
             </tr>
+            <c:if test="${orderMain.paymentMethod == 'credit'}">
            	<tr>
 			    <th>카드종류</th>
 			    <td class="text-end">
@@ -132,6 +133,7 @@
 			        </c:choose>
 			    </td>
 			</tr>
+			</c:if>
         </table>
     </div>
     <div class="text-center">

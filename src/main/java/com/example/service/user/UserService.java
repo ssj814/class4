@@ -231,7 +231,6 @@ public class UserService {
         existingUser.setPostalcode(validationUserDTO.getPostalcode());
         existingUser.setStreetaddress(validationUserDTO.getStreetaddress());
         existingUser.setDetailedaddress(validationUserDTO.getDetailedaddress());
-        existingUser.setTermsagreed(validationUserDTO.getTermsagreed());
         
         // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
         if (validationUserDTO.getRole() != null) {
@@ -243,8 +242,9 @@ public class UserService {
         	existingUser.setProfilepicture(validationUserDTO.getProfilePictureUrl());
         }
         // 기타 필드 설정
+        existingUser.setIsactive(1);
+        existingUser.setTermsagreed(1);
         existingUser.setUpdated(LocalDateTime.now());
-        existingUser.setLastlogin(null); // 초기 로그인 시간
         existingUser.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());
         existingUser.setGender(validationUserDTO.getGender());
         

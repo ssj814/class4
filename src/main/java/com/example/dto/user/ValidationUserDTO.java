@@ -29,7 +29,7 @@ public class ValidationUserDTO {
     private String userid;
     
     @NotBlank(message = "비밀번호를 입력하세요.")
-    @Pattern(regexp="(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\\\\W)(?=\\\\S+$).{8,20}", 
+    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message = "비밀번호는 영문 대소문자, 숫자, 특수기호가 포함된 8~20자여야 합니다.")
     private String userpw;
     
@@ -66,11 +66,11 @@ public class ValidationUserDTO {
     @NotBlank(message = "상세 주소를 입력하세요.")
     private String detailedaddress;
 
-    @NotNull(message = "약관 동의 필수")
-    @Pattern(regexp = "^(1)$", message = "약관 동의는 반드시 체크해야 합니다.")
+    @NotBlank(message = "약관 동의 필수입니다.")
+    @Pattern(regexp = "1", message = "약관 동의는 반드시 체크해야 합니다.")
     private String termsagreed;
     
-    @NotBlank(message = "성별은 필수 입력값입니다.")
+    //@NotBlank(message = "성별은 필수 입력값입니다.")
     private String gender;
 
     private Role role;

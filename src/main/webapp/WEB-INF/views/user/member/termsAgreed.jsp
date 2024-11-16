@@ -48,20 +48,10 @@
     </style>
     
     <script>
-	//동의 버튼 클릭 시 부모 창의 체크박스 상태를 갱신하고 자식 창 닫기
-	function agreeAndClose() {
-	    console.log("Opening parent window:", opener); // 부모 창이 제대로 참조되는지 확인
-	   	
-	    if($("input[id='termsagreed']:checked", opener.document).is(':checked') == false) {
-	    	// 약관동의 미체크시 popup내 동의하기로 opener 약관동의 체크 
-	    	//$("input[id='termsagreed']:checked", opener.document).prop('checked', true);
-	    	
-	    	console.log( $("input[id='termsagreed']:checked", opener.document).is(':checked') );
-	    }
-	    
-	    // 자식 창 닫기
-	    //window.close();
-	}
+	// 동의 버튼 클릭 시 자식 창 닫기
+        function agreeAndClose() {
+            window.close(); // 창 닫기
+        }
 </script>
 </head>
 <body>

@@ -85,6 +85,7 @@
                     <c:if test="${not empty user.profilepicture}">
                         <img src="<c:url value='${user.profilepicture}' />" alt="프로필 사진" width="100" height="100" class="mt-2">
                     </c:if>
+                    ${user.profilepicture}
                 </td>
             </tr>
             <tr>
@@ -105,13 +106,13 @@
             <tr>
                 <td>성별:</td>
                 <td>
-                    <input type="radio" id="male" name="gender" value="M" ${validationUserDTO.gender eq 'M' ? 'checked' : ''}>
+                    <input type="radio" id="male" name="gender" value="M" ${user.gender eq 'M' ? 'checked' : ''}>
                     <label for="male">남성</label>
 
-                    <input type="radio" id="female" name="gender" value="F" ${validationUserDTO.gender eq 'F' ? 'checked' : ''}>
+                    <input type="radio" id="female" name="gender" value="F" ${user.gender eq 'F' ? 'checked' : ''}>
                     <label for="female">여성</label>
 
-                    <input type="radio" id="other" name="gender" value="O" ${validationUserDTO.gender eq 'O' ? 'checked' : ''}>
+                    <input type="radio" id="other" name="gender" value="O" ${user.gender eq 'O' ? 'checked' : ''}>
                     <label for="other">기타</label>
 
                     <c:if test="${not empty validationUserDTO.gender}">
@@ -141,45 +142,45 @@
             <tr>
                 <td>이메일:</td>
                 <td style="display: flex;">
-                    <input type="text" id="emailUsername" name="emailUsername" value="${validationUserDTO.emailUsername}" class="form-control" style="width: 30%;" required>&nbsp;&nbsp;@&nbsp;&nbsp;
+                    <input type="text" id="emailUsername" name="emailUsername" value="${user.emailUsername}" class="form-control" style="width: 30%;" required>&nbsp;&nbsp;@&nbsp;&nbsp;
                     <select id="emailDomain" name="emailDomain" class="form-control" style="width: 20%;" required>
-                        <option value="gmail.com" ${validationUserDTO.emailDomain == 'gmail.com' ? 'selected' : ''}>gmail.com</option>
-                        <option value="naver.com" ${validationUserDTO.emailDomain == 'naver.com' ? 'selected' : ''}>naver.com</option>
-                        <option value="daum.net" ${validationUserDTO.emailDomain == 'daum.net' ? 'selected' : ''}>daum.net</option>
+                        <option value="gmail.com" ${user.emailDomain == 'gmail.com' ? 'selected' : ''}>gmail.com</option>
+                        <option value="naver.com" ${user.emailDomain == 'naver.com' ? 'selected' : ''}>naver.com</option>
+                        <option value="daum.net" ${user.emailDomain == 'daum.net' ? 'selected' : ''}>daum.net</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>전화번호:</td>
                 <td style="display: flex;">
-                    <input type="text" id="phone1" name="phone1" value="${validationUserDTO.phone1}" class="form-control"  style="width: 20%;" required> - 
-                    <input type="text" id="phone2" name="phone2" value="${validationUserDTO.phone2}" class="form-control"  style="width: 20%;" required> - 
-                    <input type="text" id="phone3" name="phone3" value="${validationUserDTO.phone3}" class="form-control"  style="width: 20%;" required>
+                    <input type="text" id="phone1" name="phone1" value="${user.phone1}" class="form-control"  style="width: 20%;" required> - 
+                    <input type="text" id="phone2" name="phone2" value="${user.phone2}" class="form-control"  style="width: 20%;" required> - 
+                    <input type="text" id="phone3" name="phone3" value="${user.phone3}" class="form-control"  style="width: 20%;" required>
                 </td>
             </tr>
             <tr>
                 <td>우편번호:</td>
                 <td  style="display: flex;">
-                    <input type="text" id="postalcode" name="postalcode" value="${validationUserDTO.postalcode}" class="form-control" style="width: 20%;" readonly required>
+                    <input type="text" id="postalcode" name="postalcode" value="${user.postalcode}" class="form-control" style="width: 20%;" readonly required>
                     <button type="button" class="btn btn-secondary mt-2 ms-3" onclick="openPostcode()">주소 찾기</button>
                 </td>
             </tr>
             <tr>
                 <td>도로명 주소:</td>
                 <td>
-                    <input type="text" id="streetaddress" name="streetaddress" value="${validationUserDTO.streetaddress}" class="form-control" style="width:60%;" readonly required>
+                    <input type="text" id="streetaddress" name="streetaddress" value="${user.streetaddress}" class="form-control" style="width:60%;" readonly required>
                 </td>
             </tr>
             <tr>
                 <td>상세 주소:</td>
                 <td>
-                    <input type="text" id="detailedaddress" name="detailedaddress" value="${validationUserDTO.detailedaddress}" class="form-control" style="width:60%;" required>
+                    <input type="text" id="detailedaddress" name="detailedaddress" value="${user.detailedaddress}" class="form-control" style="width:60%;" required>
                 </td>
             </tr>
             <tr>
                 <td>약관 동의:</td>
                 <td>
-                    <input type="checkbox" id="termsagreed" name="termsagreed" value="1" ${validationUserDTO.termsagreed == 1 ? 'checked' : ''}> 동의합니다
+                    <input type="checkbox" id="termsagreed" name="termsagreed" value="1" ${user.termsagreed == 1 ? 'checked' : ''}> 동의합니다
                     <c:if test="${not empty validationUserDTO.termsagreedError}">
                         <span class="text-danger">${validationUserDTO.termsagreedError}</span>
                     </c:if>

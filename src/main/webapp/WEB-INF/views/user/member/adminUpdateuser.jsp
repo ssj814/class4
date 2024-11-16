@@ -2,9 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<!-- Bootstrap CSS (CDN) -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 
 <script type="text/javascript">
@@ -76,7 +73,7 @@
     }
 </script>
 
-<div class="container mt-5">
+<div class="container mt-5" style="width: 60%;">
     <h1 class="text-center mb-4"><b>[ ${user.userid} 회원 정보 수정 ]</b></h1>
     <form action="<c:url value='/admin/updateUser/${usernumber}'/>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="usernumber" value="${usernumber}">
@@ -84,22 +81,23 @@
             <tr>
                 <td>프로필 사진:</td>
                 <td>
-                    <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*" class="form-control">
-                    <c:if test="${not empty validationUserDTO.profilePictureUrl}">
-                        <img src="${validationUserDTO.profilePictureUrl}" alt="프로필 사진" width="100" height="100" class="mt-2">
+                    <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*" class="form-control" style="width:45%;">
+                    <c:if test="${not empty user.profilepicture}">
+                        <img src="<c:url value='${user.profilepicture}' />" alt="프로필 사진" width="100" height="100" class="mt-2">
                     </c:if>
+                    ${user.profilepicture}
                 </td>
             </tr>
             <tr>
                 <td>아이디:</td>
                 <td>
-                    <input type="text" id="userid" name="userid" value="${user.userid}" readonly class="form-control">
+                    <input type="text" id="userid" name="userid" value="${user.userid}" readonly class="form-control" style="width:35%;">
                 </td>
             </tr>
             <tr>
                 <td>실명:</td>
                 <td>
-                    <input type="text" id="realusername" name="realusername" value="${user.realusername}" readonly class="form-control">
+                    <input type="text" id="realusername" name="realusername" value="${user.realusername}" readonly class="form-control"  style="width: 35%;">
                     <c:if test="${not empty validationUserDTO.realusernameError}">
                         <span class="text-danger">${validationUserDTO.realusernameError}</span>
                     </c:if>
@@ -108,13 +106,13 @@
             <tr>
                 <td>성별:</td>
                 <td>
-                    <input type="radio" id="male" name="gender" value="M" ${validationUserDTO.gender eq 'M' ? 'checked' : ''}>
+                    <input type="radio" id="male" name="gender" value="M" ${user.gender eq 'M' ? 'checked' : ''}>
                     <label for="male">남성</label>
 
-                    <input type="radio" id="female" name="gender" value="F" ${validationUserDTO.gender eq 'F' ? 'checked' : ''}>
+                    <input type="radio" id="female" name="gender" value="F" ${user.gender eq 'F' ? 'checked' : ''}>
                     <label for="female">여성</label>
 
-                    <input type="radio" id="other" name="gender" value="O" ${validationUserDTO.gender eq 'O' ? 'checked' : ''}>
+                    <input type="radio" id="other" name="gender" value="O" ${user.gender eq 'O' ? 'checked' : ''}>
                     <label for="other">기타</label>
 
                     <c:if test="${not empty validationUserDTO.gender}">
@@ -125,7 +123,7 @@
             <tr>
                 <td>새 비밀번호:</td>
                 <td>
-                    <div style="position: relative;">
+                    <div style="position: relative; width: 35%;" >
                         <input type="password" id="userpw" name="userpw" class="form-control" style="padding-right: 30px;" onkeyup="checkPasswordMatch()">
                         <span id="toggleUserpwIcon" onclick="togglePasswordVisibility('userpw')" class="position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">👁️</span>
                     </div>
@@ -134,7 +132,7 @@
             <tr>
                 <td>비밀번호 확인:</td>
                 <td>
-                    <div style="position: relative;">
+                    <div style="position: relative; width: 35%;">
                         <input type="password" id="userpwConfirm" name="userpwConfirm" class="form-control" style="padding-right: 30px;" onkeyup="checkPasswordMatch()">
                         <span id="toggleUserpwConfirmIcon" onclick="togglePasswordVisibility('userpwConfirm')" class="position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;">👁️</span>
                         <span id="passwordStatus" class="text-danger"></span>
@@ -143,46 +141,46 @@
             </tr>
             <tr>
                 <td>이메일:</td>
-                <td>
-                    <input type="text" id="emailUsername" name="emailUsername" value="${validationUserDTO.emailUsername}" class="form-control" required> @ 
-                    <select id="emailDomain" name="emailDomain" class="form-control" required>
-                        <option value="gmail.com" ${validationUserDTO.emailDomain == 'gmail.com' ? 'selected' : ''}>gmail.com</option>
-                        <option value="naver.com" ${validationUserDTO.emailDomain == 'naver.com' ? 'selected' : ''}>naver.com</option>
-                        <option value="daum.net" ${validationUserDTO.emailDomain == 'daum.net' ? 'selected' : ''}>daum.net</option>
+                <td style="display: flex;">
+                    <input type="text" id="emailUsername" name="emailUsername" value="${user.emailUsername}" class="form-control" style="width: 30%;" required>&nbsp;&nbsp;@&nbsp;&nbsp;
+                    <select id="emailDomain" name="emailDomain" class="form-control" style="width: 20%;" required>
+                        <option value="gmail.com" ${user.emailDomain == 'gmail.com' ? 'selected' : ''}>gmail.com</option>
+                        <option value="naver.com" ${user.emailDomain == 'naver.com' ? 'selected' : ''}>naver.com</option>
+                        <option value="daum.net" ${user.emailDomain == 'daum.net' ? 'selected' : ''}>daum.net</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>전화번호:</td>
-                <td>
-                    <input type="text" id="phone1" name="phone1" value="${validationUserDTO.phone1}" class="form-control" required> - 
-                    <input type="text" id="phone2" name="phone2" value="${validationUserDTO.phone2}" class="form-control" required> - 
-                    <input type="text" id="phone3" name="phone3" value="${validationUserDTO.phone3}" class="form-control" required>
+                <td style="display: flex;">
+                    <input type="text" id="phone1" name="phone1" value="${user.phone1}" class="form-control"  style="width: 20%;" required> - 
+                    <input type="text" id="phone2" name="phone2" value="${user.phone2}" class="form-control"  style="width: 20%;" required> - 
+                    <input type="text" id="phone3" name="phone3" value="${user.phone3}" class="form-control"  style="width: 20%;" required>
                 </td>
             </tr>
             <tr>
                 <td>우편번호:</td>
-                <td>
-                    <input type="text" id="postalcode" name="postalcode" value="${validationUserDTO.postalcode}" class="form-control" readonly required>
-                    <button type="button" class="btn btn-secondary mt-2" onclick="openPostcode()">주소 찾기</button>
+                <td  style="display: flex;">
+                    <input type="text" id="postalcode" name="postalcode" value="${user.postalcode}" class="form-control" style="width: 20%;" readonly required>
+                    <button type="button" class="btn btn-secondary mt-2 ms-3" onclick="openPostcode()">주소 찾기</button>
                 </td>
             </tr>
             <tr>
                 <td>도로명 주소:</td>
                 <td>
-                    <input type="text" id="streetaddress" name="streetaddress" value="${validationUserDTO.streetaddress}" class="form-control" readonly required>
+                    <input type="text" id="streetaddress" name="streetaddress" value="${user.streetaddress}" class="form-control" style="width:60%;" readonly required>
                 </td>
             </tr>
             <tr>
                 <td>상세 주소:</td>
                 <td>
-                    <input type="text" id="detailedaddress" name="detailedaddress" value="${validationUserDTO.detailedaddress}" class="form-control" required>
+                    <input type="text" id="detailedaddress" name="detailedaddress" value="${user.detailedaddress}" class="form-control" style="width:60%;" required>
                 </td>
             </tr>
             <tr>
                 <td>약관 동의:</td>
                 <td>
-                    <input type="checkbox" id="termsagreed" name="termsagreed" value="1" ${validationUserDTO.termsagreed == 1 ? 'checked' : ''}> 동의합니다
+                    <input type="checkbox" id="termsagreed" name="termsagreed" value="1" ${user.termsagreed == 1 ? 'checked' : ''}> 동의합니다
                     <c:if test="${not empty validationUserDTO.termsagreedError}">
                         <span class="text-danger">${validationUserDTO.termsagreedError}</span>
                     </c:if>
@@ -190,14 +188,9 @@
             </tr>
             <tr>
                 <td colspan="2" class="text-center">
-                    <button type="submit" class="btn btn-primary">정보 수정</button>
+                    <button type="submit" class="btn btn-dark">정보 수정</button>
                 </td>
             </tr>
         </table>
     </form>
 </div>
-
-<!-- Bootstrap JS (CDN) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

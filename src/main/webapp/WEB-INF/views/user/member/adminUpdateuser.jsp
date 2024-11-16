@@ -178,15 +178,6 @@
                 </td>
             </tr>
             <tr>
-                <td>약관 동의:</td>
-                <td>
-                    <input type="checkbox" id="termsagreed" name="termsagreed" value="1" ${user.termsagreed == 1 ? 'checked' : ''}> 동의합니다
-                    <c:if test="${not empty validationUserDTO.termsagreedError}">
-                        <span class="text-danger">${validationUserDTO.termsagreedError}</span>
-                    </c:if>
-                </td>
-            </tr>
-            <tr>
                 <td colspan="2" class="text-center">
                     <button type="submit" class="btn btn-dark">정보 수정</button>
                 </td>

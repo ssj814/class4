@@ -399,10 +399,10 @@ public class UserController {
     // 회원 정보 수정 처리
     @PostMapping("/admin/updateUser/{usernumber}")
     public String updateUser(@PathVariable("usernumber") int usernumber, 
-                             @ModelAttribute("user") User updatedUser, 
+                             @ModelAttribute("user") ValidationUserDTO validationUserDTO, 
                              Model model) {
     	System.out.println("서비스 전 ");
-        User user = userService.updateUser(usernumber, updatedUser);  // 회원 정보 수정 처리
+        User user = userService.updateUser(usernumber, validationUserDTO);  // 회원 정보 수정 처리
         System.out.println("서비스 후 ");
         model.addAttribute("user", user);  // 수정된 회원 정보 모델에 추가
         return "redirect:/admin/view";  // 수정 후 회원 목록 페이지로 리다이렉트

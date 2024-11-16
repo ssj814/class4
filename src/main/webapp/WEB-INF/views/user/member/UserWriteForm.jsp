@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript">
 function checkUserId() {
     var userId = document.getElementById("userid").value;  // 입력된 아이디 값 가져오기
@@ -182,46 +182,18 @@ function checkUserId() {
         strengthText.className = "mt-2 " + colorClass;  // 강도에 따른 색상만 변경
     }
 
-	 // 자식 창 객체 전역으로 설정
-	    let termsWindow = null;
-	
-	    // 자식 창 열기
 	    function openTermsWindow() {
-	        // 자식 창 열기
-	        termsWindow = window.open("${pageContext.request.contextPath}/termsAgreed", "termsWindow", "width=800,height=600");
-	       	
-	        /*
-	        // 자식 창 로드 후 초기화
-	        termsWindow.onload = function() {
-	            console.log("Terms window loaded.");
-	            termsWindow.isAgreed = false; // 초기 동의 상태 설정
-	            console.log("Initial isAgreed value:", termsWindow.isAgreed);
-	        };
-			*/
-	        /*
-	        // 자식 창이 닫힐 때 상태 반영
-	        termsWindow.onunload = function() {
-	            console.log("termsWindow onunload triggered");
-	            if (termsWindow && termsWindow.isAgreed !== undefined) {
-	                console.log("termsWindow isAgreed value on parent:", termsWindow.isAgreed);
-	                if (termsWindow.isAgreed) {
-	                	console.log("isAgreed: ",termsWindow.isAgreed);
-	                    document.getElementById("termsagreed").checked = true;
-	                } else {
-	                	console.log("! isAgreed: ",termsWindow.isAgreed);
-	                    document.getElementById("termsagreed").checked = false;
-	                }
-	            } else {
-	                console.log("termsWindow or isAgreed is undefined");
-	            }
-	        };
-	        */
+	        window.open(
+	            "${pageContext.request.contextPath}/termsAgreed", // 약관 동의 페이지 URL
+	            "termsWindow",
+	            "width=800,height=600"
+	        );
 	    }
 	
 	    // 동의합니다 버튼 클릭 시 체크박스 체크
-	    function agreeToTerms() {
+	   /* function agreeToTerms() {
 	        document.getElementById("termsagreed").checked = true;
-	    }
+	    } */
 
 </script>
 

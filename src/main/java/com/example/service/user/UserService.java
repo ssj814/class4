@@ -243,7 +243,6 @@ public class UserService {
         	existingUser.setProfilepicture(validationUserDTO.getProfilePictureUrl());
         }
         // 기타 필드 설정
-        existingUser.setIsactive(1); // 기본적으로 활성화된 계정
         existingUser.setUpdated(LocalDateTime.now());
         existingUser.setLastlogin(null); // 초기 로그인 시간
         existingUser.setEmail(validationUserDTO.getEmailUsername() + "@" + validationUserDTO.getEmailDomain());

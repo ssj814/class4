@@ -73,7 +73,7 @@
     }
 </script>
 
-<div class="container mt-5" style="width: 50%;">
+<div class="container mt-5" style="width: 60%;">
     <h1 class="text-center mb-4"><b>[ ${user.userid} 회원 정보 수정 ]</b></h1>
     <form action="<c:url value='/admin/updateUser/${usernumber}'/>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="usernumber" value="${usernumber}">
@@ -81,9 +81,9 @@
             <tr>
                 <td>프로필 사진:</td>
                 <td>
-                    <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*" class="form-control" style="width:35%;">
-                    <c:if test="${not empty validationUserDTO.profilePictureUrl}">
-                        <img src="${validationUserDTO.profilePictureUrl}" alt="프로필 사진" width="100" height="100" class="mt-2">
+                    <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*" class="form-control" style="width:45%;">
+                    <c:if test="${not empty user.profilepicture}">
+                        <img src="<c:url value='${user.profilepicture}' />" alt="프로필 사진" width="100" height="100" class="mt-2">
                     </c:if>
                 </td>
             </tr>
@@ -96,7 +96,7 @@
             <tr>
                 <td>실명:</td>
                 <td>
-                    <input type="text" id="realusername" name="realusername" value="${user.realusername}" readonly class="form-control"  style="width: 20%;">
+                    <input type="text" id="realusername" name="realusername" value="${user.realusername}" readonly class="form-control"  style="width: 35%;">
                     <c:if test="${not empty validationUserDTO.realusernameError}">
                         <span class="text-danger">${validationUserDTO.realusernameError}</span>
                     </c:if>
@@ -142,7 +142,7 @@
                 <td>이메일:</td>
                 <td style="display: flex;">
                     <input type="text" id="emailUsername" name="emailUsername" value="${validationUserDTO.emailUsername}" class="form-control" style="width: 30%;" required>&nbsp;&nbsp;@&nbsp;&nbsp;
-                    <select id="emailDomain" name="emailDomain" class="form-control" style="width: 15%;" required>
+                    <select id="emailDomain" name="emailDomain" class="form-control" style="width: 20%;" required>
                         <option value="gmail.com" ${validationUserDTO.emailDomain == 'gmail.com' ? 'selected' : ''}>gmail.com</option>
                         <option value="naver.com" ${validationUserDTO.emailDomain == 'naver.com' ? 'selected' : ''}>naver.com</option>
                         <option value="daum.net" ${validationUserDTO.emailDomain == 'daum.net' ? 'selected' : ''}>daum.net</option>

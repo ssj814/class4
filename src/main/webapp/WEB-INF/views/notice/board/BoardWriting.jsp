@@ -15,7 +15,7 @@
 				<tr>
 					<th>내용</th>
 					<td><textarea name="content" id="content"
-							style="width: 90%; height: 100px;">${post.content != null ? post.content : ''}</textarea>
+							style="width: 90%; height: 300px; resize: none;">${post.content != null ? post.content : ''}</textarea>
 					</td>
 				</tr>
 				<tr>

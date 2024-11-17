@@ -247,9 +247,7 @@ public class UserService {
         // Role 처리 (필요에 따라 DTO에서 받은 값을 사용하거나 기본값 설정)
         if (validationUserDTO.getRole() != null) {
         	existingUser.setRole(validationUserDTO.getRole());
-        } else {
-        	existingUser.setRole(User.Role.USER);  // 기본값 설정
-        }
+        } 
         if (validationUserDTO.getProfilePictureUrl() != null && !validationUserDTO.getProfilePictureUrl().isEmpty()) {
         	existingUser.setProfilepicture(validationUserDTO.getProfilePictureUrl());
         }

@@ -246,10 +246,12 @@
 					            <div>
 					                <strong>${product.product_name}</strong> <br>
 					                <small>
+					                	<c:if test="${not empty item.option_type }">
 					                    <c:forEach var="type" items="${fn:split(item.option_type, ',')}" varStatus="idx">
 					                        <c:set var="name" value="${fn:split(item.option_name, ',')[idx.index]}" />
 					                        ${type} : ${name}<c:if test="${!idx.last}"> || </c:if>
 					                    </c:forEach>
+					                    </c:if>
 					                </small> × ${item.quantity}
 					            </div>
 					            <span>

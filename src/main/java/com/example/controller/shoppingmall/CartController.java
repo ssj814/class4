@@ -125,7 +125,10 @@ public class CartController {
 		String userId = authentication.getName();
 	    int cartId = Integer.parseInt((String) requestMap.get("cartId"));
 	    int productId = Integer.parseInt((String) requestMap.get("productId"));
+	    int Qty = Integer.parseInt((String) requestMap.get("Qty"));
 	    List<Map<String, String>> options = (List<Map<String, String>>) requestMap.get("options");
+	    
+	    System.out.println("수량 : "+Qty);
 	    
 	    Map<String, Object> map = createCartMap(userId, productId, cartId, options);
 	    // 동일한 상품이 장바구니에 있는지 확인
@@ -133,7 +136,10 @@ public class CartController {
 	    Map<String, String> responseMap = new HashMap<>();
 	    if (existingCartId > 0) {
 	        // 동일한 옵션이 있는 경우 수량 증가
-	        int updateResult = service.increaseQuantityByCartId(existingCartId);
+	    	Map<String, Object> existingMap = new HashMap<>();
+	    	existingMap.put("cart_id", existingCartId);
+	    	existingMap.put("Qty", Qty);
+	        int updateResult = service.increaseQuantityByCartId(existingMap);
 	        if (updateResult == 1) {
 	            // 현재 cartId 상품 삭제
 	            service.deleteCartById(cartId);

@@ -350,6 +350,7 @@ input[type="number"]::-webkit-inner-spin-button {
 				$(".product-option-container select").on("change", function () {
 					var productId = $(this).closest(".row").find(".product-id").val();
 				    var cartId = $(this).closest(".row").find(".cart-id").val();
+				    var Qty = $(this).closest(".row").find(".product-count").val();
 				    var options = [];
 				    
 				    $(this).closest(".row").find(".product-option-container select").each(function() {
@@ -367,7 +368,8 @@ input[type="number"]::-webkit-inner-spin-button {
 				        data: JSON.stringify({
 				            productId: productId,
 				            cartId: cartId,
-				            options: options
+				            options: options,
+				            Qty: Qty
 				        }),
 				        success: function (resData) {
 				            console.log("옵션 변경 성공: " + resData.mesg);

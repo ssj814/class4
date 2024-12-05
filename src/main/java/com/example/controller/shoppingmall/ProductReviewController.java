@@ -28,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductReviewDTO;
 import com.example.dto.ProductReviewFeedbackDTO;
+import com.example.service.image.ImageService;
 import com.example.service.shoppingmall.ProductReviewService;
 import com.example.service.shoppingmall.ProductService;
 
@@ -39,6 +40,9 @@ public class ProductReviewController {
 
 	@Autowired
 	ProductReviewService productReviewService;
+	
+	@Autowired
+	ImageService imageService;
 
 	@GetMapping("/user/shop_productReview/{productId}") // 리뷰 insert 페이지 이동
 	public String getProductReviewPage(@PathVariable int productId, Model m) {
@@ -46,47 +50,25 @@ public class ProductReviewController {
 		m.addAttribute("productDTO", productDTO);
 		return "shoppingMall/shopReviewForm";
 	}
-
-	@Transactional
-	@PostMapping("/shop_productReview") // 리뷰 insert
+	
+	//리뷰 등록
+	@PostMapping("/shop_productReview")
 	public String postProductReview(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos,
 			RedirectAttributes redirectAttributes) {
 		
+		//유저 처리
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String user_id = authentication.getName();
+		productReviewDTO.setUser_id(user_id);
+
+		//이미지 처리
+		String imgNames = imageService.saveMultipleImg(multipartFilePhotos,"shoppingMall_review");
+		productReviewDTO.setPhotos(imgNames);
 		
-		String uploadDir = "C:/images/shoppingMall_review/";
-        File uploadDirectory = new File(uploadDir);
-        if (!uploadDirectory.exists()) {
-            uploadDirectory.mkdirs(); //폴더없으면 생성
-        }
-		UUID uuid = UUID.randomUUID();
-		InputStream inputStream = null;
-		String imgNames = "";
-		int num = 0;
-		try {
-			if (!multipartFilePhotos[0].isEmpty()) {
-				for (MultipartFile img : multipartFilePhotos) {
-					inputStream = img.getInputStream();
-					String imgName = uuid + img.getOriginalFilename();
-					imgNames += imgName + ","; // DB저장용
-					img.transferTo(new File(uploadDir + imgName));
-				}
-				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
-			}
-			productReviewDTO.setUser_id(user_id);
-			num = productReviewService.insertReview(productReviewDTO);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (inputStream != null) inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		int insertResult = productReviewService.insertReview(productReviewDTO);
+
 		String mesg = "";
-		if (num == 1) {
+		if (insertResult == 1) {
 			mesg = "리뷰가 등록되었습니다.";
 		} else {
 			mesg = "리뷰 등록 실패";
@@ -96,23 +78,16 @@ public class ProductReviewController {
 		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 
-	@Transactional
+	// 리뷰 delete
 	@ResponseBody
-	@DeleteMapping("/shop_productReview/{reviewId}") // 리뷰 delete
+	@DeleteMapping("/shop_productReview/{reviewId}") 
 	public void delProductReview(@PathVariable int reviewId) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewId);
-		if (productReviewDTO.getPhotos() != null) {
-			String[] imgNames = productReviewDTO.getPhotos().split(",");
-			String uploadDir = "C:/images/shoppingMall_review/";
-			for (String imgName : imgNames) {
-				File file = new File(uploadDir + imgName);
-				file.delete(); // 파일이미지 삭제
-			}
-		}
+		imageService.deleteMultipleImg(productReviewDTO.getPhotos(), "shoppingMall_review");
 		productReviewService.deleteReview(reviewId);
 	}
 	
-	@GetMapping("/user/shop_productReview_update/{reviewid}") // 리뷰 update 페이지 이동
+	@GetMapping("/user/shop_productReview_update/{reviewid}")
 	public String getProductReview_update(@PathVariable int reviewid, Model m) {
 		ProductReviewDTO productReviewDTO = productReviewService.selectReview(reviewid);
 		ProductDTO productDTO = productService.selectDetailproduct(productReviewDTO.getProduct_id());
@@ -126,48 +101,22 @@ public class ProductReviewController {
 	public String postProductReview_update(ProductReviewDTO productReviewDTO, MultipartFile[] multipartFilePhotos, 
 			RedirectAttributes redirectAttributes) {
 		
+		//유저 처리
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String user_id = authentication.getName();
 		
-		String uploadDir = "C:/images/shoppingMall_review/";
-		UUID uuid = UUID.randomUUID();
-		InputStream inputStream = null;
-		String imgNames = "";
-		int num = 0;
-		try {
-			if (!multipartFilePhotos[0].isEmpty()) {
-				//기존 이미지 삭제
-				ProductReviewDTO pre_productReviewDTO = productReviewService.selectReview(productReviewDTO.getReview_id());
-				if (pre_productReviewDTO.getPhotos() != null) {
-					String[] pre_imgNames = pre_productReviewDTO.getPhotos().split(",");
-					String pre_uploadDir = "C:/images/shoppingMall_review/";
-					for (String imgName : pre_imgNames) {
-						File file = new File(pre_uploadDir + imgName);
-						file.delete();
-					}
-				}
-				//새로운 이미지 등록
-				for (MultipartFile img : multipartFilePhotos) {
-					inputStream = img.getInputStream();
-					String imgName = uuid + img.getOriginalFilename();
-					imgNames += imgName + ","; // DB저장용
-					img.transferTo(new File(uploadDir + imgName));
-				}
-				productReviewDTO.setPhotos(imgNames.replaceAll(",$", ""));
-			}
-			productReviewDTO.setUser_id(user_id);
-			num = productReviewService.updateReview(productReviewDTO);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (inputStream != null) inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		//리뷰 조회
+		ProductReviewDTO pre_productReviewDTO = productReviewService.selectReview(productReviewDTO.getReview_id());
+		productReviewDTO.setUser_id(user_id);
+		
+		//이미지 처리
+		String imgNames = imageService.updateMultipleImg(multipartFilePhotos, pre_productReviewDTO.getPhotos(), "shoppingMall_review");
+		productReviewDTO.setPhotos(imgNames);
+
+		int updateResult = productReviewService.updateReview(productReviewDTO);
+
 		String mesg = "";
-		if (num == 1) {
+		if (updateResult == 1) {
 			mesg = "리뷰가 수정되었습니다.";
 		} else {
 			mesg = "리뷰 수정 실패";
@@ -177,6 +126,7 @@ public class ProductReviewController {
 		return "redirect:/user/shop_productReview/" + productReviewDTO.getProduct_id();
 	}
 	
+
 	@Transactional
 	@ResponseBody
 	@PatchMapping("/shop_productReview_Feedback") //후기 평가 update

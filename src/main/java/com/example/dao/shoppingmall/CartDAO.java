@@ -57,8 +57,8 @@ public class CartDAO {
 	    return existingCartId != null ? existingCartId : 0;
 	}
 
-	public int increaseQuantityByCartId(int cart_id) {
-		return session.update("CartMapper.increaseQuantityByCartId",cart_id);
+	public int increaseQuantityByCartId(Map<String, Object> map) {
+		return session.update("CartMapper.increaseQuantityByCartId",map);
 	}
 
 	public void deleteCartById(int cart_id) {

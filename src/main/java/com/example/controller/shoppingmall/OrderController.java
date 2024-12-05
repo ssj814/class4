@@ -58,7 +58,6 @@ public class OrderController {
 
 	    for (String cartId : cartIdList) {
 	        if (cartId == null || cartId.trim().isEmpty()) {
-	            System.out.println("빈 cartId 발견, 무시합니다.");
 	            continue;
 	        }
 	        int cart_id = Integer.parseInt(cartId);
@@ -122,7 +121,7 @@ public class OrderController {
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String userId = authentication.getName();
 
-	    // Step 1: Save OrderMain
+	    // Save OrderMain
 	    OrderMain orderMain = new OrderMain();
 	    orderMain.setUserId(userId);
 	    orderMain.setOrderDate(LocalDate.now());
@@ -134,7 +133,7 @@ public class OrderController {
 	    orderMain.setTotalAmount(BigDecimal.valueOf(orderRequest.getTotalAmount()));
 	    OrderMain savedOrderMain = orderService.saveOrderMain(orderMain);
 
-	    // Step 2: Save OrderPayment
+	    // Save OrderPayment
 	    OrderPayment orderPayment = new OrderPayment();
 	    orderPayment.setOrderId(savedOrderMain.getOrderId());
 	    orderPayment.setCardType(orderRequest.getCardType());
@@ -142,7 +141,7 @@ public class OrderController {
 	    orderPayment.setPaymentDate(Date.valueOf(LocalDate.now()));
 	    orderService.saveOrderPayment(orderPayment);
 
-	    // Step 3: Save OrderProducts and their options
+	    // Save OrderProduct & options
 	    List<Long> productIds = orderRequest.getProductIds();
 	    List<Integer> quantities = orderRequest.getQuantities();
 	    List<Double> individualPrices = orderRequest.getIndividualPrices();

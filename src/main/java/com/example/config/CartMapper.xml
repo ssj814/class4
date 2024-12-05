@@ -73,10 +73,10 @@
 	</select>
 
 	<!-- 수량 증가 -->
-	<update id="increaseQuantityByCartId" parameterType="int">
+	<update id="increaseQuantityByCartId" parameterType="hashmap">
 		UPDATE product_cart
-		SET quantity = quantity + 1
-		WHERE cart_id = #{cart_Id, jdbcType=INTEGER}
+		SET quantity = quantity + #{Qty}
+		WHERE cart_id = #{cart_id, jdbcType=INTEGER}
 	</update>
 
 	<!-- 장바구니 항목 삭제 -->

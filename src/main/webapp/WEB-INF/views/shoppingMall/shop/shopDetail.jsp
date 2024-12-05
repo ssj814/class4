@@ -130,6 +130,12 @@
 		// 로그인 유저 정보
 		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
 		
+		// 수량 입력 필드 변경 시 히든 태그 값 업데이트
+	    $(".product-quantity").on("change", function () {
+	        const quantity = $(this).val();
+	        $("input[name='quantity']").val(quantity); // 히든 태그에 값 동기화
+	    });
+		
 		// + 버튼 클릭 이벤트
 		$('.increase').click(function() {
 		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정

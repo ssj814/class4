@@ -53,8 +53,8 @@ public class CartService {
 		return dao.checkExistingCart(map);
 	}
 
-	public int increaseQuantityByCartId(int cart_id) {
-		return dao.increaseQuantityByCartId(cart_id);
+	public int increaseQuantityByCartId(Map<String, Object> map) {
+		return dao.increaseQuantityByCartId(map);
 	}
 
 	public void deleteCartById(int cart_id) {

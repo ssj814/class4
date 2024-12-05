@@ -72,27 +72,27 @@ public class ProductController {
 	}
 	
 	@RequestMapping(value="/shopList", method=RequestMethod.GET)
-	public String shopList(@RequestParam Map<String,String> map, Model m) {
-		String category = map.get("category");
-		String page = map.get("page");
-		String search = map.get("search");
-		String sort = map.get("sort");
-		//페이징
+	public String shopList(Model m,
+			@RequestParam(value="category", required = false) String category,
+			@RequestParam(value="page", required = false, defaultValue = "1") Integer page,
+			@RequestParam(value="search", required = false) String search,
+			@RequestParam(value="sort", required = false) String sort ) {
+
 		int perPage = 8; 
 		RowBounds bounds = null;
-		if (page==null) {
-			bounds = new RowBounds(0,perPage);
-		} else {
-			bounds = new RowBounds((Integer.parseInt(page)-1)*perPage,8);
-		}
+		bounds = new RowBounds((page-1)*perPage,perPage);
+
 		// 카테고리, 일반검색, 정렬용 map
 		Map<String, Object> dataMap = new HashMap<String, Object>();
+		
 		//카테고리별 데이터
 		dataMap.put("category", category);
+		
 		//일반 검색
 		if(search!=null) {
 			dataMap.put("search", search.trim());
 		}
+		
 		//정렬
 		List<String> sortList = null;
 		if ("nameAsc".equals(sort)) {
@@ -103,6 +103,7 @@ public class ProductController {
 			sortList = Arrays.asList("product_price","desc");
 		}
 		dataMap.put("sortList", sortList);
+		
 		List<ProductDTO> ProductList = service.selectProductList(dataMap,bounds);
 		
 		//페이징

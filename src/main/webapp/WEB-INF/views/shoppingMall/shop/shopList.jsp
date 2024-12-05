@@ -153,9 +153,28 @@
 		<c:if test="${not empty sort}">
 			<c:set var="url" value="${url}sort=${sort}&" />
 		</c:if>
+		
+		<c:choose>
+            <c:when test="${currentPage > 1}">
+                <a href='${url}page=${currentPage-1}'>이전</a>
+            </c:when>
+        </c:choose>
 		<c:forEach var="page" begin="1" end="${totalPage}">
-			<button onclick="location.href='${url}page=${page}'">${page}</button>
+        	<c:choose>
+                <c:when test="${page == currentPage}">
+                    <span>${page}</span>
+                </c:when>
+                <c:otherwise>
+                    <a href='${url}page=${page}'>${page}</a>
+                </c:otherwise>
+            </c:choose>
 		</c:forEach>
+		<c:choose>
+            <c:when test="${currentPage < totalPage}">
+                <a href='${url}page=${currentPage+1}'>다음</a>
+            </c:when>
+        </c:choose>
+		
 	</div>
 
 </div>

@@ -1,14 +1,10 @@
 package com.example.controller.shoppingmall;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,6 +30,7 @@ import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductRecentDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.service.image.ImageService;
 import com.example.service.notice.NoticeService;
 import com.example.service.shoppingmall.ProductReviewService;
 import com.example.service.shoppingmall.ProductService;
@@ -52,6 +48,9 @@ public class ProductController {
 	
 	@Autowired
 	NoticeService nService;
+	
+	@Autowired
+	ImageService imageService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m, HttpSession session) {
@@ -198,51 +197,37 @@ public class ProductController {
 		return "shoppingMall/productInsert";
 	}
 	
+	//상품 등록
 	@PostMapping(value="/product")
 	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames) {
-		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
-        File uploadDirectory = new File(uploadDir);
-        if (!uploadDirectory.exists()) {
-            uploadDirectory.mkdirs(); //폴더없으면 생성
-        }
-		UUID uuid = UUID.randomUUID();
-		InputStream inputStream = null;
-		int num = 0;
-		try {
-			inputStream = product_image.getInputStream();
-			String imgName = uuid + product_image.getOriginalFilename();
-			ProductDTO.setProduct_imagename(imgName);
-			num = service.insertProduct(ProductDTO);
-			product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
-			
-			// 옵션 처리
-	        if (optionTypes != null && optionNames != null) {
-	            for (int i = 0; i < optionTypes.size(); i++) {
-	                String optionType = optionTypes.get(i);
-	                String optionName = optionNames.get(i);
+		
+		//이미지 처리
+		String imgName = imageService.saveImg(product_image, "shoppingMall_product");
+		ProductDTO.setProduct_imagename(imgName);
+		
+		//상품 등록
+		int insertResult = service.insertProduct(ProductDTO);
+		
+		// 옵션 처리
+        if (optionTypes != null && optionNames != null) {
+            for (int i = 0; i < optionTypes.size(); i++) {
+                String optionType = optionTypes.get(i);
+                String optionName = optionNames.get(i);
 
-	                if (optionType != null && !optionType.isEmpty()) {
-	                    ProductOptionDTO option = new ProductOptionDTO();
-	                    option.setProduct_id(ProductDTO.getProduct_id());
-	                    option.setOption_type(optionType);
-	                    option.setOption_name(optionName);
-	                    service.insertProductOption(option);
-	                }
-	            }
-	        }
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(inputStream!=null)inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+                if (optionType != null && !optionType.isEmpty()) {
+                    ProductOptionDTO option = new ProductOptionDTO();
+                    option.setProduct_id(ProductDTO.getProduct_id());
+                    option.setOption_type(optionType);
+                    option.setOption_name(optionName);
+                    service.insertProductOption(option);
+                }
+            }
+        }
+
 		String mesg = "";
-		if(num==1) {
+		if(insertResult==1) {
 			mesg = "상품 등록이 완료되었습니다.";
 		} else {
 			mesg = "상품 등록에 실패했습니다.";
@@ -252,26 +237,33 @@ public class ProductController {
 		return "redirect:/shopList";
 	}
 	
-	
+	//상품 삭제
 	@DeleteMapping(value="/product/productId/{productId}")
 	@ResponseBody
 	public Map<String,String> productDelete(@PathVariable("productId") int productId, Model m) {
-		//저장된 외부 이미지 삭제
+		
+		Map<String,String> response = new HashMap<String, String>();
+		
+		//상품 데이터 조회
 		ProductDTO productDTO = service.selectDetailproduct(productId);
+		if(productDTO == null) {
+			response.put("mesg","상품이 존재하지 않습니다.");
+			return response;
+		}
+		
+		//이미지 삭제
 		String imgName = productDTO.getProduct_imagename();
-		if (imgName != null) {
-			String uploadDir = "C:/images/shoppingMall_product/";
-			File file = new File(uploadDir + imgName);
-			file.delete(); // 파일이미지 삭제
-		}
+		imageService.deleteImg(imgName,"shoppingMall_product");
+
 		//상품 삭제 
-		int n = service.productDelete(productId);
-		Map<String,String> map = new HashMap<String, String>();
-		map.put("mesg","상품이 삭제 되었습니다.");
-		if(n!=1) {
-			map.put("mesg","상품 삭제 실패");
+		int deleteResult  = service.productDelete(productId);
+		
+		if(deleteResult == 1) {
+			response.put("mesg","상품이 삭제 되었습니다.");
+		} else {
+			response.put("mesg","상품 삭제 실패.");
 		}
-		return map;
+		return response;
 	}
 	
 	@GetMapping(value="/productUpdate")
@@ -288,101 +280,79 @@ public class ProductController {
 		return "shoppingMall/productUpdate";
 	}
 	
+	//상품 수정
 	@PostMapping(value="/productUpdate")
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes redirectAttributes) {	
-		String uploadDir = "C:/images/shoppingMall_product/"; //이미지 저장 경로
-        File uploadDirectory = new File(uploadDir);
-        if (!uploadDirectory.exists()) {
-            uploadDirectory.mkdirs(); //폴더없으면 생성
+		
+		//상품 조회
+		ProductDTO productDTO = service.selectDetailproduct(ProductDTO.getProduct_id());
+		
+		//이미지 처리
+		String preimgName = productDTO.getProduct_imagename();
+		String imgName = imageService.updateImg(product_image, preimgName, "shoppingMall_product");
+		ProductDTO.setProduct_imagename(imgName);
+		
+		//상품 수정
+		int updateResult = service.updateProduct(ProductDTO);
+		
+		// 기존 옵션 조회
+        List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
+
+        // 옵션 처리
+        if (optionTypes != null && optionNames != null) {
+            for (int i = 0; i < optionTypes.size(); i++) {
+                String optionType = optionTypes.get(i);
+                String optionName = optionNames.get(i);
+
+                if (optionType != null && !optionType.isEmpty()) {
+                    boolean isUpdated = false;
+
+                    // 기존 옵션과 비교하여 업데이트 또는 추가
+                    for (ProductOptionDTO existingOption : existingOptions) {
+                        if (existingOption.getOption_type().equals(optionType)) {
+                            // OPTION_TYPE이 같은 경우 OPTION_NAME 업데이트
+                            existingOption.setOption_name(optionName);
+                            service.updateProductOption(existingOption);
+                            isUpdated = true;
+                            break;
+                        }
+                    }
+
+                    // OPTION_TYPE이 없는 경우 새로운 옵션 추가
+                    if (!isUpdated) {
+                        ProductOptionDTO newOption = new ProductOptionDTO();
+                        newOption.setProduct_id(ProductDTO.getProduct_id());
+                        newOption.setOption_type(optionType);
+                        newOption.setOption_name(optionName);
+                        service.insertProductOption(newOption);
+                    }
+                }
+            }
+
+            // 삭제해야 할 기존 옵션 처리
+            for (ProductOptionDTO existingOption : existingOptions) {
+                boolean shouldDelete = true;
+
+                // 현재 옵션 리스트와 비교하여 삭제 여부 결정
+                for (String optionType : optionTypes) {
+                    if (existingOption.getOption_type().equals(optionType)) {
+                        shouldDelete = false;
+                        break;
+                    }
+                }
+
+                if (shouldDelete) {
+                    service.deleteProductOption(existingOption.getOption_id());
+                }
+            }
         }
-		UUID uuid = UUID.randomUUID();
-		String imgName = null;
-		InputStream inputStream = null;
-		int num = 0;
-		int n = 0;
-		try {
-			if(!product_image.isEmpty()) {
-				//기존 이미지 삭제
-				ProductDTO productDTO = service.selectDetailproduct(ProductDTO.getProduct_id());
-				imgName = productDTO.getProduct_imagename();
-				if (imgName != null) {
-					File file = new File(uploadDir + imgName);
-					file.delete(); // 이미지 삭제
-				}
-				//새로운 이미지 등록
-				inputStream = product_image.getInputStream();
-				imgName = uuid + product_image.getOriginalFilename();
-				ProductDTO.setProduct_imagename(imgName);
-				product_image.transferTo(new File(uploadDir + imgName)); //이미지 저장
-			} 
-			 n = service.updateProduct(ProductDTO);
-			// 기존 옵션 조회
-	        List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
-
-	        // 옵션 처리
-	        if (optionTypes != null && optionNames != null) {
-	            for (int i = 0; i < optionTypes.size(); i++) {
-	                String optionType = optionTypes.get(i);
-	                String optionName = optionNames.get(i);
-
-	                if (optionType != null && !optionType.isEmpty()) {
-	                    boolean isUpdated = false;
-
-	                    // 기존 옵션과 비교하여 업데이트 또는 추가
-	                    for (ProductOptionDTO existingOption : existingOptions) {
-	                        if (existingOption.getOption_type().equals(optionType)) {
-	                            // OPTION_TYPE이 같은 경우 OPTION_NAME 업데이트
-	                            existingOption.setOption_name(optionName);
-	                            service.updateProductOption(existingOption);
-	                            isUpdated = true;
-	                            break;
-	                        }
-	                    }
-
-	                    // OPTION_TYPE이 없는 경우 새로운 옵션 추가
-	                    if (!isUpdated) {
-	                        ProductOptionDTO newOption = new ProductOptionDTO();
-	                        newOption.setProduct_id(ProductDTO.getProduct_id());
-	                        newOption.setOption_type(optionType);
-	                        newOption.setOption_name(optionName);
-	                        service.insertProductOption(newOption);
-	                    }
-	                }
-	            }
-
-	            // 삭제해야 할 기존 옵션 처리
-	            for (ProductOptionDTO existingOption : existingOptions) {
-	                boolean shouldDelete = true;
-
-	                // 현재 옵션 리스트와 비교하여 삭제 여부 결정
-	                for (String optionType : optionTypes) {
-	                    if (existingOption.getOption_type().equals(optionType)) {
-	                        shouldDelete = false;
-	                        break;
-	                    }
-	                }
-
-	                if (shouldDelete) {
-	                    service.deleteProductOption(existingOption.getOption_id());
-	                }
-	            }
-	        }
-	        
-		} catch (IOException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(inputStream!=null)inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		
 		String mesg = "";
 		
-		if(n==1) {
+		if(updateResult==1) {
 			mesg = "수정 완료 되었습니다.";
 		} else {
 			mesg = "수정 실패 되었습니다.";

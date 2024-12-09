@@ -2,18 +2,12 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>게시물 상세보기</title>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-		<link rel="stylesheet" href="resources/css/sicdan/sicdanRetrieve.css">
+<!-- Bootstrap CSS -->
+<!-- 써머노트 호환성 때문에 4.5.2 일단 유지 -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="resources/css/sicdan/sicdanRetrieve.css">
     
-</head>
-<body>
 <!-- SweetAlert 라이브러리 로드 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -71,6 +65,3 @@
     	
     </div>
 </div>
-
-</body>
-</html>

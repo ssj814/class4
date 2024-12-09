@@ -3,7 +3,6 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-    
 <link rel="stylesheet" href="<c:url value='/resources/css/sicdan/sicdanList.css' />">
 
 <!-- SweetAlert 라이브러리 로드 -->

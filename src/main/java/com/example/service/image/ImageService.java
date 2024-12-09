@@ -21,29 +21,24 @@ public class ImageService {
 		String uploadDir = baseDir + subDir + File.separator;
 		UUID uuid = UUID.randomUUID();
 		String imgName = uuid + image.getOriginalFilename();
-
 		try {
 			// 폴더없으면 생성
 			File uploadDirectory = new File(uploadDir);
 			if (!uploadDirectory.exists()) {
 				uploadDirectory.mkdirs();
 			}
-
 			// 이미지 파일 저장
 			File savedImageFile = new File(uploadDir + imgName);
 			image.transferTo(savedImageFile);
-
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 		return imgName;
 	}
 	
 	// 이미지 여러개 저장
 	public String saveMultipleImg(MultipartFile[] images, String subDir) {
 	    StringJoiner imageNames = new StringJoiner(","); // 각 이미지 이름 사이에 콤마를 구분자로 사용
-
 		try {
 			if (!images[0].isEmpty()) {
 				for (MultipartFile img : images) {
@@ -57,7 +52,6 @@ public class ImageService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return imageNames.toString();
 	}
 	
@@ -82,12 +76,10 @@ public class ImageService {
 	@Transactional
 	public String updateImg(MultipartFile image, String preImgName, String subDir) {
 		String imgName = preImgName;
-		
 		if(!image.isEmpty()) {
 			deleteImg(preImgName,subDir);
 			imgName = saveImg(image,subDir);
 		}
-		
 		return imgName;
 	}
 	
@@ -95,12 +87,10 @@ public class ImageService {
 	@Transactional
 	public String updateMultipleImg(MultipartFile[] images, String preImgNames, String subDir) {
 		String imgName = preImgNames;
-		
 		if (!images[0].isEmpty()) {
 			deleteMultipleImg(preImgNames, subDir);
 			imgName = saveMultipleImg(images,subDir);
 		}
-		
 		return imgName;
 	}
 

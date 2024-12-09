@@ -48,16 +48,8 @@
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/trainer_list">Find Trainer</a></li>
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/TrainerBoard">TrainerBoard</a></li>
 						</ul></li>
-					<li class="nav-item dropdown"><a
-						class="nav-link dropdown-toggle" href="#" role="button"
-						data-bs-toggle="dropdown" aria-expanded="false"
-						style="color: beige;">Meal Plan</a>
-						<ul class="dropdown-menu">
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/cookingTip_cooking">Cooking	Tip</a></li>
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/sicdan_list">Sicdan</a></li>
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/Chart">Chart</a></li>
-							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/bmiForm">BmiForm</a></li>
-						</ul></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="${pageContext.request.contextPath}/sicdan_list" style="color: beige;">Sicdan</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="${pageContext.request.contextPath}/notice" style="color: beige;">Notice</a></li>
 						<li class="nav-item"><a class="nav-link active"

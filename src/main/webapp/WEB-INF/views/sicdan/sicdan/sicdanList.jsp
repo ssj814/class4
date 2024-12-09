@@ -2,15 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>운동 식단 게시판</title>
+
     
-    <link rel="stylesheet" href="<c:url value='/resources/css/sicdan/sicdanList.css' />">
-</head>
-<body>
+<link rel="stylesheet" href="<c:url value='/resources/css/sicdan/sicdanList.css' />">
 
 <!-- SweetAlert 라이브러리 로드 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -57,6 +51,37 @@
 
 <div id="boardList">
     <div id="boardList_title">[운동 식단 게시판]</div>
+    
+	
+	<div class="container custom-card-container mt-1 mb-1">
+	    <div class="row text-center">
+	        <!-- 일일영양성분 -->
+	        <div class="col-md-4 p-0">
+	            <a href="${pageContext.request.contextPath}/Chart" class="custom-card">
+	                <div class="custom-card-content">
+	                    <h5>일일 권장 섭취량 Chart &nbsp;&nbsp;▶</h5>
+	                </div>
+	            </a>
+	        </div>
+	        <!-- BMI 계산기 -->
+	        <div class="col-md-4 px-1">
+	            <a href="${pageContext.request.contextPath}/bmiForm" class="custom-card">
+	                <div class="custom-card-content">
+	                    <h5>BMI 계산기 &nbsp;&nbsp;▶</h5>
+	                </div>
+	            </a>
+	        </div>
+	        <!-- Cooking Tip -->
+	        <div class="col-md-4 p-0">
+	            <a href="${pageContext.request.contextPath}/cookingTip_cooking" class="custom-card">
+	                <div class="custom-card-content">
+	                    <h5>Cooking Tip &nbsp;&nbsp;▶</h5>
+	                </div>
+	            </a>
+	        </div>
+	    </div>
+	</div>
+    
     <table>
         <thead>
             <tr>
@@ -117,7 +142,5 @@
             </c:if>
         </div>
     </div>
+    
 </div>
-
-</body>
-</html>

@@ -121,27 +121,31 @@ input[type="number"]::-webkit-inner-spin-button {
 									<a href="/app/shopDetail?productId=${product.getProduct_id()}"
 										class="text-dark fw-bold text-decoration-none fs-6">${product.getProduct_name()}</a>
 								</h2>
-								<c:forEach var="option" items="${product.allOptions}">
+								<c:forEach var="entry" items="${product.groupedOptions}">
 								    <div class="product-option-container">
-								        <label>${option.option_type}:</label>
-								        <select name="${option.option_type}">
-								            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
+								        <label>${entry.key}:</label>
+								        <select name="${entry.key}">
+								            <c:forEach var="option" items="${fn:split(entry.value, ',')}">
+						                        <c:set var="optionName" value="${fn:split(option, '|')[0]}" />
+						                        <c:set var="stock" value="${fn:split(option, '|')[1]}" />
+								                
 								                <c:set var="isSelected" value="false" />
-								
 								                <!-- 선택된 옵션에서 option_type과 option_name을 쉼표로 분리 -->
 								                <c:forEach var="selectedOption" items="${product.selectedOptions}">
 								                    <c:forEach var="selectedOptionType" items="${fn:split(selectedOption.option_type, ',')}">
 								                        <c:forEach var="selectedOptionName" items="${fn:split(selectedOption.option_name, ',')}">
 								                            <c:if test="${selectedOption.cart_id == product.cart_id 
-								                                and selectedOptionType == option.option_type 
-								                                and selectedOptionName == name}">
+								                                and selectedOptionType == entry.key
+								                                and selectedOptionName == optionName}">
 								                                <c:set var="isSelected" value="true" />
 								                            </c:if>
 								                        </c:forEach>
 								                    </c:forEach>
 								                </c:forEach>
 								
-								                <option value="${name}" <c:if test="${isSelected}">selected</c:if>>${name}</option>
+								                <option value="${optionName}" <c:if test="${isSelected}">selected</c:if>>
+								                ${optionName} [남은 수량: ${stock}]
+								                </option>
 								            </c:forEach>
 								        </select>
 								    </div>

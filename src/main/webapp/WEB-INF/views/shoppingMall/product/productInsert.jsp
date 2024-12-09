@@ -152,4 +152,27 @@
             optionRow.remove();
         }
     }
+    
+    // 옵션별 수량의 총 합이 같은지 계산
+    document.querySelector('form').addEventListener('submit', function (event) {
+        const optionRows = document.querySelectorAll('.option-row');
+        let totalStock = null;
+
+        for (let row of optionRows) {
+            const stockInput = row.querySelector('.option-stock');
+            if (stockInput) {
+                const stockValues = stockInput.value.split(',').map(value => parseInt(value.trim(), 10));
+                const currentTotalStock = stockValues.reduce((acc, val) => acc + val, 0);
+
+                // 첫 번째 옵션의 총합을 기준으로 설정
+                if (totalStock === null) {
+                    totalStock = currentTotalStock;
+                } else if (totalStock !== currentTotalStock) {
+                    alert("옵션별 수량의 총합이 일치하지 않습니다.");
+                    event.preventDefault(); // 폼 제출 중단
+                    return;
+                }
+            }
+        }
+    });
 </script>

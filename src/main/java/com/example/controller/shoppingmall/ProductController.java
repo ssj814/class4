@@ -171,7 +171,30 @@ public class ProductController {
 		
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(map,bounds);
-		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		List<ProductOptionDTO> rawOptions = service.selectProductOptions(productId);
+		// 옵션 데이터 가공
+	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
+	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
+
+	    List<Map<String, String>> options = new ArrayList<>();
+	    for (String optionType : groupedOptions.keySet()) {
+	        List<ProductOptionDTO> optionList = groupedOptions.get(optionType);
+
+	        // 옵션 이름과 재고를 ,로 연결
+	        String optionNames = optionList.stream()
+	                .map(ProductOptionDTO::getOption_name)
+	                .collect(Collectors.joining(","));
+	        String stocks = optionList.stream()
+	                .map(option -> String.valueOf(option.getStock()))
+	                .collect(Collectors.joining(","));
+
+	        // 가공된 데이터 추가
+	        Map<String, String> optionData = new HashMap<>();
+	        optionData.put("option_type", optionType);
+	        optionData.put("option_name", optionNames);
+	        optionData.put("stock", stocks);
+	        options.add(optionData);
+	    }
 		service.addViewCount(productId); //조회수++
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		

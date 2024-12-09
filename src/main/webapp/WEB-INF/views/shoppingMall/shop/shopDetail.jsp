@@ -72,8 +72,9 @@
 					    <div class="product-option-container">
 					        <label>${option.option_type}</label>
 					        <select class="form-select">
-					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}">
-					                <option value="${name}">${name}</option>
+					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}" varStatus="status">
+						            <c:set var="stockValue" value="${fn:split(option.stock, ',')[status.index]}" />
+					                <option value="${name}">${name} [수량 : ${stockValue}]</option>
 					            </c:forEach>
 					        </select>
 					    </div>

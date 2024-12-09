@@ -43,8 +43,18 @@ public class CartController {
 		List<CartProductDTO> ProductList = service.selectCart(userId);
 		 for (CartProductDTO product : ProductList) {
 			// 모든 옵션을 가져오기
-		        List<ProductOptionDTO> allOptions = productService.selectProductOptions(product.getProduct_id());
-		        product.setAllOptions(allOptions);
+		        List<ProductOptionDTO> rawOptions = productService.selectProductOptions(product.getProduct_id());
+		     // 옵션 데이터를 가공 및 그룹화
+		        Map<String, String> groupedOptions = rawOptions.stream()
+		        	    .collect(Collectors.groupingBy(
+		        	        ProductOptionDTO::getOption_type,
+		        	        Collectors.mapping(
+		        	            option -> option.getOption_name() + "|" + option.getStock(),
+		        	            Collectors.joining(",")
+		        	        )
+		        	    ));
+
+		        product.setGroupedOptions(groupedOptions);
 		        
 		        // 장바구니에 선택된 옵션을 가져오기
 		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), userId);

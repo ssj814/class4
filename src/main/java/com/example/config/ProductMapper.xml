@@ -77,42 +77,42 @@
 
 	<insert id="insertProduct" parameterType="ProductDTO">
 		insert into product
-		(product_category_id,product_name,product_price,product_description,product_imagename,product_inventory,product_createdat,product_isactive)
+		(product_category_id,product_name,product_price,product_description,product_imagename,product_createdat,product_isactive)
 		values
-		(#{product_category_id},#{product_name},#{product_price},#{product_description},#{product_imagename},#{product_inventory},sysdate,#{product_isactive})
+		(#{product_category_id},#{product_name},#{product_price},#{product_description},#{product_imagename},sysdate,#{product_isactive})
 	</insert>
 
 	<update id="updateProduct" parameterType="ProductDTO">
 		UPDATE product SET
 		product_category_id=#{product_category_id},
 		product_name=#{product_name}, product_price=#{product_price},
-		product_description=#{product_description},
+		product_description=#{product_description}
 		<if test="product_imagename!=null">
-			product_imagename=#{product_imagename},
+			, product_imagename=#{product_imagename}
 		</if>
-		product_inventory = #{product_inventory} 
 		where product_id = #{product_id}
 	</update>
 
 	<!-- 상품 옵션 삽입 -->
-	<insert id="insertProductOption"
-		parameterType="ProductOptionDTO">
-		INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE,
-		OPTION_NAME)
-		VALUES (#{product_id}, #{option_type}, #{option_name})
+	<insert id="insertProductOption" parameterType="ProductOptionDTO">
+	    INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE, OPTION_NAME, STOCK)
+	    VALUES (#{product_id}, #{option_type}, #{option_name}, #{stock})
 	</insert>
+
 
 	<!-- 상품 옵션 가져오기 -->
 	<select id="selectProductOptions" parameterType="int"
 		resultType="ProductOptionDTO">
-		SELECT * FROM PRODUCT_OPTION WHERE PRODUCT_ID =
-		#{productId}
+		SELECT OPTION_ID, PRODUCT_ID, OPTION_TYPE, OPTION_NAME, STOCK FROM PRODUCT_OPTION 
+		WHERE PRODUCT_ID = #{productId}
+		ORDER BY OPTION_ID
 	</select>
 
 	<update id="updateProductOption"
 		parameterType="ProductOptionDTO">
 		UPDATE PRODUCT_OPTION
-		SET OPTION_NAME = #{option_name}
+		SET OPTION_NAME = #{option_name},
+		STOCK = #{stock}
 		WHERE OPTION_ID = #{option_id}
 	</update>
 

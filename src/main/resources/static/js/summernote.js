@@ -3,28 +3,31 @@ const imageDeleteUrl = "/app/sicdan/imageDelete";
     $(document).ready(function() {
         $('.summernote').summernote({
             lang: 'ko-KR',
-            height: 400,
+            height: 500,
+            disableDragAndDrop: true,
+            disableResizeEditor: true,
             toolbar: [
                 ['fontname', ['fontname']],
                 ['fontsize', ['fontsize']],
                 ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
-                ['color', ['forecolor', 'color']],
+                ['color', ['forecolor']],
                 ['table', ['table']],
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
-                ['insert', ['picture']],
-                ['view', ['fullscreen', 'help']]
             ],
             callbacks: {
+				onInit: function () {
+                $('.note-editable').css('text-align', 'left'); // 왼쪽 정렬로 설정
+            	},
                 onImageUpload: function(files) {
                     for (let i = 0; i < files.length; i++) {
                         uploadImage(files[i], this);
                     }
                 }
-            }
+            },
+            
         });
     });
-
     // 이미지 업로드 함수
     function uploadImage(file, editor) {
         let data = new FormData();

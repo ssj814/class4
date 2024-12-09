@@ -18,10 +18,10 @@ public class ProductDTO {
 	private int product_price;
 	private String product_description;
 	private String product_imagename;
-	private int product_inventory;
 	private int product_totalsales; // 총판매량
 	private int product_view;
 	private String product_createdat;
 	private String product_isactive; // product_status로 변경
-
+	private int product_stock;
+	private boolean hasOptions;
 }

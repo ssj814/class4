@@ -92,13 +92,19 @@
 		</if>
 		where product_id = #{product_id}
 	</update>
-
+	
+	<!-- 옵션 없는 상품 재고 업데이트 -->
+	<update id="updateProductStock" parameterType="com.example.dto.ProductDTO">
+	    UPDATE product
+	    SET product_stock = #{product_stock}
+	    WHERE product_id = #{product_id}
+	</update>
+	
 	<!-- 상품 옵션 삽입 -->
 	<insert id="insertProductOption" parameterType="ProductOptionDTO">
 	    INSERT INTO PRODUCT_OPTION (PRODUCT_ID, OPTION_TYPE, OPTION_NAME, STOCK)
 	    VALUES (#{product_id}, #{option_type}, #{option_name}, #{stock})
 	</insert>
-
 
 	<!-- 상품 옵션 가져오기 -->
 	<select id="selectProductOptions" parameterType="int"

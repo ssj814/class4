@@ -29,5 +29,6 @@ public class CartProductDTO {
 	private int quantity;
 	private Map<String, String> groupedOptions; // 옵션 타입별 그룹화된 데이터
 	private List<CartDTO> selectedOptions; // 선택된 옵션
-
+	private boolean hasOptions; // 옵션 유무
+	private int stock; // 옵션 없는 상품의 재고
 }

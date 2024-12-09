@@ -94,5 +94,9 @@ public class ProductService {
 	public void deleteRecentView(String user_id) {
 		dao.deleteRecentView(user_id);
 	}
+
+	public void updateProductStock(ProductDTO dto) {
+		dao.updateProductStock(dto);
+	}
 	
 }

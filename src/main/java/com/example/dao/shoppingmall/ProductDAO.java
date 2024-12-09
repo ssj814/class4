@@ -95,6 +95,8 @@ public class ProductDAO {
 		session.delete("ProductMapper.deleteRecentView", user_id);
 	}
 
-
+	public void updateProductStock(ProductDTO dto) {
+		session.update("ProductMapper.updateProductStock", dto);
+	}
 
 }

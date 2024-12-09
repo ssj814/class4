@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
@@ -227,7 +226,8 @@ public class ProductController {
 	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
 			@RequestParam(value = "option_name", required = false) List<String> optionNames,
-            @RequestParam(value = "stock", required = false) List<String> stocks) {
+            @RequestParam(value = "stock", required = false) List<String> stocks,
+            @RequestParam(value = "stock_no_option", required = false, defaultValue = "0") Integer stockNoOption) {
 		
 		//이미지 처리
 		String imgName = imageService.saveImg(product_image, "shoppingMall_product");
@@ -237,7 +237,7 @@ public class ProductController {
 		int insertResult = service.insertProduct(ProductDTO);
 		
 		// 옵션 처리
-        if (optionTypes != null && optionNames != null && stocks != null) {
+		if (optionTypes != null && !optionTypes.isEmpty()) {
     		System.out.println("최초 optionTypes : "+optionTypes);
     		System.out.println("최초 optionNames : "+optionNames.toString());
     		System.out.println("최초 optionNames 길이 : "+optionNames.size());
@@ -307,6 +307,12 @@ public class ProductController {
 	                }
 	            }
     		}
+        } else {
+            // 옵션이 없는 경우 처리
+            if (stockNoOption != null && stockNoOption > 0) {
+                ProductDTO.setProduct_stock(stockNoOption);
+                service.updateProductStock(ProductDTO);
+            }
         }
 
 		String mesg = "";
@@ -379,6 +385,9 @@ public class ProductController {
 	        optionData.put("stock", stocks);
 	        options.add(optionData);
 	    }
+	    
+	    // 옵션 여부 설정
+	    productDTO.setHasOptions(!rawOptions.isEmpty());
 	    
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("product", productDTO);

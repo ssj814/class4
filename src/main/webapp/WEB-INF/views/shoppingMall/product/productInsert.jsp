@@ -35,6 +35,13 @@
         <label for="product_name">상품명</label>
         <input type="text" id="product_name" name="product_name" placeholder="상품명을 입력하세요."  maxlength="50" required />
 
+		<!-- 옵션 여부 토글 -->
+        <label for="has_options_toggle">옵션 여부</label>
+        <label class="switch">
+            <input type="checkbox" id="has_options_toggle" checked>
+            <span class="slider round"></span>
+        </label>
+        
 		<div id="option-container">
 		    <div class="option-row">
 		        <div class="input-group">
@@ -53,14 +60,19 @@
 		        </div>
 		    </div>
 		</div>
-		
 		<!-- 옵션 추가 버튼 -->
-		<div>
+		<div id="add-option-container">
 		    <button type="button" id="add-option">옵션 추가</button>
 		</div>
 
+		<!-- 수량 입력 필드 (옵션이 없을 경우 표시) -->
+        <div id="stock-container" style="display: none;">
+            <label for="stock">수량</label>
+            <input type="number" id="stock" name="stock_no_option" placeholder="예: 10" min="1" />
+        </div>
+        
         <label for="product_price">가격</label>
-        <input type="text" id="product_price" name="product_price" value="0" required />
+        <input type="text" id="product_price" name="product_price" placeholder="예: 1000" required />
 		
 		<label for="product_image">대표 이미지</label>
         <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')" required/>
@@ -77,6 +89,51 @@
 </div>
 
 <script>
+	//토글에 따라 옵션 입력과 수량 입력 표시 전환
+	document.getElementById('has_options_toggle').addEventListener('change', function () {
+	    const optionContainer = document.getElementById('option-container');
+	    const addOptionContainer = document.getElementById('add-option-container');
+	    const stockContainer = document.getElementById('stock-container');
+	
+	    const optionTypeInputs = document.querySelectorAll('.option-type');
+	    const optionStockInputs = document.querySelectorAll('.option-stock');
+	    const optionNameInputs = document.querySelectorAll('.option-name');
+	    const stockInput = document.getElementById('stock');
+	
+	    if (this.checked) {
+	        // 옵션 입력 표시
+	        optionContainer.style.display = 'block';
+	        addOptionContainer.style.display = 'block';
+	        stockContainer.style.display = 'none';
+	
+	        // 옵션 필수 설정
+	        optionTypeInputs.forEach(input => input.setAttribute('required', 'required'));
+	        optionStockInputs.forEach(input => input.setAttribute('required', 'required'));
+	        optionNameInputs.forEach(input => input.setAttribute('required', 'required'));
+	
+	        // 수량 필수 해제
+	        stockInput.removeAttribute('required');
+	    } else {
+	        // 옵션 입력 숨김, 수량 입력 표시
+	        optionContainer.style.display = 'none';
+	        addOptionContainer.style.display = 'none';
+	        stockContainer.style.display = 'block';
+	
+	        // 옵션 필수 해제
+	        optionTypeInputs.forEach(input => input.removeAttribute('required'));
+	        optionStockInputs.forEach(input => input.removeAttribute('required'));
+	        optionNameInputs.forEach(input => input.removeAttribute('required'));
+	
+	        // 수량 필수 설정
+	        stockInput.setAttribute('required', 'required');
+	    }
+	});
+	
+	// 페이지 로드 시 초기 상태 설정
+	document.addEventListener('DOMContentLoaded', function () {
+	    const toggle = document.getElementById('has_options_toggle');
+	    toggle.dispatchEvent(new Event('change')); // 초기 상태에 따라 동작
+	});
 	
 	//이미지 미리보기
     function showPreview(input, previewId) {

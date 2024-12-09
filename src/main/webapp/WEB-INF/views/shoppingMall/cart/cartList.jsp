@@ -121,6 +121,7 @@ input[type="number"]::-webkit-inner-spin-button {
 									<a href="/app/shopDetail?productId=${product.getProduct_id()}"
 										class="text-dark fw-bold text-decoration-none fs-6">${product.getProduct_name()}</a>
 								</h2>
+								<c:if test="${product.hasOptions}">
 								<c:forEach var="entry" items="${product.groupedOptions}">
 								    <div class="product-option-container">
 								        <label>${entry.key}:</label>
@@ -150,8 +151,14 @@ input[type="number"]::-webkit-inner-spin-button {
 								        </select>
 								    </div>
 								</c:forEach>
+								</c:if>
+								<!-- 옵션이 없는 경우 -->
+								<c:if test="${!product.hasOptions}">
+				                	<div class="product-option-container">남은 수량: <strong>${product.stock}</strong></div>
+				            	</c:if>
 							</div>
-								
+								 
+				            
 							<div class="col-1">
 								<span id="price-${product.getCart_id()}" class="mb-1">
 									<fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩" />
@@ -356,7 +363,6 @@ input[type="number"]::-webkit-inner-spin-button {
 				    var cartId = $(this).closest(".row").find(".cart-id").val();
 				    var Qty = $(this).closest(".row").find(".product-count").val();
 				    var options = [];
-				    
 				    $(this).closest(".row").find(".product-option-container select").each(function() {
 				        options.push({
 				            type: $(this).attr("name"),

@@ -31,6 +31,13 @@
         <label for="product_name">상품명</label>
         <input type="text" id="product_name" name="product_name" value="${product.getProduct_name()}" required/><br/>
         
+        <!-- 옵션 여부 토글 -->
+        <label for="has_options_toggle">옵션 여부</label>
+        <label class="switch">
+            <input type="checkbox" id="has_options_toggle" checked>
+            <span class="slider round"></span>
+        </label>
+        
         <div id="option-container">
             <!-- 기존 옵션 출력 -->
             <c:forEach var="option" items="${options}">
@@ -51,12 +58,17 @@
                 </div>
             </c:forEach>
         </div>
-
         <!-- 옵션 추가 버튼 -->
-        <div>
+        <div id="add-option-container">
             <button type="button" id="add-option">옵션 추가</button>
         </div>
-		
+        
+		<!-- 수량 입력 필드 (옵션이 없을 경우 표시) -->
+        <div id="stock-container" style="display: none;">
+            <label for="stock">수량</label>
+            <input type="number" id="stock" name="stock_no_option" value="${product.getProduct_stock() }" placeholder="예: 100" min="1" />
+        </div>
+        
         <label for="product_price">가격</label>
         <input type="text" id="product_price" name="product_price" value="${product.getProduct_price()}" required/><br/>
         
@@ -76,7 +88,68 @@
  </div>
 
 <script>
+	//페이지 로드 시 옵션 여부에 따라 필드 표시 설정
+	window.addEventListener('DOMContentLoaded', function () {
+	    const hasOptionsToggle = document.getElementById('has_options_toggle');
+	    const optionContainer = document.getElementById('option-container');
+	    const addOptionContainer = document.getElementById('add-option-container');
+	    const stockContainer = document.getElementById('stock-container');
+	
+	    // 옵션 여부 초기 상태 설정
+	    if (${product.hasOptions}) {
+	        hasOptionsToggle.checked = true;
+	        optionContainer.style.display = 'block';
+	        addOptionContainer.style.display = 'block';
+	        stockContainer.style.display = 'none';
+	    } else {
+	        hasOptionsToggle.checked = false;
+	        optionContainer.style.display = 'none';
+	        addOptionContainer.style.display = 'none';
+	        stockContainer.style.display = 'block';
+	    }
+	    hasOptionsToggle.dispatchEvent(new Event('change')); // 초기 상태에 따라 필수 필드 설정
+	});
 
+	// 옵션 여부에 따라 필수 필드 설정
+	document.getElementById('has_options_toggle').addEventListener('change', function () {
+	    const optionContainer = document.getElementById('option-container');
+	    const addOptionContainer = document.getElementById('add-option-container');
+	    const stockContainer = document.getElementById('stock-container');
+
+	    const optionTypeInputs = document.querySelectorAll('.option-type');
+	    const optionStockInputs = document.querySelectorAll('.option-stock');
+	    const optionNameInputs = document.querySelectorAll('.option-name');
+	    const stockInput = document.getElementById('stock');
+
+	    if (this.checked) {
+	        // 옵션 입력 표시
+	        optionContainer.style.display = 'block';
+	        addOptionContainer.style.display = 'block';
+	        stockContainer.style.display = 'none';
+
+	        // 옵션 필드에 필수 속성 추가
+	        optionTypeInputs.forEach(input => input.setAttribute('required', 'required'));
+	        optionStockInputs.forEach(input => input.setAttribute('required', 'required'));
+	        optionNameInputs.forEach(input => input.setAttribute('required', 'required'));
+
+	        // 수량 필드에서 필수 속성 제거
+	        stockInput.removeAttribute('required');
+	    } else {
+	        // 옵션 입력 숨김
+	        optionContainer.style.display = 'none';
+	        addOptionContainer.style.display = 'none';
+	        stockContainer.style.display = 'block';
+
+	        // 옵션 필드에서 필수 속성 제거
+	        optionTypeInputs.forEach(input => input.removeAttribute('required'));
+	        optionStockInputs.forEach(input => input.removeAttribute('required'));
+	        optionNameInputs.forEach(input => input.removeAttribute('required'));
+
+	        // 수량 필드에 필수 속성 추가
+	        stockInput.setAttribute('required', 'required');
+	    }
+	});
+	
 	//이미지 미리보기
 	function showPreview(input, previewId) {
 	    const file = input.files[0];

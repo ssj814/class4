@@ -1,6 +1,7 @@
 package com.example.dto;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.type.Alias;
 
@@ -19,7 +20,6 @@ public class CartProductDTO {
 	private int product_price;
 	private String product_description;
 	private String product_imagename;
-	private int product_inventory;
 	private int product_totalsales;
 	private int product_like;
 	private String product_createdat;
@@ -27,7 +27,7 @@ public class CartProductDTO {
 	private int cart_id;
 	private String user_id;
 	private int quantity;
-	private List<ProductOptionDTO> allOptions; // 전체 옵션 목록
+	private Map<String, String> groupedOptions; // 옵션 타입별 그룹화된 데이터
 	private List<CartDTO> selectedOptions; // 선택된 옵션
 
 }

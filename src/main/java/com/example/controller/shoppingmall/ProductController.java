@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -171,7 +173,30 @@ public class ProductController {
 		
 		ProductDTO productDTO = service.selectDetailproduct(productId);
 		List<ProductReviewDTO> productReviewDTO = productReviewService.selectReviewList(map,bounds);
-		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		List<ProductOptionDTO> rawOptions = service.selectProductOptions(productId);
+		// 옵션 데이터 가공
+	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
+	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
+
+	    List<Map<String, String>> options = new ArrayList<>();
+	    for (String optionType : groupedOptions.keySet()) {
+	        List<ProductOptionDTO> optionList = groupedOptions.get(optionType);
+
+	        // 옵션 이름과 재고를 ,로 연결
+	        String optionNames = optionList.stream()
+	                .map(ProductOptionDTO::getOption_name)
+	                .collect(Collectors.joining(","));
+	        String stocks = optionList.stream()
+	                .map(option -> String.valueOf(option.getStock()))
+	                .collect(Collectors.joining(","));
+
+	        // 가공된 데이터 추가
+	        Map<String, String> optionData = new HashMap<>();
+	        optionData.put("option_type", optionType);
+	        optionData.put("option_name", optionNames);
+	        optionData.put("stock", stocks);
+	        options.add(optionData);
+	    }
 		service.addViewCount(productId); //조회수++
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
@@ -201,7 +226,8 @@ public class ProductController {
 	@PostMapping(value="/product")
 	public String productInsert(MultipartFile product_image, ProductDTO ProductDTO, Model m, RedirectAttributes redirectAttributes,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
-            @RequestParam(value = "option_name", required = false) List<String> optionNames) {
+			@RequestParam(value = "option_name", required = false) List<String> optionNames,
+            @RequestParam(value = "stock", required = false) List<String> stocks) {
 		
 		//이미지 처리
 		String imgName = imageService.saveImg(product_image, "shoppingMall_product");
@@ -211,19 +237,76 @@ public class ProductController {
 		int insertResult = service.insertProduct(ProductDTO);
 		
 		// 옵션 처리
-        if (optionTypes != null && optionNames != null) {
-            for (int i = 0; i < optionTypes.size(); i++) {
-                String optionType = optionTypes.get(i);
-                String optionName = optionNames.get(i);
+        if (optionTypes != null && optionNames != null && stocks != null) {
+    		System.out.println("최초 optionTypes : "+optionTypes);
+    		System.out.println("최초 optionNames : "+optionNames.toString());
+    		System.out.println("최초 optionNames 길이 : "+optionNames.size());
+    		System.out.println("최초 stocks : "+stocks.toString());
+    		
+    		if (optionTypes.size() == 1) {
+    			String optionType = optionTypes.get(0);
+    			for (int i = 0; i < optionNames.size(); i++) {
+	                String optionName = optionNames.get(i);
+	                String stock = stocks.get(i);
+	    		
+	                String[] optionNameArray = optionName.split(",");
+                    String[] stockArray = stock.split(",");
+                    if (optionNameArray.length != stockArray.length) {
+                        throw new IllegalArgumentException("옵션 이름과 재고의 개수가 맞지 않습니다.");
+                    }
+                    
+                    // 옵션 저장
+                    for (int j = 0; j < optionNameArray.length; j++) {
+                        String name = optionNameArray[j].trim();
+                        Integer stockValue = Integer.parseInt(stockArray[j].trim());
 
-                if (optionType != null && !optionType.isEmpty()) {
-                    ProductOptionDTO option = new ProductOptionDTO();
-                    option.setProduct_id(ProductDTO.getProduct_id());
-                    option.setOption_type(optionType);
-                    option.setOption_name(optionName);
-                    service.insertProductOption(option);
-                }
-            }
+                        if (!name.isEmpty() && stockValue >= 0) {
+                            ProductOptionDTO option = new ProductOptionDTO();
+                            option.setProduct_id(ProductDTO.getProduct_id());
+                            option.setOption_type(optionType);
+                            option.setOption_name(name);
+                            option.setStock(stockValue);
+                            service.insertProductOption(option);
+                        }
+                    }
+    			}
+    		} else {
+	            for (int i = 0; i < optionTypes.size(); i++) {
+	                String optionType = optionTypes.get(i);
+	                String optionName = optionNames.get(i);
+	                String stock = stocks.get(i);
+	                
+//	                System.out.println("optionType : "+optionType);
+//	                System.out.println("optionName : "+optionName);
+//	                System.out.println("stock : "+stock);
+
+	                if (optionType != null && !optionType.isEmpty() &&
+                        optionName != null && !optionName.isEmpty() &&
+                        stock != null && !stock.isEmpty()) {
+	                	
+	                	// 옵션 이름 및 재고 콤마로 분리
+	                    String[] optionNameArray = optionName.split(",");
+	                    String[] stockArray = stock.split(",");
+	                    if (optionNameArray.length != stockArray.length) {
+	                        throw new IllegalArgumentException("옵션 이름과 재고의 개수가 맞지 않습니다.");
+	                    }
+	                    // 옵션 저장
+	                    for (int j = 0; j < optionNameArray.length; j++) {
+	                        String name = optionNameArray[j].trim();
+	                        Integer stockValue = Integer.parseInt(stockArray[j].trim());
+
+	                        if (!name.isEmpty() && stockValue >= 0) {
+	                            ProductOptionDTO option = new ProductOptionDTO();
+	                            option.setProduct_id(ProductDTO.getProduct_id());
+	                            option.setOption_type(optionType);
+	                            option.setOption_name(name);
+	                            option.setStock(stockValue);
+	                            service.insertProductOption(option);
+	                        }
+	                    }
+	                }
+	            }
+    		}
         }
 
 		String mesg = "";
@@ -270,9 +353,33 @@ public class ProductController {
 	public String productUpdate(int productId, Model m,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page) {
 		ProductDTO productDTO = service.selectDetailproduct(productId);
-		List<ProductOptionDTO> options = service.selectProductOptions(productId);
+		List<ProductOptionDTO> rawOptions  = service.selectProductOptions(productId);
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+		// 옵션 데이터 가공
+	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
+	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
+
+	    List<Map<String, String>> options = new ArrayList<>();
+	    for (String optionType : groupedOptions.keySet()) {
+	        List<ProductOptionDTO> optionList = groupedOptions.get(optionType);
+
+	        // 옵션 이름과 재고를 ,로 연결
+	        String optionNames = optionList.stream()
+	                .map(ProductOptionDTO::getOption_name)
+	                .collect(Collectors.joining(","));
+	        String stocks = optionList.stream()
+	                .map(option -> String.valueOf(option.getStock()))
+	                .collect(Collectors.joining(","));
+
+	        // 가공된 데이터 추가
+	        Map<String, String> optionData = new HashMap<>();
+	        optionData.put("option_type", optionType);
+	        optionData.put("option_name", optionNames);
+	        optionData.put("stock", stocks);
+	        options.add(optionData);
+	    }
+	    
 		m.addAttribute("CategoryList",CategoryList);
 		m.addAttribute("product", productDTO);
 		m.addAttribute("options", options);
@@ -285,6 +392,7 @@ public class ProductController {
 	public String productUpdatePost(MultipartFile product_image, ProductDTO ProductDTO, Model m,
 			@RequestParam(value = "option_type", required = false) List<String> optionTypes,
             @RequestParam(value = "option_name", required = false) List<String> optionNames,
+            @RequestParam(value = "stock", required = false) List<String> stocks,
 			@RequestParam(value = "page", required = false, defaultValue = "1") String page, RedirectAttributes redirectAttributes) {	
 		
 		//상품 조회
@@ -302,31 +410,86 @@ public class ProductController {
         List<ProductOptionDTO> existingOptions = service.selectProductOptions(ProductDTO.getProduct_id());
 
         // 옵션 처리
-        if (optionTypes != null && optionNames != null) {
+        if (optionTypes != null && optionNames != null && stocks != null) {
+        	if (optionTypes.size() == 1) {
+        		String optionType = optionTypes.get(0);
+        		for (int i = 0; i < optionNames.size(); i++) {
+	                String optionName = optionNames.get(i);
+	                String stock = stocks.get(i);
+
+	                // 옵션 이름 및 재고 분리
+	                String[] optionNameArray = optionName.split(",");
+	                String[] stockArray = stock.split(",");
+	                if (optionNameArray.length != stockArray.length) {
+	                    throw new IllegalArgumentException("옵션 이름과 재고의 개수가 맞지 않습니다.");
+	                }
+
+	                // 기존 옵션 처리
+	                for (int j = 0; j < optionNameArray.length; j++) {
+	                    String name = optionNameArray[j].trim();
+	                    Integer stockValue = Integer.parseInt(stockArray[j].trim());
+
+	                    boolean isUpdated = false;
+	                    for (ProductOptionDTO existingOption : existingOptions) {
+	                        if (existingOption.getOption_type().equals(optionType) &&
+	                            existingOption.getOption_name().equals(name)) {
+	                            // 기존 옵션 업데이트
+	                            existingOption.setStock(stockValue);
+	                            service.updateProductOption(existingOption);
+	                            isUpdated = true;
+	                            break;
+	                        }
+	                    }
+
+	                    // 새로운 옵션 추가
+	                    if (!isUpdated) {
+	                        ProductOptionDTO newOption = new ProductOptionDTO();
+	                        newOption.setProduct_id(ProductDTO.getProduct_id());
+	                        newOption.setOption_type(optionType);
+	                        newOption.setOption_name(name);
+	                        newOption.setStock(stockValue);
+	                        service.insertProductOption(newOption);
+	                    }
+	                }
+	            }
+        		
+        	}
             for (int i = 0; i < optionTypes.size(); i++) {
                 String optionType = optionTypes.get(i);
                 String optionName = optionNames.get(i);
+                String stock = stocks.get(i);
 
-                if (optionType != null && !optionType.isEmpty()) {
+                // 옵션 이름 및 재고 분리
+                String[] optionNameArray = optionName.split(",");
+                String[] stockArray = stock.split(",");
+                if (optionNameArray.length != stockArray.length) {
+                    throw new IllegalArgumentException("옵션 이름과 재고의 개수가 맞지 않습니다.");
+                }
+
+                // 기존 옵션 처리
+                for (int j = 0; j < optionNameArray.length; j++) {
+                    String name = optionNameArray[j].trim();
+                    Integer stockValue = Integer.parseInt(stockArray[j].trim());
+
                     boolean isUpdated = false;
-
-                    // 기존 옵션과 비교하여 업데이트 또는 추가
                     for (ProductOptionDTO existingOption : existingOptions) {
-                        if (existingOption.getOption_type().equals(optionType)) {
-                            // OPTION_TYPE이 같은 경우 OPTION_NAME 업데이트
-                            existingOption.setOption_name(optionName);
+                        if (existingOption.getOption_type().equals(optionType) &&
+                            existingOption.getOption_name().equals(name)) {
+                            // 기존 옵션 업데이트
+                            existingOption.setStock(stockValue);
                             service.updateProductOption(existingOption);
                             isUpdated = true;
                             break;
                         }
                     }
 
-                    // OPTION_TYPE이 없는 경우 새로운 옵션 추가
+                    // 새로운 옵션 추가
                     if (!isUpdated) {
                         ProductOptionDTO newOption = new ProductOptionDTO();
                         newOption.setProduct_id(ProductDTO.getProduct_id());
                         newOption.setOption_type(optionType);
-                        newOption.setOption_name(optionName);
+                        newOption.setOption_name(name);
+                        newOption.setStock(stockValue);
                         service.insertProductOption(newOption);
                     }
                 }
@@ -335,21 +498,19 @@ public class ProductController {
             // 삭제해야 할 기존 옵션 처리
             for (ProductOptionDTO existingOption : existingOptions) {
                 boolean shouldDelete = true;
-
-                // 현재 옵션 리스트와 비교하여 삭제 여부 결정
-                for (String optionType : optionTypes) {
-                    if (existingOption.getOption_type().equals(optionType)) {
+                for (int i = 0; i < optionTypes.size(); i++) {
+                    String[] optionNameArray = optionNames.get(i).split(",");
+                    if (existingOption.getOption_type().equals(optionTypes.get(i)) &&
+                        Arrays.asList(optionNameArray).contains(existingOption.getOption_name())) {
                         shouldDelete = false;
                         break;
                     }
                 }
-
                 if (shouldDelete) {
                     service.deleteProductOption(existingOption.getOption_id());
                 }
             }
         }
-		
 		String mesg = "";
 		
 		if(updateResult==1) {

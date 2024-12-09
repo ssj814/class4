@@ -17,6 +17,8 @@ main {
 	flex: 1; /* 콘텐츠가 가능한 공간을 모두 차지하도록 설정 */
 }
 
+.note-btn.dropdown-toggle:after { content: none; }
+
 footer {
 	width: 100%; /* 너비 100% */
 }

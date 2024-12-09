@@ -15,5 +15,5 @@ public class ProductOptionDTO {
 	private int product_id;
 	private String option_type;
 	private String option_name;
-
+	private int stock;
 }

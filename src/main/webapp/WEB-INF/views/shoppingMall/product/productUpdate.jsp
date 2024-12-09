@@ -1,6 +1,5 @@
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link rel="stylesheet" href="resources/css/shoppingMall/productUpdate.css">
 
 <div class="container update-container">
@@ -8,6 +7,7 @@
     <form action="productUpdate" method="post" enctype="multipart/form-data">
         <input type="hidden" name="product_id" value="${product.getProduct_id()}"/>
         <input type="hidden" name="page" value="${currentPage}"/>
+        
         <label for="category_id">카테고리</label>
         <select id="product_category_id" name="product_category_id" required>
 		    <!-- "기타" 카테고리를 제외한 카테고리 출력 -->
@@ -32,26 +32,30 @@
         <input type="text" id="product_name" name="product_name" value="${product.getProduct_name()}" required/><br/>
         
         <div id="option-container">
-		    <!-- 기존 옵션 출력 -->
-		    <c:forEach var="option" items="${options}" varStatus="status">
-		        <div class="option-container">
-		            <label>옵션 타입 ${status.index + 1}</label>
-		            <input type="text" name="option_type" class="option-type" value="${option.option_type}" placeholder="예: Size" />
-		            <label>옵션 이름 ${status.index + 1}</label>
-		            <input type="text" name="option_name" class="option-name" value="${option.option_name}" placeholder="예: S, M, L" />
-		        </div>
-		    </c:forEach>
-		
-		    <!-- 남은 옵션 필드 출력 (항상 3개의 입력 필드가 보이도록) -->
-		    <c:forEach begin="${options.size() + 1}" end="3" var="index">
-		        <div class="option-container">
-		            <label>옵션 타입 ${index}</label>
-		            <input type="text" name="option_type" class="option-type" placeholder="예: Size" />
-		            <label>옵션 이름 ${index}</label>
-		            <input type="text" name="option_name" class="option-name" placeholder="예: S, M, L" />
-		        </div>
-		    </c:forEach>
-		</div>
+            <!-- 기존 옵션 출력 -->
+            <c:forEach var="option" items="${options}">
+                <div class="option-row">
+                    <div class="input-group">
+                        <label>옵션 타입</label>
+                        <input type="text" name="option_type" class="option-type" value="${option.option_type}" placeholder="예: Size" />
+
+                        <label>옵션 재고</label>
+                        <input type="text" name="stock" class="option-stock" value="${option.stock}" placeholder="예: 10,15,20" />
+                    </div>
+                    <div class="input-group-2">
+                        <label>옵션 이름</label>
+                        <input type="text" name="option_name" class="option-name" value="${option.option_name}" placeholder="예: S,M,L" />
+
+                        <button type="button" class="remove-option" onclick="removeOption(this)">삭제</button>
+                    </div>
+                </div>
+            </c:forEach>
+        </div>
+
+        <!-- 옵션 추가 버튼 -->
+        <div>
+            <button type="button" id="add-option">옵션 추가</button>
+        </div>
 		
         <label for="product_price">가격</label>
         <input type="text" id="product_price" name="product_price" value="${product.getProduct_price()}" required/><br/>
@@ -59,9 +63,6 @@
         <label for="product_image">상품 이미지</label>
         <input type="file" id="product_image" name="product_image" accept="image/*" onchange="showPreview(this, 'preview1')"/>
         <img id="preview1" class="image-preview" style="display: block;" src="<c:url value='/images/shoppingMall_product/${product.getProduct_imagename()}'/>"/>
-        
-        <label for="product_inventory">재고 수량</label>
-        <input type="text" id="product_inventory" name="product_inventory" value="${product.getProduct_inventory()}" required/><br/>
         
         <label for="product_description">상세 정보</label>
         <textarea id="product_description" name="product_description" required>${product.getProduct_description()}</textarea><br/>
@@ -97,5 +98,43 @@
 	        reader.readAsDataURL(file);
 	    }
 	}
+	
+    // 옵션 추가
+    document.getElementById('add-option').addEventListener('click', function () {
+        const container = document.getElementById('option-container');
+        const currentOptions = container.querySelectorAll('.option-row').length;
+
+        if (currentOptions >= 10) {
+            alert('옵션은 최대 10개까지만 추가할 수 있습니다.');
+            return;
+        }
+
+        const newRow = document.createElement('div');
+        newRow.classList.add('option-row');
+        newRow.innerHTML = `
+            <div class="input-group">
+                <label>옵션 타입</label>
+                <input type="text" name="option_type" class="option-type" placeholder="예: Size" />
+                
+                <label>옵션 재고</label>
+                <input type="text" name="stock" class="option-stock" placeholder="예: 10,15,20" />
+            </div>
+            <div class="input-group-2">
+                <label>옵션 이름</label>
+                <input type="text" name="option_name" class="option-name" placeholder="예: S,M,L" />
+                
+                <button type="button" class="remove-option" onclick="removeOption(this)">삭제</button>
+            </div>
+        `;
+        container.appendChild(newRow);
+    });
+
+    // 옵션 삭제
+    function removeOption(button) {
+        const optionRow = button.closest('.option-row');
+        if (optionRow) {
+            optionRow.remove();
+        }
+    }
 
 </script>

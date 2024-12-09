@@ -86,28 +86,57 @@ input[type="submit"]:hover, input[type="reset"]:hover {
 	border-radius: 4px;
 }
 
-.option-container {
-	display: flex;
-	align-items: center;
-	margin-bottom: 5px;
+.option-row {
+    display: flex;
+    flex-direction: column; /* 기본적으로 세로 정렬 */
+    margin-bottom: 10px; /* 각 옵션 행 간 간격 */
 }
 
-.option-container label {
-	width: 100px;
-	margin: 5px 5px 5px 0;
-	font-size: 13px;
+.option-row .input-group {
+    display: flex;
+    gap: 10px; /* 각 필드 간 간격 */
 }
 
-.option-container input.option-type {
-	width: 100px; 
-	padding: 5px;
-	margin: 5px 15px 5px 0;
-	font-size: 12px;
+.option-row .input-group-2 {
+    display: flex;
+    justify-content: space-between; /* 삭제 버튼을 오른쪽으로 밀기 */
+    gap: 10px; /* 필드 간 간격 */
 }
 
-.option-container input.option-name {
-	width: 300px; 
-	padding: 5px;
-	margin: 5px 0;
-	font-size: 12px;
+.option-row label {
+    font-size: 14px;
+}
+
+.option-row input.option-type {
+	flex: 1; /* 같은 줄에서 동일한 비율로 크기 설정 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+} 
+.option-row input.option-stock {
+    flex: 2; /* 같은 줄에서 동일한 비율로 크기 설정 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.option-row input.option-name {
+    flex: 1; /* 이름 필드 크기 설정 */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    margin-bottom: 0px
+}
+
+.option-row button.remove-option {
+    background-color: #333;
+    color: white;
+    border: none;
+    padding: 0px 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
 }

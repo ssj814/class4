@@ -86,6 +86,7 @@
 		UPDATE product SET
 		product_category_id=#{product_category_id},
 		product_name=#{product_name}, product_price=#{product_price},
+		product_isactive=#{product_isactive},
 		product_description=#{product_description}
 		<if test="product_imagename!=null">
 			, product_imagename=#{product_imagename}

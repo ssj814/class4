@@ -27,9 +27,13 @@
 		        </c:if>
 		    </c:forEach>
 		</select>
-
+		
         <label for="product_name">상품명</label>
         <input type="text" id="product_name" name="product_name" value="${product.getProduct_name()}" required/><br/>
+        
+        <label for="product_isactive">판매상태</label>
+        <input type="radio" name="product_isactive" value="1" <c:if test="${product.product_isactive == 1}"> checked </c:if> />판매중
+        <input type="radio" name="product_isactive" value="0" <c:if test="${product.product_isactive == 0}"> checked </c:if>/>품절
         
         <!-- 옵션 여부 토글 -->
         <label for="has_options_toggle">옵션 여부</label>

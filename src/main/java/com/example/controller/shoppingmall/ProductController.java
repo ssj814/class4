@@ -188,12 +188,18 @@ public class ProductController {
 	        String stocks = optionList.stream()
 	                .map(option -> String.valueOf(option.getStock()))
 	                .collect(Collectors.joining(","));
+	        
+	        // 옵션상품의 총 재고량 
+	        int totalStock = optionList.stream()
+	                .mapToInt(ProductOptionDTO::getStock)
+	                .sum();
 
 	        // 가공된 데이터 추가
 	        Map<String, String> optionData = new HashMap<>();
 	        optionData.put("option_type", optionType);
 	        optionData.put("option_name", optionNames);
 	        optionData.put("stock", stocks);
+	        optionData.put("totalStock", String.valueOf(totalStock));
 	        options.add(optionData);
 	    }
 		service.addViewCount(productId); //조회수++

@@ -50,7 +50,15 @@
 						Price: <strong><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩ " /></strong>
 					</p>
 					<p class="product-inventory">
-						In Stock: <strong> 옵션없으면 product의 product_stock이 수량! 있으면 하던대로 다 더해서 계산!</strong>
+						<!-- 옵션없으면 product의 product_stock이 수량! 있으면 하던대로 다 더해서 계산! -->
+						<c:choose>
+						    <c:when test="${not empty options[0].totalStock}">
+						        In Stock: <strong> ${options[0].totalStock}</strong>
+						    </c:when>
+						    <c:otherwise>
+						        In Stock: <strong> ${product.getProduct_stock()}</strong>
+						    </c:otherwise>
+						</c:choose>
 					</p>
 					<p class="product-status">
 						Status:

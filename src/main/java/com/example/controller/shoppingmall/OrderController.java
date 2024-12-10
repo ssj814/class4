@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +26,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.example.dto.CartDTO;
 import com.example.dto.OrderRequestDTO;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductOptionDTO;
 import com.example.entity.CardInfo;
 import com.example.entity.OrderMain;
 import com.example.entity.OrderPayment;
@@ -149,6 +153,7 @@ public class OrderController {
 	    List<List<String>> optionNames = orderRequest.getOptionNames();
 
 	    for (int i = 0; i < productIds.size(); i++) {
+	    	
 	        OrderProduct orderProduct = new OrderProduct();
 	        orderProduct.setOrderId(savedOrderMain.getOrderId());
 	        orderProduct.setProductId(productIds.get(i));
@@ -156,17 +161,46 @@ public class OrderController {
 	        orderProduct.setPrice(BigDecimal.valueOf(individualPrices.get(i)));
 	        OrderProduct savedOrderProduct = orderService.saveOrderProduct(orderProduct);
 
+	        List<ProductOptionDTO> rawOptions = pService.selectProductOptions(productIds.get(i).intValue());
 	        List<String> types = optionTypes.get(i);
 	        List<String> names = optionNames.get(i);
-	        for (int j = 0; j < types.size(); j++) {
-	            OrderProductOption orderProductOption = new OrderProductOption();
-	            orderProductOption.setOrderProductId(savedOrderProduct.getOrderProductId());
-	            orderProductOption.setOptionType(types.get(j));
-	            orderProductOption.setOptionName(names.get(j));
-	            orderService.saveOrderProductOption(orderProductOption);
+	        
+	        if (rawOptions != null && rawOptions.size() > 0) {
+	        	System.out.println("옵션 상품 재고 변경");
+	    	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
+	    	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
+	    	    
+		        for (int j = 0; j < types.size(); j++) {
+		            OrderProductOption orderProductOption = new OrderProductOption();
+		            orderProductOption.setOrderProductId(savedOrderProduct.getOrderProductId());
+		            orderProductOption.setOptionType(types.get(j));
+		            orderProductOption.setOptionName(names.get(j));
+		            orderService.saveOrderProductOption(orderProductOption);
+		            
+		            // 옵션 상품 재고 처리
+		            List<ProductOptionDTO> ProductOptionsByType = groupedOptions.get(orderProductOption.getOptionType());
+		            for (ProductOptionDTO option : ProductOptionsByType) {
+		                if (option.getOption_name().equals(orderProductOption.getOptionName())) {
+		                	int updateProductOptionStock = option.getStock() - quantities.get(i);
+		                	option.setStock(updateProductOptionStock);
+		                	pService.updateProductOption(option);
+		                    break;
+		                }
+		            }
+		        }
+	        } else {
+	        	// 옵션 없는 상품 처리
+	        	System.out.println("옵션 없는 상품 재고 변경");
+	        	ProductDTO product = pService.selectDetailproduct(productIds.get(i).intValue());
+	        	int preProductStock = product.getProduct_stock();
+			    int updateProductStock = preProductStock - orderRequest.getQuantities().get(i).intValue();
+			    product.setProduct_stock(updateProductStock);
+			    pService.updateProductStock(product);
 	        }
+	     
 	    }
-	 // 반환할 orderId를 JSON 형식으로 감싸서 반환
+	    
+	    // 반환할 orderId를 JSON 형식으로 감싸서 반환
 	    Map<String, Object> response = new HashMap<>();
 	    response.put("orderId", savedOrderMain.getOrderId());
 	    response.put("message", "결제가 완료되었습니다.");

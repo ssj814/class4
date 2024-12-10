@@ -17,11 +17,11 @@
 				</tr>
 				<tr>
 					<th>글번호</th>
-					<td>${BoardOne.postid}</td>
+					<td>${BoardOne.postId}</td>
 					<th>등록일</th>
-					<td>${BoardOne.createdate}</td>
+					<td>${BoardOne.createdAt}</td>
 					<th>조회수</th>
-					<td>${BoardOne.viewcount}</td>
+					<td>${BoardOne.viewCount}</td>
 				</tr>
 			</table>
 			<div id="boardArticle_content">
@@ -98,7 +98,7 @@
 			</div>
 			<div class="comment-body">
 				<form class="replyForm">
-					<input type="hidden" name="postid" value="${BoardOne.postid}">
+					<input type="hidden" name="postid" value="${BoardOne.postId}">
 					<input type="hidden" name="userid" value="${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name}">
 					<textarea id="comment-textarea" name="content"
 						placeholder="댓글을 입력하세요" rows="5"></textarea>
@@ -134,13 +134,13 @@
 				});
 
 				$("#BoardUpdate").on("click", function() {
-					location.href = 'admin/notice_update?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
+					location.href = 'admin/notice_update?postid=' + ${BoardOne.postId} + '&currentPage=' + currentPage;
 				});
 
 				$("#BoardDelete").on("click", function() {
 					var confirmed = confirm("정말로 삭제하겠습니까?");
 					if (confirmed) {
-						location.href = 'admin/notice_delete?postid=' + ${BoardOne.postid} + '&currentPage=' + currentPage;
+						location.href = 'admin/notice_delete?postid=' + ${BoardOne.postId} + '&currentPage=' + currentPage;
 					}
 				});
 				

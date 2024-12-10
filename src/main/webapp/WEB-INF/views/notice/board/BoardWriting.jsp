@@ -18,7 +18,7 @@
 
 <div class="container">
 	<form action="notice_save" method="post">
-		<input type="hidden" name="postid" value="${post.postid}">
+		<input type="hidden" name="postid" value="${post.postId}">
 		<table border="1" width="90%">
 			<tbody>
 				<tr>

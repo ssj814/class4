@@ -19,7 +19,7 @@
                     <ul>
                         <c:forEach var="notice" items="${sessionScope.popupNotices}">
                             <li>
-                                <a href="<c:url value='/notice_content?postid=${notice.postid}'/>">
+                                <a href="<c:url value='/notice_content?postid=${notice.postId}'/>">
                                     ${notice.title}
                                 </a>
                             </li>

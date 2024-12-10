@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.NoticeDTO;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
@@ -62,7 +63,7 @@ public class ProductController {
 		Boolean noticePopupClosed = (Boolean) session.getAttribute("noticePopupClosed");
 		System.out.println("noticePopupClosed : "+noticePopupClosed);
 	    if (noticePopupClosed == null || !noticePopupClosed) {
-	        List<NoticeDTO> popupNotices = nService.getPopupNotices();
+	        List<BoardPostsDTO> popupNotices = nService.getPopupPosts();
 	        session.setAttribute("popupNotices", popupNotices);
 	    }
 		m.addAttribute("popularProduct",popularProduct);

@@ -44,8 +44,9 @@ button {
     margin-bottom: 20px;
 }
 
-.productDetail-right button:hover {
-    background-color: #555;
+.productDetail-right button[disabled] {
+    background-color: #ddd;
+    cursor: default;
 }
 
 .productDetail-right h2 {
@@ -77,3 +78,5 @@ button {
 	font-size: 13px;
 	cursor: pointer;
 }
+
+

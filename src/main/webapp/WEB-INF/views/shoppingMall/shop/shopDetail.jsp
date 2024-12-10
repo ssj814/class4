@@ -63,11 +63,11 @@
 					<p class="product-status">
 						Status:
 						<c:choose>
-							<c:when test="${product.getProduct_isactive() == '1'}">
+							<c:when test="${product.getProduct_isactive() == 1}">
 								<span class="badge bg-success">판매중</span>
 							</c:when>
 							<c:otherwise>
-								<span class="badge bg-danger">품절</span>
+								<span class="badge bg-danger ">품절</span>
 							</c:otherwise>
 						</c:choose>
 					</p>
@@ -82,7 +82,7 @@
 					        <select class="form-select">
 					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}" varStatus="status">
 						            <c:set var="stockValue" value="${fn:split(option.stock, ',')[status.index]}" />
-					                <option value="${name}">${name} [수량 : ${stockValue}]</option>
+					                <option value="${name}" <c:if test="${stockValue == 0}">disabled</c:if>>${name} [수량 : ${stockValue}]</option>
 					            </c:forEach>
 					        </select>
 					    </div>
@@ -110,11 +110,12 @@
 				<button class="btn-wish mt-3 me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
 	            	<i class="fa-solid fa-heart"></i>
 	            </button>   
-	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;" 
+	            	<c:if test="${product.getProduct_isactive() == 0}">disabled</c:if>>
 	            	<i class="fa-solid fa-cart-shopping "></i>
 	            </button>
 	            
-	            <form id="orderForm" action="user/singleOrderPayment" method="post">
+	            <form id="orderForm" action="user/singleOrderPayment" method="post" class="w-100">
 				    <input type="hidden" name="productId" value="${product.getProduct_id()}">
 				    <input type="hidden" name="quantity" class="product-quantity" value="1">
 				    
@@ -124,7 +125,7 @@
 				        <input type="hidden" name="optionName_${option.option_type}" class="hidden-option-name">
 				    </c:forEach>
 				    
-				    <button type="button" class="btn-buy mt-3 w-100">구매하기</button>
+				    <button type="button" class="btn-buy mt-3 w-100" <c:if test="${product.getProduct_isactive() == 0}">disabled</c:if> >구매하기</button>
 				</form>
 				
 			</div>
@@ -137,7 +138,7 @@
 	$(function() {
 		
 		// 로그인 유저 정보
-		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;		
 		
 		// 수량 입력 필드 변경 시 히든 태그 값 업데이트
 	    $(".product-quantity").on("change", function () {
@@ -258,7 +259,7 @@
 		            }
 		    });
 		});
-		
+
 		//모달창 함수
 		function modalShow(mesg) {
 			$("#mesg").html(mesg);

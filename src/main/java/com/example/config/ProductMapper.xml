@@ -94,6 +94,13 @@
 		where product_id = #{product_id}
 	</update>
 	
+	<!-- 상품 상태 변경 (판매중, 품절) -->
+	<update id="updateProductActive" parameterType="ProductDTO">
+	    UPDATE product
+	    SET product_isactive = #{product_isactive}
+	    WHERE product_id = #{product_id}
+	</update>
+	
 	<!-- 옵션 없는 상품 재고 업데이트 -->
 	<update id="updateProductStock" parameterType="com.example.dto.ProductDTO">
 	    UPDATE product

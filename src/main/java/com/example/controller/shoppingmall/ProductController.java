@@ -176,7 +176,9 @@ public class ProductController {
 		// 옵션 데이터 가공
 	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
 	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
-
+	    
+	    System.out.println("groupedOptions" + groupedOptions);
+	    
 	    List<Map<String, String>> options = new ArrayList<>();
 	    for (String optionType : groupedOptions.keySet()) {
 	        List<ProductOptionDTO> optionList = groupedOptions.get(optionType);

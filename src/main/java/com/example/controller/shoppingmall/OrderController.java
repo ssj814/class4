@@ -162,14 +162,18 @@ public class OrderController {
 	        OrderProduct savedOrderProduct = orderService.saveOrderProduct(orderProduct);
 
 	        List<ProductOptionDTO> rawOptions = pService.selectProductOptions(productIds.get(i).intValue());
+        	ProductDTO product = pService.selectDetailproduct(productIds.get(i).intValue());
+        	
 	        List<String> types = optionTypes.get(i);
 	        List<String> names = optionNames.get(i);
+	        
+	        Boolean updatedNonActive = false; //재고 상태 플래그
 	        
 	        if (rawOptions != null && rawOptions.size() > 0) {
 	        	System.out.println("옵션 상품 재고 변경");
 	    	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
 	    	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
-	    	    
+
 		        for (int j = 0; j < types.size(); j++) {
 		            OrderProductOption orderProductOption = new OrderProductOption();
 		            orderProductOption.setOrderProductId(savedOrderProduct.getOrderProductId());
@@ -184,18 +188,35 @@ public class OrderController {
 		                	int updateProductOptionStock = option.getStock() - quantities.get(i);
 		                	option.setStock(updateProductOptionStock);
 		                	pService.updateProductOption(option);
-		                    break;
 		                }
 		            }
+		            
+		            //옵션 전체 재고 계산
+		            int totalStock = ProductOptionsByType.stream()
+		                    .mapToInt(ProductOptionDTO::getStock)
+		                    .sum(); 
+
+		            if(totalStock == 0) {
+		            	updatedNonActive = true;
+		            } 
 		        }
 	        } else {
 	        	// 옵션 없는 상품 처리
 	        	System.out.println("옵션 없는 상품 재고 변경");
-	        	ProductDTO product = pService.selectDetailproduct(productIds.get(i).intValue());
 	        	int preProductStock = product.getProduct_stock();
 			    int updateProductStock = preProductStock - orderRequest.getQuantities().get(i).intValue();
+	            if(updateProductStock == 0) {
+	            	updatedNonActive = true;
+	            }
 			    product.setProduct_stock(updateProductStock);
 			    pService.updateProductStock(product);
+	        }
+	        
+	        // 남은재고 0 인경우
+	        if(updatedNonActive) {
+	        	product.setProduct_isactive("0");
+	        	pService.updateProductActive(product);
+	        	System.out.println("재고 0입니다. 품절로 변경 완료");
 	        }
 	     
 	    }

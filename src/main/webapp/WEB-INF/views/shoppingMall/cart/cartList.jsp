@@ -37,6 +37,7 @@
 }
 
 .cart-item {
+	min-height: 90px;
 	border-bottom: 1px solid #333;
 	padding: 0px 0;
 }
@@ -67,12 +68,15 @@ img {
 	width: 70px;
 }
 
+.btn-product[disabled] {
+	background-color: black;
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
-
 
 </style>
 
@@ -103,13 +107,29 @@ input[type="number"]::-webkit-inner-spin-button {
 			<div class="form-group-inline">
 				<div class="cart-items">
 					<c:forEach var="product" varStatus="status" items="${ProductList}">
+						<!-- 옵션 상품 품절 체크 -->
+						<c:set var="hasZeroStock" value="false" />
+					    <c:if test="${product.hasOptions}">
+					        <c:forEach var="entry" items="${product.groupedOptions}">
+					            <c:forEach var="option" items="${fn:split(entry.value, ',')}">
+					                <c:set var="stock" value="${fn:split(option, '|')[1]}" />
+					                <c:if test="${stock == 0}">
+					                    <c:set var="hasZeroStock" value="true" />
+					                </c:if>
+					            </c:forEach>
+					        </c:forEach>
+					    </c:if>
+					    
 						<div class="row align-items-center cart-item"
-							style="margin-bottom: 0.3px">
+							style="margin-bottom: 0.3px; <c:if test="${hasZeroStock or (!product.hasOptions and product.product_stock == 0)}">
+				               background-color: #e9ecef; </c:if>">
 							<input type="hidden" class="product-id" value="${product.getProduct_id()}">
 							<input type="hidden" class="cart-id" value="${product.getCart_id()}">
 							<div class="col-1 text-center">
-								<input class="btn-product form-check-input m-0 border border-dark"
-									type="checkbox" value="${product.getCart_id()}">
+								<input class="btn-product form-check-input m-0 border border-dark
+									<c:if test="${hasZeroStock or (!product.hasOptions and product.product_stock == 0)}">
+				               		soldOut </c:if>"
+								    type="checkbox" value="${product.getCart_id()}">
 							</div>
 							<div class="col-1 p-2">
 								<img
@@ -129,7 +149,6 @@ input[type="number"]::-webkit-inner-spin-button {
 								            <c:forEach var="option" items="${fn:split(entry.value, ',')}">
 						                        <c:set var="optionName" value="${fn:split(option, '|')[0]}" />
 						                        <c:set var="stock" value="${fn:split(option, '|')[1]}" />
-								                
 								                <c:set var="isSelected" value="false" />
 								                <!-- 선택된 옵션에서 option_type과 option_name을 쉼표로 분리 -->
 								                <c:forEach var="selectedOption" items="${product.selectedOptions}">
@@ -144,8 +163,10 @@ input[type="number"]::-webkit-inner-spin-button {
 								                    </c:forEach>
 								                </c:forEach>
 								
-								                <option value="${optionName}" <c:if test="${isSelected}">selected</c:if>>
-								                ${optionName} [남은 수량: ${stock}]
+								                <option value="${optionName}" data-stock="${stock}"
+								                	<c:if test="${isSelected and stock != 0}">selected</c:if>
+								                	<c:if test="${stock eq 0}">disabled</c:if>>
+								                	${optionName} [남은 수량: ${stock}]
 								                </option>
 								            </c:forEach>
 								        </select>
@@ -154,7 +175,7 @@ input[type="number"]::-webkit-inner-spin-button {
 								</c:if>
 								<!-- 옵션이 없는 경우 -->
 								<c:if test="${!product.hasOptions}">
-				                	<div class="product-option-container">남은 수량: <strong>${product.stock}</strong></div>
+				                	<div class="product-option-container"> 남은 수량: <strong class="no-option-stock">${product.product_stock}</strong></div>
 				            	</c:if>
 							</div>
 								 
@@ -217,9 +238,8 @@ input[type="number"]::-webkit-inner-spin-button {
 				//+,- 버튼
 				$('.increase').click(function() {
 				    var input = $(this).closest('.input-group').find('.product-count'); 
-				    console.log(input);
-				    var value = parseInt(input.val()) || 0; 
-				    input.val(value + 1).trigger('change');;
+				    var value = parseInt(input.val()) || 0;
+				    input.val(value + 1).trigger('change');
 				});
 				
 				$('.decrease').click(function() {
@@ -234,6 +254,28 @@ input[type="number"]::-webkit-inner-spin-button {
 		            $(this).val(value ? Number(value).toLocaleString() : '');
 		        });
 				
+				//재고 확인용
+				function calculateStock(cartItem) {
+				    var stock = 0;
+
+				    // 옵션이 있는 경우
+				    var optionStocks = [];
+				    cartItem.find('.product-option-container select').each(function() {
+				        var selectedOption = $(this).find(':selected'); // 현재 선택된 옵션
+				        var optionStock = parseInt(selectedOption.data('stock')) || 0;
+				        optionStocks.push(optionStock);
+				    });
+
+				    // 옵션이 없는 경우
+				    if (optionStocks.length > 0) {
+				        stock = Math.min(...optionStocks); // 모든 선택된 옵션의 최소 재고
+				    } else {
+				        stock = parseInt(cartItem.find('.no-option-stock').text()) || 0; // 기본 재고
+				    }
+
+				    return stock;
+				}
+
 				// 총 구매 상품 개수와 금액 계산 함수
 				function calculateTotal() {
 					var count = 0;
@@ -255,12 +297,25 @@ input[type="number"]::-webkit-inner-spin-button {
 				$(".product-count").on(
 						"change",
 						function() {
-							var cartId = $(this).data("id");
-						    var quantity = $(this).val();
-						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, '').replace(/₩/g, ''));
-							var total = quantity * price;
-						
-							// 개별 상품 총액 업데이트
+							var cartId = $(this).data("id"); 
+						    var input = $(this);
+						    var quantity = parseInt(input.val());
+						    var price = parseInt($("#price-" + cartId).text().replace(/,/g, "").replace(/₩/g, ""));
+						    var cartItem = input.closest(".cart-item"); // 해당 상품 컨테이너
+						    var stock = calculateStock(cartItem); // 재고 확인
+		
+						    // 재고 체크 및 수량 수정
+						    if (quantity > stock) {
+						        alert("재고가 부족합니다. 최대 " + stock + "개까지 구매 가능합니다.");
+						        quantity = stock; // 최대 재고로 설정
+						        input.val(quantity);
+						    } else if (quantity < 1) {
+						        alert("최소 구매 수량은 1개입니다.");
+						        quantity = 1; // 최소 수량으로 설정
+						        input.val(quantity);
+						    }
+						    
+						    var total = quantity * price;
 							$("#total-" + cartId).val(total.toLocaleString());
 							
 							if(quantity<1){
@@ -287,7 +342,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 							// 총 구매 개수와 금액 업데이트
 							calculateTotal();
-						});
+				});
 
 				// 선택된 상품들, 총 구매 개수, 금액 설정하기 (체크박스 변경 시)
 				$(".btn-product").on("change", function() {
@@ -297,7 +352,7 @@ input[type="number"]::-webkit-inner-spin-button {
 				// 전체선택 checkbox, 총 구매 개수, 금액 설정하기
 				$("#flexCheckDefault").on("click", function() {
 					var ck = this.checked;
-					$(".form-check-input").each(function(idx, data) {
+					$(".form-check-input:not([disabled])").each(function(idx, data) {
 						data.checked = ck;
 					});
 
@@ -311,6 +366,11 @@ input[type="number"]::-webkit-inner-spin-button {
 						
 					$(".form-check-input").each(function(idx, data) {
 				        if (data.checked) {
+				        	//체크된 상품이 품절상품이면 경고창 띄우고 이동 막기
+							if($(data).hasClass("soldOut")){
+								alert("품절 상품은 구매가 불가능합니다. 다시 선택해 주세요.");
+								event.preventDefault();
+							}
 				            cartIdList.push($(data).val());
 				        }
 				    });

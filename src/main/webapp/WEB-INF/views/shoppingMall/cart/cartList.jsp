@@ -241,7 +241,6 @@ input[type="number"]::-webkit-inner-spin-button {
 				    var value = parseInt(input.val()) || 0;
 				    input.val(value + 1).trigger('change');
 				});
-				
 				$('.decrease').click(function() {
 				    var input = $(this).closest('.input-group').find('.product-count');
 				    var value = parseInt(input.val()) || 0;

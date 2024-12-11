@@ -99,4 +99,8 @@ public class ProductDAO {
 		session.update("ProductMapper.updateProductStock", dto);
 	}
 
+	public void updateProductActive(ProductDTO dto) {
+		session.update("ProductMapper.updateProductActive", dto);
+	}
+
 }

@@ -41,7 +41,7 @@ public class CartController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userId = authentication.getName();
 		List<CartProductDTO> ProductList = service.selectCart(userId);
-		 for (CartProductDTO product : ProductList) {
+		for (CartProductDTO product : ProductList) {
 			// 모든 옵션을 가져오기
 		    List<ProductOptionDTO> rawOptions = productService.selectProductOptions(product.getProduct_id());
 		    if (rawOptions.isEmpty()) {
@@ -60,13 +60,13 @@ public class CartController {
 	        	            Collectors.joining(",")
 	        	        )
 	        	    ));
-		        	product.setGroupedOptions(groupedOptions);
-		        }
-		        
-		        // 장바구니에 선택된 옵션을 가져오기
-		        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), userId);
-		        product.setSelectedOptions(selectedOptions);
+		        product.setGroupedOptions(groupedOptions);
 		    }
+		        
+	        // 장바구니에 선택된 옵션을 가져오기
+	        List<CartDTO> selectedOptions = service.selectProductOptions(product.getProduct_id(), userId);
+	        product.setSelectedOptions(selectedOptions);
+	    }
 		m.addAttribute("ProductList", ProductList);
 		return "shoppingMall/cartList";
 	}

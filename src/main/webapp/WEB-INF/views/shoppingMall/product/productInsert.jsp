@@ -23,11 +23,10 @@
 		        </c:if>
 		    </c:forEach>
 		</select>
-	        
         
         <label for="product_isactive">판매상태</label>
         <input type="radio" name="product_isactive" value="1" checked="checked"/>판매중
-        <input type="radio" name="product_isactive" value="0"/>품절
+        <input type="radio" name="product_isactive" value="0"/>판매 중단
         
         <label for="product_id">상품코드</label>
         <input type="text" id="product_id" name="product_id" placeholder="${ProductId}" value="${ProductId}" readonly />

@@ -7,61 +7,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.notice.NoticeDAO;
-import com.example.dto.NoticeDTO;
+import com.example.dto.BoardPostsDTO;
 
 @Service
 public class NoticeService {
 	@Autowired
 	NoticeDAO dao;
 
-	//공지사항 전체 리스트 불러오기
-	public List<NoticeDTO> selectBoardList(HashMap<String, Object> map) {
-		List<NoticeDTO> list = null;
-		list = dao.selectBoardList(map);
-		return list;
-	}
+	// 게시판 리스트 불러오기
+    public List<BoardPostsDTO> selectBoardList(HashMap<String, Object> map) {
+        return dao.selectBoardList(map);
+    }
 
-	//공지사항 글 하나 불러오기
-	public NoticeDTO selectBoardOne(int postid) {
-		NoticeDTO dto = null;
-		dao.increaseViewCount(postid);
-		dto = dao.selectBoardOne(postid);
-		return dto;
-	}
+    // 게시글 하나 불러오기
+    public BoardPostsDTO selectBoardOne(int postId) {
+        dao.increaseViewCount(postId);
+        return dao.selectBoardOne(postId);
+    }
 
-	//공지사항 글쓰기
-	public int insertContent(NoticeDTO dto) {
-		int count = 0;
-		count = dao.insertContent(dto);
-		return count;
-	}
+    // 게시글 작성
+    public int insertContent(BoardPostsDTO dto) {
+        return dao.insertContent(dto);
+    }
 
-	//공지사항 글 삭제
-	public int boardDelete(int postid) {
-		int num = 0;
-		num = dao.boardDelete(postid);
-		return num;
-	}
+    // 게시글 삭제
+    public int boardDelete(int postId) {
+        return dao.boardDelete(postId);
+    }
 
-	//공지사항 글 수정
-	public int updateContent(NoticeDTO dto) {
-		int num = 0;
-		num = dao.updateContent(dto);
-		return num;
-	}
+    // 게시글 수정
+    public int updateContent(BoardPostsDTO dto) {
+        return dao.updateContent(dto);
+    }
 
-	//공지사항 조회수
-	public int getTotalCount(HashMap<String, Object> map) {
-		int total = 0;
-		total = dao.getTotalCount(map);
-		return total;
-	}
+    // 게시글 전체 수 가져오기
+    public int getTotalCount(HashMap<String, Object> map) {
+        return dao.getTotalCount(map);
+    }
 
-	public List<NoticeDTO> getPopupNotices() {
-		return dao.selectPopupNotices();
-	}
+    // 팝업 공지 가져오기
+    public List<BoardPostsDTO> getPopupPosts() {
+        return dao.selectPopupPosts();
+    }
 
-	public void updatePopupToN(NoticeDTO notice) {
-		dao.updatePopupToN(notice);
-	}
+    // 오래된 팝업 공지 비활성화
+    public void updatePopupToN(BoardPostsDTO post) {
+        dao.updatePopupToN(post);
+    }
 }

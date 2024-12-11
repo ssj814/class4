@@ -15,12 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.CommentDTO;
-import com.example.dto.NoticeDTO;
 import com.example.service.notice.CommentService;
 import com.example.service.notice.NoticeService;
-
-import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class NoticeController {
@@ -32,134 +30,114 @@ public class NoticeController {
 	CommentService cService;
 
 	@RequestMapping("/notice")
-	public String BoardList(Model m, @RequestParam(value = "searchKey", required = false) String searchKey,
-			@RequestParam(value = "searchValue", required = false) String searchValue,
-			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
-		int pageSize = 15; // 페이지당 보여줄 게시글 수
+    public String BoardList(Model m, @RequestParam(value = "searchKey", required = false) String searchKey,
+                             @RequestParam(value = "searchValue", required = false) String searchValue,
+                             @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+        int pageSize = 15;
 
-		// 파라미터를 HashMap에 저장
-		HashMap<String, Object> map = new HashMap<>();
-		map.put("searchKey", searchKey);
-		map.put("searchValue", searchValue);
-		map.put("startRow", (currentPage - 1) * pageSize + 1);
-		map.put("endRow", currentPage * pageSize);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("searchKey", searchKey);
+        map.put("searchValue", searchValue);
+        map.put("startRow", (currentPage - 1) * pageSize + 1);
+        map.put("endRow", currentPage * pageSize);
+        map.put("categoryId", 1);
 
-		int totalCount = service.getTotalCount(map);
-		int totalPages = (int) Math.ceil((double) totalCount / pageSize);
+        int totalCount = service.getTotalCount(map);
+        int totalPages = (int) Math.ceil((double) totalCount / pageSize);
 
-		List<NoticeDTO> list = service.selectBoardList(map);
+        List<BoardPostsDTO> list = service.selectBoardList(map);
 
-		// 데이터를 Model에 담아 뷰로 전달
-		m.addAttribute("BoardList", list);
-		m.addAttribute("category", "notice");
-		m.addAttribute("currentPage", currentPage);
-		m.addAttribute("totalPages", totalPages);
-		m.addAttribute("totalCount", totalCount);
-		m.addAttribute("pageSize", pageSize);
-		m.addAttribute("search", map);
+        m.addAttribute("BoardList", list);
+        m.addAttribute("category", "notice");
+        m.addAttribute("currentPage", currentPage);
+        m.addAttribute("totalPages", totalPages);
+        m.addAttribute("totalCount", totalCount);
+        m.addAttribute("pageSize", pageSize);
+        m.addAttribute("search", map);
 
-		return "notice/list";
-	}
+        return "notice/list";
+    }
 
-	@RequestMapping("/notice_content")
-	public String BoardContent(Model m,
-			@RequestParam(value = "postid", defaultValue = "0") int postid,
-			@RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+    @RequestMapping("/notice_content")
+    public String BoardContent(Model m,
+                                @RequestParam(value = "postid", defaultValue = "0") int postid,
+                                @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
 
-		// 원본 게시글 가져오기
-		NoticeDTO dto = service.selectBoardOne(postid);
-		// 댓글 목록 가져오기
-		List<CommentDTO> comments = cService.getCommentsByPostId(postid);
+        BoardPostsDTO dto = service.selectBoardOne(postid);
+        List<CommentDTO> comments = cService.getCommentsByPostId(postid);
 
-		// JSP 페이지에 필요한 데이터 설정
-		m.addAttribute("BoardOne", dto);
-		m.addAttribute("comments", comments); // 댓글 목록 추가
-		m.addAttribute("currentPage", currentPage);
+        m.addAttribute("BoardOne", dto);
+        m.addAttribute("comments", comments);
+        m.addAttribute("currentPage", currentPage);
 
-		return "notice/content";
-	}
+        return "notice/content";
+    }
 
-	@RequestMapping("/admin/notice_write")
-	public String BoardWrite() {
-		return "notice/BoardWriting";
-	}
+    @RequestMapping("/admin/notice_write")
+    public String BoardWrite() {
+        return "notice/BoardWriting";
+    }
 
-	@RequestMapping("/admin/notice_update")
-	public String BoardUpdate(@RequestParam("postid") int postid, Model m) {
-		NoticeDTO dto = service.selectBoardOne(postid);
-		m.addAttribute("post", dto);
-		return "notice/BoardWriting";
-	}
+    @RequestMapping("/admin/notice_update")
+    public String BoardUpdate(@RequestParam("postid") int postid, Model m) {
+        BoardPostsDTO dto = service.selectBoardOne(postid);
+        m.addAttribute("post", dto);
+        return "notice/BoardWriting";
+    }
 
-	@RequestMapping("/admin/notice_delete")
-	public String BoardDelete(@RequestParam("postid") int postid, @RequestParam("currentPage") int currentPage,
-			RedirectAttributes redirectAttributes) {
+    @RequestMapping("/admin/notice_delete")
+    public String BoardDelete(@RequestParam("postid") int postid, @RequestParam("currentPage") int currentPage,
+                               RedirectAttributes redirectAttributes) {
 
-		int num = service.boardDelete(postid);
-		String message = "";
-		if (num == 1) {
-			message = "글을 삭제하였습니다.";
-		} else {
-			message = "글 삭제 실패.";
-		}
-		redirectAttributes.addFlashAttribute("mesg", message);
-		return "redirect:/notice?currentPage=" + currentPage;
-	}
+        int num = service.boardDelete(postid);
+        String message = num == 1 ? "글을 삭제하였습니다." : "글 삭제 실패.";
+        redirectAttributes.addFlashAttribute("mesg", message);
+        return "redirect:/notice?currentPage=" + currentPage;
+    }
 
-	@RequestMapping("/admin/notice_save")
-	public String BoardSave(HttpSession session, @RequestParam("title") String title,
-			@RequestParam("content") String content, @RequestParam(value = "postid", required = false) Integer postid,
-			@RequestParam(value = "popup", required = false) String popup, RedirectAttributes redirectAttributes) {
-		
-		String category = (String) session.getAttribute("category");
-		if (category == null) {
-			category = ""; // 혹은 적절한 기본 카테고리 설정
-		}
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String user_id = authentication.getName();
-		
-		NoticeDTO dto = new NoticeDTO();
-		dto.setTitle(title);
-		dto.setContent(content);
-		dto.setCategory(category);
-		dto.setWriter(user_id);
-		
-		// 팝업 표시 여부 확인
-        if ("Y".equals(popup)) {
-        	dto.setPopup("Y");
+    @RequestMapping("/admin/notice_save")
+    public String BoardSave(@RequestParam("title") String title,
+                             @RequestParam("content") String content,
+                             @RequestParam(value = "postid", required = false) Integer postid,
+                             @RequestParam(value = "popup", required = false, defaultValue = "N") String popup,
+                             RedirectAttributes redirectAttributes) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String writer = authentication.getName();
+
+        BoardPostsDTO dto = new BoardPostsDTO();
+        dto.setTitle(title);
+        dto.setContent(content);
+        dto.setCategoryId(1); // NOTICE 게시판은 CATEGORY_ID = 1
+        dto.setWriter(writer);
+        dto.setPopup(popup); // 팝업 여부 설정
+
+        String message;
+        if (postid != null) {
+            dto.setPostId(postid);
+            service.updateContent(dto);
+            message = "글을 수정하였습니다.";
         } else {
-        	dto.setPopup("N");
+            service.insertContent(dto);
+            message = "글을 저장하였습니다.";
         }
 
-		String message = "";
-		int count;
-		if (postid != null) {
-			dto.setPostid(postid);
-			count = service.updateContent(dto);
-			message = "글을 수정하였습니다";
-			
-		} else {
-			count = service.insertContent(dto);
-			message = "글을 저장하였습니다";
-		}
-		
-	    // popup 값이 "Y"일 때, 최대 3개 유지 로직 처리
-	    if ("Y".equals(popup)) {
-	        List<NoticeDTO> popupNotices = service.getPopupNotices();  // "Y"인 공지사항 목록 가져오기
-	        System.out.println("popupNotices : "+popupNotices);
-	        if (popupNotices.size() > 3) {
-	            for (int i = 0; i < popupNotices.size()-3; i++) {
-	                NoticeDTO notice = popupNotices.get(i);
-	                System.out.println("Y인 게시글 : "+notice);
-	                service.updatePopupToN(notice);  // 오래된 공지사항 popup 값을 "N"으로 업데이트
-	            }
-	        }
-	    }
-		
-		redirectAttributes.addFlashAttribute("mesg", message);
-		return "redirect:/notice";
-	}
+        // 팝업 게시글 유지 제한 로직
+        if ("Y".equals(popup)) {
+            List<BoardPostsDTO> popupPosts = service.getPopupPosts();
+            if (popupPosts.size() > 3) {
+                for (int i = 0; i < popupPosts.size() - 3; i++) {
+                    BoardPostsDTO oldPost = popupPosts.get(i);
+                    oldPost.setPopup("N");
+                    service.updateContent(oldPost); // 오래된 팝업 게시글 업데이트
+                }
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("mesg", message);
+        return "redirect:/notice";
+    }
+
 	
 	
 	// 댓글

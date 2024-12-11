@@ -127,12 +127,22 @@
 	        addOptionContainer.style.display = 'block';
 	        stockContainer.style.display = 'none';
 
-	        // 옵션 필드에 필수 속성 추가
-	        optionTypeInputs.forEach(input => input.setAttribute('required', 'required'));
-	        optionStockInputs.forEach(input => input.setAttribute('required', 'required'));
-	        optionNameInputs.forEach(input => input.setAttribute('required', 'required'));
+	     	// 옵션 필드 활성화 및 required 추가
+	        optionTypeInputs.forEach(input => {
+	            input.removeAttribute('disabled');
+	            input.setAttribute('required', 'required');
+	        });
+	        optionStockInputs.forEach(input => {
+	            input.removeAttribute('disabled');
+	            input.setAttribute('required', 'required');
+	        });
+	        optionNameInputs.forEach(input => {
+	            input.removeAttribute('disabled');
+	            input.setAttribute('required', 'required');
+	        });
 
-	        // 수량 필드에서 필수 속성 제거
+	     	// 수량 필드 비활성화 및 required 제거
+	        stockInput.setAttribute('disabled', 'disabled');
 	        stockInput.removeAttribute('required');
 	    } else {
 	        // 옵션 입력 숨김
@@ -140,12 +150,22 @@
 	        addOptionContainer.style.display = 'none';
 	        stockContainer.style.display = 'block';
 
-	        // 옵션 필드에서 필수 속성 제거
-	        optionTypeInputs.forEach(input => input.removeAttribute('required'));
-	        optionStockInputs.forEach(input => input.removeAttribute('required'));
-	        optionNameInputs.forEach(input => input.removeAttribute('required'));
+	     	// 옵션 필드 비활성화 및 required 제거
+	        optionTypeInputs.forEach(input => {
+	            input.setAttribute('disabled', 'disabled');
+	            input.removeAttribute('required');
+	        });
+	        optionStockInputs.forEach(input => {
+	            input.setAttribute('disabled', 'disabled');
+	            input.removeAttribute('required');
+	        });
+	        optionNameInputs.forEach(input => {
+	            input.setAttribute('disabled', 'disabled');
+	            input.removeAttribute('required');
+	        });
 
-	        // 수량 필드에 필수 속성 추가
+	        // 수량 필드 활성화 및 required 추가
+	        stockInput.removeAttribute('disabled');
 	        stockInput.setAttribute('required', 'required');
 	    }
 	});

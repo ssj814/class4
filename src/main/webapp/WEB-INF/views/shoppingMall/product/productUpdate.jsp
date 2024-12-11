@@ -33,7 +33,7 @@
         
         <label for="product_isactive">판매상태</label>
         <input type="radio" name="product_isactive" value="1" <c:if test="${product.product_isactive == 1}"> checked </c:if> />판매중
-        <input type="radio" name="product_isactive" value="0" <c:if test="${product.product_isactive == 0}"> checked </c:if>/>품절
+        <input type="radio" name="product_isactive" value="0" <c:if test="${product.product_isactive == 0}"> checked </c:if>/>판매 중단
         
         <!-- 옵션 여부 토글 -->
         <label for="has_options_toggle">옵션 여부</label>
@@ -138,6 +138,7 @@
 
 	        // 수량 필드에서 필수 속성 제거
 	        stockInput.removeAttribute('required');
+	        stockInput.value = ''; // 숨길 때 값 초기화
 	    } else {
 	        // 옵션 입력 숨김
 	        optionContainer.style.display = 'none';
@@ -151,6 +152,7 @@
 
 	        // 수량 필드에 필수 속성 추가
 	        stockInput.setAttribute('required', 'required');
+	        stockInput.value = stockInput.value || '1'; // 기본값 설정
 	    }
 	});
 	

@@ -7,53 +7,56 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.example.dto.NoticeDTO;
+import com.example.dto.BoardPostsDTO;
 
 @Repository
 public class NoticeDAO {
 	@Autowired
 	SqlSessionTemplate session;
 
-	public List<NoticeDTO> selectBoardList(HashMap<String, Object> map) {
-		List<NoticeDTO> list = session.selectList("NoticeMapper.selectBoardList", map);
-		return list;
-	}
+	// 게시판 리스트 가져오기
+    public List<BoardPostsDTO> selectBoardList(HashMap<String, Object> map) {
+        return session.selectList("NoticeMapper.selectBoardList", map);
+    }
 
-	public NoticeDTO selectBoardOne(int postid) {
-		NoticeDTO dto = session.selectOne("NoticeMapper.selectBoardOne", postid);
-		return dto;
-	}
+    // 게시글 하나 가져오기
+    public BoardPostsDTO selectBoardOne(int postId) {
+        return session.selectOne("NoticeMapper.selectBoardOne", postId);
+    }
 
-	public int insertContent(NoticeDTO dto) {
-		int count = session.insert("NoticeMapper.insertContent", dto);
-		return count;
-	}
+    // 게시글 작성
+    public int insertContent(BoardPostsDTO dto) {
+        return session.insert("NoticeMapper.insertContent", dto);
+    }
 
-	public int boardDelete(int postid) {
-		int num = session.delete("NoticeMapper.boardDelete", postid);
-		return num;
-	}
+    // 게시글 삭제
+    public int boardDelete(int postId) {
+        return session.delete("NoticeMapper.boardDelete", postId);
+    }
 
-	public int updateContent(NoticeDTO dto) {
-		int num = session.update("NoticeMapper.updateContent", dto);
-		return num;
-	}
+    // 게시글 수정
+    public int updateContent(BoardPostsDTO dto) {
+        return session.update("NoticeMapper.updateContent", dto);
+    }
 
-	public int getTotalCount(HashMap<String, Object> map) {
-		int total = session.selectOne("NoticeMapper.getTotalCount", map);
-		return total;
-	}
+    // 게시글 총 수 가져오기
+    public int getTotalCount(HashMap<String, Object> map) {
+        return session.selectOne("NoticeMapper.getTotalCount", map);
+    }
 
-	public void increaseViewCount(int postid) {
-		session.update("NoticeMapper.increaseViewCount", postid);
-	}
+    // 조회수 증가
+    public void increaseViewCount(int postId) {
+        session.update("NoticeMapper.increaseViewCount", postId);
+    }
 
-	public List<NoticeDTO> selectPopupNotices() {
-		return session.selectList("NoticeMapper.selectPopupNotices");
-	}
+    // 팝업 공지 가져오기 (CATEGORY_ID = 1 필터링)
+    public List<BoardPostsDTO> selectPopupPosts() {
+        return session.selectList("NoticeMapper.selectPopupPosts");
+    }
 
-	public void updatePopupToN(NoticeDTO notice) {
-		session.update("NoticeMapper.updatePopupToN", notice);
-	}
+    // 팝업 비활성화 업데이트
+    public void updatePopupToN(BoardPostsDTO post) {
+        session.update("NoticeMapper.updatePopupToN", post);
+    }
 
 }

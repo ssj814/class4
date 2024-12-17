@@ -37,17 +37,17 @@
     <table class="boardHeader">
         <tr>
             <th>제목</th>
-            <td colspan="3">${retrive.sic_title}</td>
+            <td colspan="3">${retrive.title}</td>
             <th>작성자</th>
-            <td>${retrive.user_id}</td>
+            <td>${retrive.writer}</td>
         </tr>
         <tr>
             <th>글번호</th>
-            <td>${retrive.sic_num}</td>
+            <td>${retrive.postId}</td>
             <th>등록일</th>
-            <td>${retrive.writeday}</td>
+            <td>${retrive.createdAt}</td>
             <th>조회수</th>
-            <td>${retrive.readCnt}</td>
+            <td>${retrive.viewCount}</td>
         </tr>
     </table>
 
@@ -56,10 +56,10 @@
     </div>
 
     <div class="mb-3" id="boardArticle_footer">  
-    	<c:if test="${retrive.user_id == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name 
+    	<c:if test="${retrive.writer == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name 
     		|| fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
-        <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.sic_num}&currentPage=${currentPage}' />'">수정</button>
-        <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.sic_num}&currentPage=${currentPage}' />'">삭제</button>
+        <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.postId}&currentPage=${currentPage}' />'">수정</button>
+        <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.postId}&currentPage=${currentPage}' />'">삭제</button>
         </c:if>
         <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
     	

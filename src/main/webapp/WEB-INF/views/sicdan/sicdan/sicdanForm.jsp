@@ -15,10 +15,7 @@
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
   
-    
-    
     <!-- Summernote JS -->
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
@@ -39,18 +36,18 @@
     <h2>${isUpdate ? '게시물 수정' : '게시물 작성'}</h2>
 
     <form action="<c:url value='/sicdan_submit' />" method="post" onsubmit="return formCheck(event)" enctype="multipart/form-data">
-        <input type="hidden" name="sic_num" value="${dto.sic_num}">
+        <input type="hidden" name="postId" value="${dto.postId}">
         <input type="hidden" name="isUpdate" value="${isUpdate}">
         <input type="hidden" name="currentPage" value="${currentPage}">
 
         <div class="form-group">
             <label for="sic_title">제목:</label>
-            <input type="text" class="form-control" id="sic_title" name="sic_title" value="${dto.sic_title}">
+            <input type="text" class="form-control" id="sic_title" name="title" value="${dto.title}">
         </div>
 
         <div class="form-group">
             <label for="user_id">작성자:</label>
-            <input type="text" class="form-control" id="user_id" name="user_id" value="${dto.user_id}" readonly>
+            <input type="text" class="form-control" id="user_id" name="writer" value="${dto.writer}" readonly>
         </div>
 
         <div class="form-group">
@@ -58,7 +55,7 @@
             <textarea class="summernote form-control" id="content" name="content">${dto.content}</textarea>
         </div>
 
-        <input type="submit" class="btn btn-primary" value="${isUpdate ? '수정' : '발행'}">
+        <input type="submit" class="btn btn-primary" value="${isUpdate ? '수정' : '작성'}">
         <button type="button" class="btn btn-secondary" onclick="location.href='<c:url value='/sicdan_list' />'">목록 보기</button>
     </form>
 </div>

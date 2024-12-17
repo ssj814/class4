@@ -98,5 +98,9 @@ public class ProductService {
 	public void updateProductStock(ProductDTO dto) {
 		dao.updateProductStock(dto);
 	}
+
+	public void updateProductActive(ProductDTO dto) {
+		dao.updateProductActive(dto);
+	}
 	
 }

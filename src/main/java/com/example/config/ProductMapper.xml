@@ -86,11 +86,19 @@
 		UPDATE product SET
 		product_category_id=#{product_category_id},
 		product_name=#{product_name}, product_price=#{product_price},
+		product_isactive=#{product_isactive},
 		product_description=#{product_description}
 		<if test="product_imagename!=null">
 			, product_imagename=#{product_imagename}
 		</if>
 		where product_id = #{product_id}
+	</update>
+	
+	<!-- 상품 상태 변경 (판매중, 품절) -->
+	<update id="updateProductActive" parameterType="ProductDTO">
+	    UPDATE product
+	    SET product_isactive = #{product_isactive}
+	    WHERE product_id = #{product_id}
 	</update>
 	
 	<!-- 옵션 없는 상품 재고 업데이트 -->

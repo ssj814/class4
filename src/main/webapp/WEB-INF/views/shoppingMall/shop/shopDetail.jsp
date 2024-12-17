@@ -50,16 +50,24 @@
 						Price: <strong><fmt:formatNumber value="${product.getProduct_price()}" type="currency" currencySymbol="₩ " /></strong>
 					</p>
 					<p class="product-inventory">
-						In Stock: <strong> 옵션없으면 product의 product_stock이 수량! 있으면 하던대로 다 더해서 계산!</strong>
+						<!-- 옵션없으면 product의 product_stock이 수량! 있으면 하던대로 다 더해서 계산! -->
+						<c:choose>
+						    <c:when test="${not empty options[0].totalStock}">
+						        In Stock: <strong> ${options[0].totalStock}</strong>
+						    </c:when>
+						    <c:otherwise>
+						        In Stock: <strong> ${product.getProduct_stock()}</strong>
+						    </c:otherwise>
+						</c:choose>
 					</p>
 					<p class="product-status">
 						Status:
 						<c:choose>
-							<c:when test="${product.getProduct_isactive() == '1'}">
+							<c:when test="${product.getProduct_isactive() == 1}">
 								<span class="badge bg-success">판매중</span>
 							</c:when>
 							<c:otherwise>
-								<span class="badge bg-danger">품절</span>
+								<span class="badge bg-danger ">품절</span>
 							</c:otherwise>
 						</c:choose>
 					</p>
@@ -74,7 +82,7 @@
 					        <select class="form-select">
 					            <c:forEach var="name" items="${fn:split(option.option_name, ',')}" varStatus="status">
 						            <c:set var="stockValue" value="${fn:split(option.stock, ',')[status.index]}" />
-					                <option value="${name}">${name} [수량 : ${stockValue}]</option>
+					                <option value="${name}" <c:if test="${stockValue == 0}">disabled</c:if> data-stock="${stockValue}">${name} [수량 : ${stockValue}]</option>
 					            </c:forEach>
 					        </select>
 					    </div>
@@ -83,7 +91,7 @@
 					<label>quantity</label>
 					<div class="input-group">
 			            <input class="btn btn-dark decrease" type="button" value="-">
-						<input class="product-quantity form-control text-center" type="number" min="1" value="1">
+						<input class="product-quantity form-control text-center" type="text" min="1" value="1">
 						<input class="btn btn-dark increase" type="button" value="+">
 					</div>	
 					<hr class="container pb-0">
@@ -102,11 +110,12 @@
 				<button class="btn-wish mt-3 me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="좋아요" style="cursor: pointer;">
 	            	<i class="fa-solid fa-heart"></i>
 	            </button>   
-	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;">
+	            <button class="btn-cart mt-3 me-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="장바구니" style="cursor: pointer;" 
+	            	<c:if test="${product.getProduct_isactive() == 0}">disabled</c:if>>
 	            	<i class="fa-solid fa-cart-shopping "></i>
 	            </button>
 	            
-	            <form id="orderForm" action="user/singleOrderPayment" method="post">
+	            <form id="orderForm" action="user/singleOrderPayment" method="post" class="w-100">
 				    <input type="hidden" name="productId" value="${product.getProduct_id()}">
 				    <input type="hidden" name="quantity" class="product-quantity" value="1">
 				    
@@ -116,7 +125,7 @@
 				        <input type="hidden" name="optionName_${option.option_type}" class="hidden-option-name">
 				    </c:forEach>
 				    
-				    <button type="button" class="btn-buy mt-3 w-100">구매하기</button>
+				    <button type="button" class="btn-buy mt-3 w-100" <c:if test="${product.getProduct_isactive() == 0}">disabled</c:if> >구매하기</button>
 				</form>
 				
 			</div>
@@ -129,17 +138,11 @@
 	$(function() {
 		
 		// 로그인 유저 정보
-		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
-		
-		// 수량 입력 필드 변경 시 히든 태그 값 업데이트
-	    $(".product-quantity").on("change", function () {
-	        const quantity = $(this).val();
-	        $("input[name='quantity']").val(quantity); // 히든 태그에 값 동기화
-	    });
+		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;		
 		
 		// + 버튼 클릭 이벤트
 		$('.increase').click(function() {
-		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    var input = $(this).closest('.input-group').find('.product-quantity');
 		    console.log(input);
 		    var value = parseInt(input.val()) || 0;
 		    input.val(value + 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
@@ -147,21 +150,31 @@
 
 		// - 버튼 클릭 이벤트
 		$('.decrease').click(function() {
-		    var input = $(this).closest('.input-group').find('.product-quantity'); // 클래스 이름 수정
+		    var input = $(this).closest('.input-group').find('.product-quantity');
 		    var value = parseInt(input.val()) || 0;
 		    if (value > 1) input.val(value - 1).trigger('change'); // 값 변경 후 change 이벤트 트리거
 		});
 		
 		// total 계산
 		$(".product-quantity").on("change", function(){
-			var productPrice = `${product.getProduct_price()}`;
-			var productQuantity = $(this).val();
-			var totalPrice = Number(productPrice*productQuantity).toLocaleString();
-			if(productQuantity <= 0){
-				$(".product-quantity").val(1);
-			} else {
-				$(".total-price").html("₩ "+totalPrice);
-			}
+	        var input = $(this);
+	        var quantity = parseInt(input.val()) || 0;
+	        var stock = calculateStock(); // 재고 확인 함수 호출
+
+	        // 최소 수량 및 재고 초과 확인
+	        if (quantity < 1) {
+	            alert("최소 구매 수량은 1개입니다.");
+	            quantity = 1;
+	        } else if (quantity > stock) {
+	            alert("재고가 부족합니다. 최대 " + stock + "개까지 구매 가능합니다.");
+	            quantity = stock;
+	        }
+	        
+	        // 입력 필드 및 히든 필드 값 업데이트
+	        input.val(quantity);
+	        $("input[name='quantity']").val(quantity);
+	        
+	        updateTotal();
 		});
 		
 		// wish 이동버튼
@@ -225,6 +238,7 @@
                     });
                 }
             });
+			 
 			//상품 수량 
 			var productQuantity = parseInt($(".product-quantity").val());
 			if(productQuantity<1){
@@ -250,7 +264,7 @@
 		            }
 		    });
 		});
-		
+
 		//모달창 함수
 		function modalShow(mesg) {
 			$("#mesg").html(mesg);
@@ -266,6 +280,7 @@
 	$(document).ready(function() {
 		// 구매하기 버튼 클릭 시, 선택된 옵션 값을 hidden inputs에 설정
 		$(".btn-buy").on("click", function() {
+			console.log("Button clicked!",calculateStock());
 			$(".product-option-container").each(function() {
 	            // 옵션 타입과 선택된 옵션 이름을 가져옵니다.
 	            let optionType = $(this).find("label").text().trim();
@@ -287,9 +302,44 @@
 	                console.error(`Hidden input not found for option type: ${optionType}`);
 	            }
 	        });
-            /* event.preventDefault(); */
-            // 폼 전송
-             $("#orderForm").submit(); 
+			
+            //옵션 변경 후 quantity가 재고보다 많은 경우
+            if(calculateStock()<$("input[name='quantity']").val()){
+            	alert("수량을 확인해주세요");
+            } else {
+            	// 폼 전송
+            	$("#orderForm").submit(); 
+            }
+            
         });
     });
+	
+    // 재고 확인 함수
+    function calculateStock() {
+        var stock = 0;
+        // 옵션별 재고
+	    var optionStocks = [];
+        $(".product-option-container select").each(function () {
+            var selectedOption = $(this).find(":selected");
+            var optionStock = parseInt(selectedOption.data("stock")) || 0;
+            optionStocks.push(optionStock);
+        });
+        // 옵션 없는 상품 재고
+	    if (optionStocks.length > 0) {
+	        stock = Math.min(...optionStocks); // 모든 선택된 옵션의 최소 재고
+	    } else {
+	        stock = parseInt($(".product-inventory strong").text()) || 0;
+	    }
+        return stock;
+    }
+    
+    // 총액 업데이트 함수
+    function updateTotal() {
+        var price = parseInt($(".product-price strong").text().replace(/₩|,/g, "")) || 0;
+        var quantity = parseInt($(".product-quantity").val()) || 1;
+
+        var totalPrice = price * quantity;
+        $(".total-price").text("₩ " + totalPrice.toLocaleString());
+    }
+    
 </script>

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.PageDTO;
 import com.example.dto.TrainerBoardCommentDTO;
 import com.example.dto.TrainerBoardDTO;
@@ -53,9 +54,10 @@ public class TrainerBoardController {
 		PageDTO pDTO = service.select(searchName, searchValue, curPage);
 		System.out.println(pDTO);
 		// 상위 5개 게시글 조회
-	    List<TrainerBoardDTO> topPosts = service.selectTopPosts();
+	    List<BoardPostsDTO> topPosts = service.selectTopPosts();
+		System.out.println("topPosts: "+topPosts);
 		
-		List<TrainerBoardDTO> list = pDTO.getList(); //
+		List<BoardPostsDTO> list = pDTO.getList(); //
 		System.out.println("list출력" + list);
 		m.addAttribute("topPosts", topPosts);
 		m.addAttribute("pDTO", pDTO);
@@ -68,16 +70,16 @@ public class TrainerBoardController {
 	//페이지상태 유지용 retrieve
 	//메인에서 글내용 클릭시 postid랑 curPage 함께 넘겨서 2p에서 글 조회 후 목록보기 누르면 2p로 보이게 함-기존에는 무조건 1로감
 	@RequestMapping(value = "/Retrieve/{postid}/{curPage}", method = RequestMethod.GET)
-	public String retrieve(@PathVariable("postid") int postid, @PathVariable("curPage") int curPage, Model m) {
+	public String retrieve(@PathVariable("postid") int postId, @PathVariable("curPage") int curPage, Model m) {
 		// DTO 조회
-		TrainerBoardDTO dto = service.retrieve(postid);
+		BoardPostsDTO dto = service.retrieve(postId);
 
 		m.addAttribute("dto", dto);
 		m.addAttribute("curPage", curPage);
 
 		// 댓글 조회
 		System.out.println("111 "+dto);
-		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postid);
+		List<TrainerBoardCommentDTO> comments = coservice.getCommentsByPostId(postId);
 		System.out.println("222 "+comments);
 		m.addAttribute("comments", comments);
 
@@ -96,7 +98,7 @@ public class TrainerBoardController {
 	//글쓰고나면 제목, 내용을 세션에 저장시킴 이미지 여기에 저장하기
 	@RequestMapping(value = "/trainer/write", method = RequestMethod.POST)
 	public String write(@RequestParam("title") String title, @RequestParam("content") String content,
-			HttpSession session,Model m, MultipartFile weightImage, TrainerBoardDTO dto) {
+			HttpSession session,Model m, MultipartFile weightImage, BoardPostsDTO dto) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userid = authentication.getName();
 
@@ -118,14 +120,16 @@ public class TrainerBoardController {
 			if(!weightImage.isEmpty()) {
 				inputStream = weightImage.getInputStream(); //업로드된 파일의 내용을 읽기 위한 InputStream을 반환
 				String imgName = uuid + weightImage.getOriginalFilename(); //업로드된 파일의 원래 이름을 반환
-				//String userid2 = authentication.getName();
-				dto.setImagename(imgName);
+				
+				dto.setImageName(imgName);
+			}
 				dto.setTitle(title);
 				dto.setContent(content);
-				dto.setUserid(userid);
-				dto.setRealUsername(realUsername);
+				dto.setWriter(userid);
+				dto.setRealName(realUsername);
 
-				weightImage.transferTo(new File(uploadDir + imgName)); //파일의 내용을 지정된 위치로 직접 저장
+			if(!weightImage.isEmpty()) {
+				weightImage.transferTo(new File(uploadDir + dto.getImageName())); //파일의 내용을 지정된 위치로 직접 저장
 			}
 			
 			// 서비스 호출
@@ -148,14 +152,14 @@ public class TrainerBoardController {
 	@RequestMapping(value = "/update", method = RequestMethod.GET)
 	public String showUpdateForm(@RequestParam("postid") int postid, Model m) {
 		
-		TrainerBoardDTO dto = service.retrieve(postid); // postid받아와서 상세내용 불러오고 
+		BoardPostsDTO dto = service.retrieve(postid); // postid받아와서 상세내용 불러오고 
 		m.addAttribute("dto", dto);
 		return "trainerboard/update"; // update.jsp로
 	}
 
 	//수정 후 세션에 저장
 	@RequestMapping(value = "/trainer/update", method = RequestMethod.POST)
-	public String update(TrainerBoardDTO dto, HttpSession session, Model m, MultipartFile weightImage) {
+	public String update(BoardPostsDTO dto, HttpSession session, Model m, MultipartFile weightImage) {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userid = authentication.getName();
@@ -168,8 +172,8 @@ public class TrainerBoardController {
 	    
 	    try {
 	        // 기존 이미지가 있을 경우
-	        if (dto.getImagename() != null) { 
-	            File oldImageFile = new File(uploadDir + dto.getImagename());
+	        if (dto.getImageName() != null) { 
+	            File oldImageFile = new File(uploadDir + dto.getImageName());
 	           
 	            if (oldImageFile.exists()) {
 	                // 새 이미지가 있는 경우에만 기존 이미지 삭제
@@ -182,7 +186,7 @@ public class TrainerBoardController {
 	        // 새 이미지가 있는 경우
 	        if (!weightImage.isEmpty()) {
 	            String newImageName = UUID.randomUUID() + weightImage.getOriginalFilename();
-	            dto.setImagename(newImageName); // 새로운 이미지 이름 설정
+	            dto.setImageName(newImageName); // 새로운 이미지 이름 설정
 	            weightImage.transferTo(new File(uploadDir + newImageName)); // 새로운 이미지 저장
 	        }
 
@@ -200,7 +204,7 @@ public class TrainerBoardController {
 	    }
 
 	    session.setAttribute("update", dto);
-	    return "redirect:/retrieve/" + dto.getPostid(); // 수정 후 수정된 게시글 보기
+	    return "redirect:/retrieve/" + dto.getPostId(); // 수정 후 수정된 게시글 보기
 	}
 
 
@@ -212,9 +216,7 @@ public class TrainerBoardController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String userid = authentication.getName();
 		
-		TrainerBoardDTO dto = service.retrieve(postid);
-		String title = dto.getTitle();
-		String content = dto.getContent();
+		BoardPostsDTO dto = service.retrieve(postid);
 
 		m.addAttribute("dto", dto);
 		
@@ -244,8 +246,8 @@ public class TrainerBoardController {
 
 	    try {
             // 게시글 정보 조회
-            TrainerBoardDTO dto = service.retrieve(postid);
-	        String imgName = dto.getImagename();
+	    	BoardPostsDTO dto = service.retrieve(postid);
+	        String imgName = dto.getImageName();
 	        
 	        // 이미지 파일 삭제
 	        if (imgName != null) {

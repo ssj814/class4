@@ -66,11 +66,11 @@
             </colgroup>
             <tr>
                 <th>글번호</th>
-                <td>${dto.postid}</td>
+                <td>${dto.postId}</td>
             </tr>
             <tr>
                 <th>작성자</th>
-                <td>${dto.realUsername}</td>
+                <td>${dto.realName}</td>
             <tr>
                 <th>글제목</th>
                  <td>${dto.title}</td>
@@ -78,8 +78,8 @@
             <tr>
                 <th>글내용</th>
                  <td>${dto.content}
-                 <c:if test="${not empty dto.imagename}">
-                 <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
+                 <c:if test="${not empty dto.imageName}">
+                 <img src="<c:url value='/images/trainerboard_image/${dto.imageName}'/>"  alt="Image"
 				class="img-fluid" style="object-fit: contain; max-height: 500px;">
 				</c:if>
 				</td>
@@ -88,10 +88,10 @@
         </table>
         <br>
         <div class="button">
-         <c:if test="${dto.userid == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name || fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+         <c:if test="${dto.writer == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name || fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
          <!-- 세션에 저장된 글쓴이 userid와 dto에 저장된 userid가 같은ㄴ지 && TRAINER권한으로 된 사람인지 확인 -->
-      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postid}'">수정</button>&nbsp;
-	<button class="buttonmulti" onclick="confirmDelete(${dto.postid})">삭제</button>&nbsp;
+      <button class="buttonmulti" onclick="location.href='/app/update?postid=${dto.postId}'">수정</button>&nbsp;
+	<button class="buttonmulti" onclick="confirmDelete(${dto.postId})">삭제</button>&nbsp;
 	</c:if>
 	<button class="buttonmulti" type="button" onclick="location.href='/app/TrainerBoard?curPage=${curPage}'">목록보기</button>
 <!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
@@ -106,7 +106,7 @@
 			</div>
 			<div class="comment-body">
 				<form class="replyForm">
-					<input type="hidden" name="postid" value="${dto.postid}">
+					<input type="hidden" name="postid" value="${dto.postId}">
 					<textarea id="comment-textarea" name="commContent"
 						placeholder="댓글을 입력하세요" rows="5"></textarea>
 					<button type="submit" id="submit-comment" class="hidden" onclick="checkLoginBeforeComment()">
@@ -122,7 +122,7 @@
 					<table class="reply-table">
 						<tr class="reply">
 							<td class="reply-userid" colspan="2" 
-							<c:if test="${dto.userid == comment.userId}">
+							<c:if test="${dto.writer == comment.userId}">
 							style="background-color: black; color:pink";
 							</c:if>>
 							${comment.realUsername}</td>
@@ -243,7 +243,7 @@
 		            var parentContainer = $(this).closest('.reply-container');
 		            var newContent = parentContainer.find('.edit-content-textarea').val();  // 수정된 내용
 		            
-		            var postId = ${dto.postid};
+		            var postId = ${dto.postId};
 		            console.log(postId);
 		            //location.href = "/app/updateTrainerboardComment";
 		           

@@ -2,16 +2,12 @@
     pageEncoding="UTF-8"%>
     <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
     
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
- 
-
-    
     <!-- Summernote CSS -->
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
 
@@ -37,31 +33,28 @@
 <body>
 <div class="container" style="margin-top:40px;">
         <main>
-
-
 		   <form action="${pageContext.request.contextPath}/trainer/update" method="post" id="writeForm" enctype="multipart/form-data">
-		    	<input type="hidden" name="postid" value="${dto.postid}">
+		    	<input type="hidden" name="postId" value="${dto.postId}">
 		    	<div class="label">
 		    	<label for="title">제목</label></div>
 		    	<input type="text" id="title" name="title"  maxlength="50" required value="${dto.title}"><br><br>
 		    	<div class="label">
 		    	<label for="content">내용</label></div>
 		    	  <textarea class="summernote form-control" id="content" name="content">${dto.content}</textarea> 
-		    	<%-- <textarea id="content" name="content"  maxlength="1000" required>${dto.content}</textarea><br> --%>
 			   
 			    <!-- 첨부된 파일 이름 표시 -->
                 <div class="label">
                     <label>첨부된 파일명:</label>
-                    <span>${dto.imagename != null ? dto.imagename : "첨부된 파일이 없습니다."}</span>
+                    <span>${dto.imageName != null ? dto.imageName : "첨부된 파일이 없습니다."}</span>
                 </div>
                 <br>
                    <!-- 현재 이미지 미리보기 -->
                 <div class="label">
                     <label>첨부된 이미지:</label>
                
-                 <img src="<c:url value='/images/trainerboard_image/${dto.imagename}'/>"  alt="Image"
+                 <img src="<c:url value='/images/trainerboard_image/${dto.imageName}'/>"  alt="Image"
 				class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
-                <input type="hidden" name="imagename" value='${dto.imagename}'/>
+                <input type="hidden" name="imageName" value='${dto.imageName}'/>
                 </div>
                 
 			   <br>

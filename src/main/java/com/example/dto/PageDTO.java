@@ -6,7 +6,7 @@ import org.apache.ibatis.type.Alias;
 
 @Alias("PageDTO")
 public class PageDTO {
-	private List<TrainerBoardDTO> list;
+	private List<BoardPostsDTO> list;
 	private int curPage; //현재페이지
 	private int perPage=10; //페이징되는 갯수
 	private int totalCount; //총페이지
@@ -18,7 +18,7 @@ public class PageDTO {
 	}
 
 
-	public PageDTO(List<TrainerBoardDTO> list, int curPage, int perPage, int totalCount) {
+	public PageDTO(List<BoardPostsDTO> list, int curPage, int perPage, int totalCount) {
 		super();
 		this.list = list;
 		this.curPage = curPage;
@@ -27,12 +27,12 @@ public class PageDTO {
 	}
 
 
-	public List<TrainerBoardDTO> getList() {
+	public List<BoardPostsDTO> getList() {
 		return list;
 	}
 
 
-	public void setList(List<TrainerBoardDTO> list) {
+	public void setList(List<BoardPostsDTO> list) {
 		this.list = list;
 	}
 

@@ -118,11 +118,11 @@
 
 	<div>
 		<c:forEach var="list" items="${allData}">
-			<div class="question" data-faq-qna-id="${list.FAQ_QNA_ID}"
-				onclick="toggleAnswer('answer_${list.FAQ_QNA_ID}')">
-				${list.QUESTION}</div>
-			<div class="answer" id="answer_${list.FAQ_QNA_ID}">
-				${list.ANSWER}</div>
+			<div class="question" data-faq-qna-id="${list.faq_qna_id}"
+				onclick="toggleAnswer('answer_${list.faq_qna_id}')">
+				${list.question}</div>
+			<div class="answer" id="answer_${list.faq_qna_id}">
+				${list.answer}</div>
 		</c:forEach>
 	</div>
 </div>

@@ -1,0 +1,202 @@
+@charset "UTF-8";
+/* 전체 스타일 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* boardList 전체 스타일 */
+#boardList {
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 추가 */
+}
+
+/* 제목 스타일 */
+#boardList_title {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
+/* 리스트 헤더 스타일 */
+#postTitle {
+    background-color: #f1f1f1;
+    border-bottom: 1px solid #ddd;
+}
+
+#postTitle dl {
+    display: flex;
+    padding: 10px;
+    margin-bottom: 0px;
+}
+
+#postTitle dt {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* 제목 열의 폭을 늘리기 위해 flex: 3로 설정 */
+#postTitle .question {
+    flex: 3;
+}
+
+/* 리스트 항목 스타일 */
+#lists dl {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px 0;
+    align-items: center;
+}
+
+#lists dd {
+    flex: 1;
+    text-align: center;
+}
+
+/* 제목 열의 폭을 늘리기 위해 flex: 3로 설정 */
+#lists .question {
+    flex: 3;
+}
+
+#lists .question a {
+    text-decoration: none;
+    color: #333;
+    transition: color 0.3s, text-decoration 0.3s;
+}
+
+#lists .question a:hover {
+    text-decoration: underline;
+    color: #000;
+}
+
+/* 푸터 스타일 */
+#boardList_footer {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 8px 8px;
+}
+
+#boardList_footer form {
+    display: flex;
+    align-items: center;
+}
+
+.selectField, .textField {
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 1em; /* 폰트 크기 추가 */
+}
+
+#boardSearch, #writing {
+    border: none;
+    background-color: #333;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s; /* 부드러운 전환 효과 추가 */
+}
+
+#boardSearch:hover, #Writing:hover {
+    background-color: #555;
+}
+
+/*         아래는 지우기               */
+
+
+
+
+/* 페이징 컨트롤 스타일 */
+#boardList_paging {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#boardList_paging a, #boardList_paging span {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 5px;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+#boardList_paging a:hover {
+    background-color: #ddd;
+    color: #000;
+}
+
+#boardList_paging .current {
+    font-weight: bold;
+    background-color: #333;
+    color: #fff;
+}
+
+/* 이전/다음 버튼 스타일 */
+#boardList_paging a {
+    padding: 8px 15px;
+    font-weight: bold;
+}
+
+#boardList_paging a:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    #boardList {
+        width: 100%;
+        padding: 10px;
+    }
+
+    #boardList_title {
+        font-size: 1.5em;
+        padding: 8px;
+    }
+
+    #postTitle dl, #lists dl {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #postTitle dt, #lists dd {
+        text-align: left;
+    }
+
+    #boardList_footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .selectField, .textField {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #boardList_paging a, #boardList_paging span {
+        padding: 6px 10px;
+    }
+}
+ 

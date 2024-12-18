@@ -3,7 +3,37 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="FaqMapper">
-	<select id="faqList" resultType="FaqDTO">
+
+	<select id="list" resultType="FaqDTO">
 		 SELECT * FROM FAQ_QNA
 	</select>
+	
+	<select id="qnaList" parameterType="hashmap" resultType="FaqDTO">
+	    SELECT * FROM FAQ_QNA
+	    <where>
+	        <if test="category != null and category != ''">
+	            category = #{category}
+	        </if>
+	        <if test="searchValue != null and searchKey != null">
+	            AND LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
+	        </if>
+	    </where>
+	</select>
+	
+    <select id="selectBoardOne" resultType="FaqDTO" parameterType="int">
+        SELECT * FROM FAQ_QNA
+        WHERE faq_qna_id = #{faq_qna_id}
+    </select>
+    
+    <insert id="saveQuestion" parameterType="FaqDTO">
+    	INSERT INTO FAQ_QNA(faq_qna_id, question, questioner, faq_qna_date, category, is_secret)
+    	VALUES (FAQ_QNA_SEQ.nextval, #{question}, #{questioner}, SYSDATE, #{category}, #{is_secret})
+    </insert>
+    
+    <update id="saveAnswer" parameterType="FaqDTO">
+    	UPDATE FAQ_QNA
+        SET answer = #{answer}
+        WHERE faq_qna_id = #{faq_qna_id}
+    </update>
+	
 </mapper>

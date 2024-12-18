@@ -3,6 +3,7 @@ package com.example.service.faq;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,12 @@ public class FaqService {
 		return dao.list();
 	}
 
-	public List<FaqDTO> qnaList(HashMap<String, Object> map) {
+	public List<FaqDTO> qnaList(HashMap<String, Object> map, RowBounds bounds) {
 		List<FaqDTO> list = null;
 		if(map == null) {
 			list = list();
 		} else {
-			list = dao.qnaList(map);
+			list = dao.qnaList(map,bounds);
 		}
 		return list;
 	}
@@ -54,6 +55,16 @@ public class FaqService {
 		} else {
 			message = "답변 등록 실패";
 		}
+		return message;
+	}
+
+	public int getTotalCount(HashMap<String, Object> map) {
+		return dao.getTotalCount(map);
+	}
+
+	public String deleteQuestion(int faq_qna_id) {
+		int deleteResult = dao.deleteQuestion(faq_qna_id);
+		String message = deleteResult == 1 ? "삭제하였습니다." : "삭제 실패.";
 		return message;
 	}
 

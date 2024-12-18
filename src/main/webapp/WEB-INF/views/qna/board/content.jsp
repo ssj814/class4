@@ -89,7 +89,8 @@
 		<div id="boardArticle_footer">
 			<div>
 				<c:if
-					test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+					test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN') 
+							|| sessionScope.SPRING_SECURITY_CONTEXT.authentication.name == BoardOne.questioner}">
 					<input type="button" value=" 삭제 " id="BoardDelete" />
 				</c:if>
 			</div>
@@ -104,6 +105,19 @@
 	src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		var currentPage = ${currentPage};
+
+		$("#viewList").on("click", function() {
+			location.href = '/app/qna?currentPage=' + currentPage;
+		});
+
+		$("#BoardDelete").on("click", function() {
+			var confirmed = confirm("정말로 삭제하겠습니까?");
+			if (confirmed) {
+				location.href = 'admin/qna_delete?faq_qna_id=' + ${BoardOne.faq_qna_id} +'&currentPage=' + currentPage;
+			}
+		});
 
 		//답변 수정 폼 보이기
 		$("#edit-answer").on("click", function() {

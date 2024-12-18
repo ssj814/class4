@@ -120,11 +120,6 @@
     background-color: #555;
 }
 
-/*         아래는 지우기               */
-
-
-
-
 /* 페이징 컨트롤 스타일 */
 #boardList_paging {
     text-align: center;
@@ -142,7 +137,7 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
-#boardList_paging a:hover {
+#boardList_paging a:hover{
     background-color: #ddd;
     color: #000;
 }
@@ -159,7 +154,7 @@
     font-weight: bold;
 }
 
-#boardList_paging a:hover {
+#boardList_paging a:hover, #boardList_paging span {
     background-color: #555;
     color: #fff;
 }

@@ -18,12 +18,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	            AND LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
 	        </if>
 	    </where>
+	    ORDER BY faq_qna_date desc
 	</select>
 	
     <select id="selectBoardOne" resultType="FaqDTO" parameterType="int">
         SELECT * FROM FAQ_QNA
         WHERE faq_qna_id = #{faq_qna_id}
     </select>
+    
+   	<select id="getTotalCount" parameterType="hashmap" resultType="int">
+	    SELECT COUNT(*) FROM FAQ_QNA
+	    <where>
+	        <if test="category != null and category != ''">
+	            category = #{category}
+	        </if>
+	        <if test="searchValue != null and searchKey != null">
+	            AND LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
+	        </if>
+	    </where>
+	</select>
     
     <insert id="saveQuestion" parameterType="FaqDTO">
     	INSERT INTO FAQ_QNA(faq_qna_id, question, questioner, faq_qna_date, category, is_secret)
@@ -35,5 +48,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SET answer = #{answer}
         WHERE faq_qna_id = #{faq_qna_id}
     </update>
+    
+    <delete id="deleteQuestion" parameterType="int">
+    	DELETE FROM FAQ_QNA
+        WHERE faq_qna_id = #{faq_qna_id}
+    </delete>
 	
 </mapper>

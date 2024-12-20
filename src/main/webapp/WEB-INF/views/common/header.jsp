@@ -59,8 +59,14 @@
 				</ul>
 				<!-- 검색창 들어갈 부분 -->
 				<form action="${pageContext.request.contextPath}/searchAll" method="get" class="d-flex ms-auto">
-				    <input class="form-control me-2" type="text" name="keyword" placeholder="검색어 입력" aria-label="Search" required>
-				    <button class="btn btn-outline-light" type="submit">검색</button>
+				    <input 
+				        class="form-control me-2" 
+				        type="text" 
+				        name="keyword" 
+				        placeholder="검색어 입력" 
+				        aria-label="Search" 
+				        required>
+				    <button class="btn" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
 				</form>
 				
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->

@@ -57,6 +57,12 @@
 					<li class="nav-item"><a class="nav-link active"
 						href="${pageContext.request.contextPath}/qna" style="color: beige;">Q&A</a></li>
 				</ul>
+				<!-- 검색창 들어갈 부분 -->
+				<form action="${pageContext.request.contextPath}/searchAll" method="get" class="d-flex ms-auto">
+				    <input class="form-control me-2" type="text" name="keyword" placeholder="검색어 입력" aria-label="Search" required>
+				    <button class="btn btn-outline-light" type="submit">검색</button>
+				</form>
+				
 				<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> <!-- 로그인 -->
 					<ul class="navbar-nav ms-auto">
 						<li class="nav-item"><a class="nav-link active"

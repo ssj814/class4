@@ -50,7 +50,6 @@
 
 <div id="boardList">
     <div id="boardList_title">[운동 식단 게시판]</div>
-    
 	
 	<div class="container custom-card-container mt-1 mb-1">
 	    <div class="row text-center">
@@ -95,11 +94,11 @@
             <c:forEach var="sicdan" items="${list}" varStatus="status">
                 <tr>
                     <!-- 게시글 번호 계산: 각 페이지마다 번호 일관성 유지 -->
-                  <td>${totalCount - ((currentPage - 1) * pageSize + status.index)}</td>
-					 <td><a href="<c:url value='/sicdan_retrieve?num=${sicdan.sic_num}&currentPage=${currentPage}' />">${sicdan.sic_title}</a></td>
-                    <td>${sicdan.user_id}</td>
-                    <td>${sicdan.writeday}</td>
-                    <td>${sicdan.readCnt}</td>
+                  	<td>${totalCount - ((currentPage - 1) * pageSize + status.index)}</td>
+					<td><a href="<c:url value='/sicdan_retrieve?num=${sicdan.postId}&currentPage=${currentPage}' />">${sicdan.title}</a></td>
+                    <td>${sicdan.writer}</td>
+                    <td>${sicdan.createdAt}</td>
+                    <td>${sicdan.viewCount}</td>
                 </tr>
             </c:forEach>
         </tbody>
@@ -128,7 +127,7 @@
             <form action="<c:url value='/sicdan_list' />" method="get">
                 <select name="searchName">
                     <option value="title">제목</option>
-                    <option value="user_id">작성자</option>
+                    <option value="writer">작성자</option>
                 </select>
                 <input type="text" name="searchValue" placeholder="검색어를 입력하세요" />
                 <input type="submit" value="검색" />

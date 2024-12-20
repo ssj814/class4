@@ -5,61 +5,59 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="com.sicdan.SicdanMapper">
 
     <!-- 게시글 작성 -->
-    <insert id="write" parameterType="SicdanDTO">
-        INSERT INTO sicdan (sic_num, sic_title, user_id, content)
-        VALUES (sicdan_seq.nextval, #{sic_title}, #{user_id}, #{content})
+    <insert id="write" parameterType="BoardPostsDTO">
+        INSERT INTO BOARD_POSTS (category_id, title, writer, content)
+        VALUES (3, #{title}, #{writer}, #{content})
     </insert>
 
     <!-- 게시글 번호로 조회 -->
-    <select id="selectByNum" parameterType="int" resultType="SicdanDTO">
-        SELECT sic_num, sic_title, user_id, content, 
-               TO_CHAR(writeday, 'yyyy/MM/dd') AS writeday, 
-               readCnt, is_del
-        FROM sicdan
-        WHERE sic_num = #{sic_num} AND is_del = 'N'
+    <select id="selectByNum" parameterType="int" resultType="BoardPostsDTO">
+        SELECT post_id as postId, title, writer, content, 
+               TO_CHAR(created_at, 'yyyy/MM/dd') AS createdAt, 
+               viewcount
+        FROM BOARD_POSTS
+        WHERE post_id = #{postId} AND CATEGORY_ID = 3
     </select>
 
     <!-- 조회수 증가 -->
     <update id="updateReadCnt" parameterType="int">
-        UPDATE sicdan
-        SET readCnt = readCnt + 1
-        WHERE sic_num = #{sic_num}
+        UPDATE BOARD_POSTS
+        SET viewcount = viewcount + 1
+        WHERE post_id = #{postId}
     </update>
 
     <!-- 게시글 수정 -->
-    <update id="updateByNum" parameterType="SicdanDTO">
-        UPDATE sicdan
-        SET sic_title = #{sic_title}, user_id = #{user_id}, content = #{content}
-        WHERE sic_num = #{sic_num}
+    <update id="updateByNum" parameterType="BoardPostsDTO">
+        UPDATE BOARD_POSTS
+        SET TITLE = #{title}, CONTENT = #{content}, UPDATED_AT = SYSDATE
+        WHERE POST_ID = #{postId} 
     </update>
 
-    <!-- 게시글 삭제 (논리적 삭제) -->
+    <!-- 게시글 삭제 -->
     <update id="deleteNum" parameterType="int">
-        UPDATE sicdan
-        SET is_del = 'Y'
-        WHERE sic_num = #{sic_num}
+        DELETE FROM BOARD_POSTS
+        WHERE POST_ID = #{postId} AND CATEGORY_ID = 3
     </update>
 
-    <!-- 게시글 목록 조회 -->
    <!-- 게시글 목록 조회 -->
-<select id="listAll" parameterType="map" resultType="SicdanDTO">
+<select id="listAll" parameterType="map" resultType="BoardPostsDTO">
     SELECT * FROM (
-        SELECT ROW_NUMBER() OVER (ORDER BY sic_num DESC) AS rn,
-               sic_num, sic_title, user_id, content,
-               TO_CHAR(writeday, 'yyyy/MM/dd') AS writeday, readCnt
-        FROM sicdan
-        WHERE is_del = 'N'
+        SELECT ROW_NUMBER() OVER (ORDER BY post_id DESC) AS rn,
+               post_id AS postId, title, writer, content,
+               TO_CHAR(created_at, 'yyyy/MM/dd') AS createdAt, viewcount
+        FROM BOARD_POSTS
+        WHERE CATEGORY_ID = 3
         <if test="searchName != null and searchValue != null and searchValue != ''">
             <choose>
                 <when test="searchName == 'title'">
-                    AND sic_title LIKE '%' || #{searchValue} || '%'
+                    AND title LIKE '%' || #{searchValue} || '%'
                 </when>
-                <when test="searchName == 'user_id'">
-                    AND user_id LIKE '%' || #{searchValue} || '%'
+                <when test="searchName == 'writer'">
+                    AND writer LIKE '%' || #{searchValue} || '%'
                 </when>
             </choose>
         </if>
-    ) paginated  <!-- 'AS' 제거 -->
+    )
     WHERE rn BETWEEN #{startRow} AND #{endRow}
 </select>
 
@@ -68,15 +66,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <!-- 총 게시글 개수 조회 -->
 <select id="getTotalCount" parameterType="map" resultType="int">
     SELECT count(*)
-    FROM sicdan
-    WHERE is_del = 'N'
+    FROM BOARD_POSTS
+    WHERE CATEGORY_ID = 3
     <if test="searchName != null and searchValue != null and searchValue != ''">
         AND <choose>
             <when test="searchName == 'title'">
-                LOWER(sic_title) LIKE '%' || LOWER(#{searchValue}) || '%'
+                LOWER(title) LIKE '%' || LOWER(#{searchValue}) || '%'
             </when>
-            <when test="searchName == 'user_id'">
-                LOWER(user_id) LIKE '%' || LOWER(#{searchValue}) || '%'
+            <when test="searchName == 'writer'">
+                LOWER(writer) LIKE '%' || LOWER(#{searchValue}) || '%'
             </when>
         </choose>
     </if>

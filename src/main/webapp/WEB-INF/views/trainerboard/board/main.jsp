@@ -18,7 +18,7 @@
 		<main>
 		<form action="TrainerBoard" method="get" id="search">
 			<select name="searchName">
-				<option value="realUsername">작성자</option>
+				<option value="realName">작성자</option>
 				<option value="title">제목</option>
 				<option value="content">내용</option>
 			</select>
@@ -50,10 +50,10 @@
     					<c:forEach var="post" items="${topPosts}">
        					 <tr>
        					 	<td class="tdTopPosts"><img src="resources/img/trainerboard/recommend.png" alt="recommend" height=25 width=25></td>
-            				<td class="trainerboard_topPosts"><a href="Retrieve/${post.postid}/${pDTO.curPage}"><strong>${post.title}</strong></a></td>
-           					<td class="tdTopPosts">${post.realUsername}</td>
-            				<td class="tdTopPosts">${post.crdate}</td>
-            				<td class="tdTopPosts">${post.viewcount}</td>
+            				<td class="trainerboard_topPosts"><a href="Retrieve/${post.postId}/${pDTO.curPage}"><strong>${post.title}</strong></a></td>
+           					<td class="tdTopPosts">${post.realName}</td>
+            				<td class="tdTopPosts">${post.createdAt}</td>
+            				<td class="tdTopPosts">${post.viewCount}</td>
        					 </tr>
    						 </c:forEach>
 				</c:if>
@@ -63,10 +63,10 @@
 						<c:forEach var="dto" items="${pDTO.list}" varStatus="status">
 							<tr>
 								<td class="trainerboard_postno">${pDTO.totalCount-(status.index+(pDTO.curPage-1)*pDTO.perPage)} </td>
-								<td class="trainerboard_content"><a href="Retrieve/${dto.postid}/${pDTO.curPage}">${dto.title}</a></td>
-								<td class="trainerboard_tbody">${dto.realUsername}</td>
-								<td class="trainerboard_tbody" >${dto.crdate}</td>
-								<td class="trainerboard_tbody">${dto.viewcount}</td>
+								<td class="trainerboard_content"><a href="Retrieve/${dto.postId}/${pDTO.curPage}">${dto.title}</a></td>
+								<td class="trainerboard_tbody">${dto.realName}</td>
+								<td class="trainerboard_tbody" >${dto.createdAt}</td>
+								<td class="trainerboard_tbody">${dto.viewCount}</td>
 							</tr>
 						</c:forEach>
 					</c:when>

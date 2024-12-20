@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SearchMapper">
+
+	<select id="selectAll" parameterType="String" resultType="SearchResultDTO">
+	    SELECT 'PRODUCT' AS category, 
+	           PRODUCT_NAME AS title, 
+	           PRODUCT_DESCRIPTION AS content, 
+	           PRODUCT_IMAGENAME AS writer, 
+	           PRODUCT_CREATEDAT AS createdAt,
+	           PRODUCT_PRICE AS productPrice,
+	           PRODUCT_ID AS id
+	    FROM PRODUCT
+	    WHERE PRODUCT_NAME LIKE '%' || #{keyword} || '%'
+	       OR PRODUCT_DESCRIPTION LIKE '%' || #{keyword} || '%'
+	    
+	    UNION ALL
+	    
+	    SELECT 'POSTS' AS category, 
+	           TITLE AS title, 
+	           CONTENT AS content, 
+	           WRITER AS writer, 
+	           CREATED_AT AS createdAt,
+	           CATEGORY_ID AS categoryId,
+	           POST_ID AS id
+	    FROM BOARD_POSTS
+	    WHERE TITLE LIKE '%' || #{keyword} || '%'
+	       OR CONTENT LIKE '%' || #{keyword} || '%'
+	    
+	    UNION ALL
+	    
+	    SELECT 'FAQ' AS category, 
+	           QUESTION AS title, 
+	           ANSWER AS content, 
+	           QUESTIONER AS writer, 
+	           FAQ_QNA_DATE AS createdAt,
+	           IS_SECRET AS categoryId,
+	           FAQ_QNA_ID AS id
+	    FROM FAQ_QNA
+	    WHERE QUESTION LIKE '%' || #{keyword} || '%'
+	       OR ANSWER LIKE '%' || #{keyword} || '%'
+	</select>
+	
+	<select id="searchDetail" parameterType="map" resultType="SearchResultDTO">
+	    SELECT * FROM (
+	        <choose>
+	            <when test="category == 'PRODUCT'">
+	                SELECT 'PRODUCT' AS category, 
+				           PRODUCT_NAME AS title, 
+				           PRODUCT_DESCRIPTION AS content, 
+				           PRODUCT_IMAGENAME AS writer, 
+				           PRODUCT_CREATEDAT AS createdAt,
+				           PRODUCT_PRICE AS productPrice,
+				           PRODUCT_ID AS id
+				    FROM PRODUCT
+				    WHERE PRODUCT_NAME LIKE '%' || #{keyword} || '%'
+				       OR PRODUCT_DESCRIPTION LIKE '%' || #{keyword} || '%'
+	            </when>
+	            <when test="category == 'POSTS'">
+	                SELECT 'POSTS' AS category, 
+				           TITLE AS title, 
+				           CONTENT AS content, 
+				           WRITER AS writer, 
+				           CREATED_AT AS createdAt,
+				           CATEGORY_ID AS productPrice,
+				           POST_ID AS id
+				    FROM BOARD_POSTS
+				    WHERE (TITLE LIKE '%' || #{keyword} || '%'
+				       OR CONTENT LIKE '%' || #{keyword} || '%')
+	                <if test="subcategory != null">
+	                    AND CATEGORY_ID = #{subcategory}
+	                </if>
+	            </when>
+	            <when test="category == 'FAQ'">
+	                SELECT 'FAQ' AS category, 
+				           QUESTION AS title, 
+				           ANSWER AS content, 
+				           QUESTIONER AS writer, 
+				           FAQ_QNA_DATE AS createdAt,
+				           IS_SECRET AS categoryId,
+				           FAQ_QNA_ID AS id
+				    FROM FAQ_QNA
+				    WHERE QUESTION LIKE '%' || #{keyword} || '%'
+				       OR ANSWER LIKE '%' || #{keyword} || '%'
+	            </when>
+	        </choose>
+	    )
+	</select>
+
+</mapper>

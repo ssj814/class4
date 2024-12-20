@@ -1,111 +1,101 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="BoardMapper">
 
-<!-- 상위 5개 게시글 조회 -->
-<select id="selectTopPosts" resultType="BoardDTO">
-SELECT postid, title, userid,
-          Crdate,
-           viewcount, realUsername
-FROM (
-    SELECT postid, title, userid,
-           TO_CHAR(crdate, 'YYYY-MM-DD')Crdate,
-           viewcount, realUsername
-    FROM TRAINERBOARD_BOARD
-    ORDER BY viewcount DESC
-)
-WHERE ROWNUM &lt;= 5
-</select>
-
-<select id="selectAll" resultType="BoardDTO" parameterType="hashmap">
-
-		select postid, title, userid, 
-		to_char(crdate,'YYYY-MM-DD')crdate,
-		viewcount,  realUsername
-		from
-		TRAINERBOARD_BOARD
-		
-		<where>
-		<if test="searchName=='realUsername'">
-		realUsername like '%' ||#{searchValue}||'%'
-		</if>
-		<if test="searchName=='title'">
-		title like '%'||#{searchValue}||'%'
-		</if>
-		<if test="searchName=='content'">
-		content like '%'||#{searchValue}||'%'
-		</if>
-		</where>
-		
-		order by postid desc
-
-
-	</select>
-
-	<!-- 추가 -->
-	<insert id="insert" parameterType="BoardDTO">
-
-		insert into TRAINERBOARD_BOARD
-		( categoryid,userid,trainerid, title,
-		content,
-		crdate,updatedate, viewcount, imagename, realUsername)
-		values (
-		1, #{userid}, 9999, #{title},
-		#{content},
-		sysdate, sysdate, #{viewcount}, #{imagename},#{realUsername})
-
-	</insert>
-	
-	<!-- 수정 -->
-	<update id="update" parameterType="BoardDTO">
-	update TRAINERBOARD_BOARD
-	set title=#{title}, content=#{content}
-	<if test="imagename!=null">
-	,imagename=#{imagename}</if>
-	WHERE postid = #{postid} 
-	
-	</update>
-	
-	<!-- 글조회 -->
-	<select id="selectBytitle" parameterType="int" resultType="BoardDTO">
-    SELECT * FROM TRAINERBOARD_BOARD WHERE postid = #{postid}
-</select>
-
-	<update id="increaseViewCount" parameterType="int">
-	UPDATE TRAINERBOARD_BOARD
-	SET viewcount = viewcount + 1
-	WHERE postid = #{postid}
-	</update>
-
-
-<!-- 삭제 -->
-<delete id="delete" parameterType="int">
-delete from TRAINERBOARD_BOARD
-where postid=#{postid}
-</delete>
-	
-	
-	<!-- 전체글 -->
-<select id="totalCount" parameterType="hashmap" resultType="int">
-    SELECT COUNT(*) 
-    FROM TRAINERBOARD_BOARD
+	<!-- 상위 5개 게시글 조회 -->
+    <select id="selectTopPosts" resultType="BoardPostsDTO">
+        SELECT post_id AS postId, title, writer, 
+               TO_CHAR(created_at, 'YYYY-MM-DD') AS createdAt, 
+               VIEWCOUNT, real_name AS realName
+        FROM (
+            SELECT post_id, title, writer, created_at, VIEWCOUNT, REAL_NAME
+            FROM BOARD_POSTS
+            WHERE category_id = 2
+            ORDER BY VIEWCOUNT DESC
+        )
+        WHERE ROWNUM &lt;= 5
+    </select>
     
-    <where>
-    <if test="searchName=='realUsername'">
-    realUsername like '%' ||#{searchValue}||'%'
-    </if>
-    <if test="searchName=='title'">
-    title like '%'||#{searchValue}||'%'
-    </if>
-    <if test="searchName=='content'">
-    content like '%'||#{searchValue}||'%'
-    </if>
-    </where>
-</select>
+	<!-- 전체 게시글 조회 -->
+    <select id="selectAll" resultType="BoardPostsDTO" parameterType="hashmap">
+        SELECT post_id AS postId, title, writer, 
+               TO_CHAR(created_at, 'YYYY-MM-DD') AS createdAt, 
+               VIEWCOUNT, REAL_NAME AS realName
+        FROM BOARD_POSTS
+        <where>
+            category_id = 2
+            <if test="searchName == 'realName'">
+                AND REAL_NAME LIKE '%' || #{searchValue} || '%'
+            </if>
+            <if test="searchName == 'title'">
+                AND title LIKE '%' || #{searchValue} || '%'
+            </if>
+            <if test="searchName == 'content'">
+                AND content LIKE '%' || #{searchValue} || '%'
+            </if>
+        </where>
+        ORDER BY post_id DESC
+    </select>
 
+    <!-- 게시글 추가 -->
+    <insert id="insert" parameterType="BoardPostsDTO">
+        INSERT INTO BOARD_POSTS
+        (category_id, writer, title, content, created_at, VIEWCOUNT, image_name, REAL_NAME)
+        VALUES
+        (2, #{writer}, #{title}, #{content}, SYSDATE, #{viewCount}, #{imageName}, #{realName})
+    </insert>
 
+    <!-- 게시글 수정 -->
+    <update id="update" parameterType="BoardPostsDTO">
+        UPDATE BOARD_POSTS
+        SET title = #{title},
+            content = #{content},
+            updated_at = SYSDATE
+        <if test="imageName != null">
+            , image_name = #{imageName}
+        </if>
+        WHERE post_id = #{postId} AND category_id = 2
+    </update>
+
+    <!-- 특정 게시글 조회 -->
+    <select id="selectBytitle" parameterType="int" resultType="BoardPostsDTO">
+        SELECT post_id AS postId, title, writer, content, 
+               TO_CHAR(created_at, 'YYYY-MM-DD') AS createdAt, 
+               VIEWCOUNT, image_name AS imageName, REAL_NAME AS realName
+        FROM BOARD_POSTS
+        WHERE post_id = #{postid} AND category_id = 2
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="increaseViewCount" parameterType="int">
+        UPDATE BOARD_POSTS
+        SET VIEWCOUNT = VIEWCOUNT + 1
+        WHERE post_id = #{post_id} AND category_id = 2
+    </update>
+
+    <!-- 게시글 삭제 -->
+    <delete id="delete" parameterType="int">
+        DELETE FROM BOARD_POSTS
+        WHERE post_id = #{post_id} AND category_id = 2
+    </delete>
+
+    <!-- 전체 게시글 수 -->
+    <select id="totalCount" parameterType="hashmap" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD_POSTS
+        <where>
+            category_id = 2
+            <if test="searchName == 'REAL_NAME'">
+                AND REAL_NAME LIKE '%' || #{searchValue} || '%'
+            </if>
+            <if test="searchName == 'title'">
+                AND title LIKE '%' || #{searchValue} || '%'
+            </if>
+            <if test="searchName == 'content'">
+                AND content LIKE '%' || #{searchValue} || '%'
+            </if>
+        </where>
+    </select>
 
 
 </mapper>

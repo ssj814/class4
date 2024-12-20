@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.dao.sicdan.SicdanDAO;
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.SicdanDTO;
 import com.example.util.BadWordFilter;
 
@@ -17,39 +18,39 @@ public class SicdanService {
     private SicdanDAO sicdanDAO;
 
     // 게시글 작성
-    public int write(SicdanDTO dto) {
+    public int write(BoardPostsDTO dto) {
         // 제목과 내용 필터링
-        String filteredTitle = BadWordFilter.filterBadWords(dto.getSic_title());
+        String filteredTitle = BadWordFilter.filterBadWords(dto.getTitle());
         String filteredContent = BadWordFilter.filterBadWords(dto.getContent());
-        dto.setSic_title(filteredTitle);
+        dto.setTitle(filteredTitle);
         dto.setContent(filteredContent);
         
         return sicdanDAO.write(dto);
     }
 
     // 게시글 번호로 조회
-    public SicdanDTO selectByNum(int num) {
-        return sicdanDAO.selectByNum(num);
+    public BoardPostsDTO selectByNum(int postId) {
+        return sicdanDAO.selectByNum(postId);
     }
 
     // 게시글 수정
-    public int updateByNum(SicdanDTO dto) {
+    public int updateByNum(BoardPostsDTO dto) {
         // 제목과 내용 필터링
-        String filteredTitle = BadWordFilter.filterBadWords(dto.getSic_title());
+        String filteredTitle = BadWordFilter.filterBadWords(dto.getTitle());
         String filteredContent = BadWordFilter.filterBadWords(dto.getContent());
-        dto.setSic_title(filteredTitle);
+        dto.setTitle(filteredTitle);
         dto.setContent(filteredContent);
         
         return sicdanDAO.updateByNum(dto);
     }
 
     // 게시글 삭제
-    public int deleteNum(int num) {
-        return sicdanDAO.deleteNum(num);
+    public int deleteNum(int postId) {
+        return sicdanDAO.deleteNum(postId);
     }
 
     // 게시글 목록 조회
-    public List<SicdanDTO> listAll(HashMap<String, Object> map) {
+    public List<BoardPostsDTO> listAll(HashMap<String, Object> map) {
         return sicdanDAO.listAll(map);
     }
 

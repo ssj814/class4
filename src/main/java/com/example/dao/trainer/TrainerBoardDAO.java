@@ -9,55 +9,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.dto.TrainerBoardDTO;
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.PageDTO;
 
 @Repository
 public class TrainerBoardDAO {
-	
+
 	@Autowired
 	SqlSessionTemplate template;
 
-	
-	public PageDTO select( HashMap<String, String> map, int curPage) {
+	public PageDTO select(HashMap<String, String> map, int curPage) {
 		PageDTO pDTO = new PageDTO();
-		int perPage=pDTO.getPerPage();
-		int offset=(curPage-1)*perPage;
+		int perPage = pDTO.getPerPage();
+		int offset = (curPage - 1) * perPage;
 		System.out.println(map);
-		List<TrainerBoardDTO> list=template.selectList("BoardMapper.selectAll", map, new RowBounds(offset, perPage));
-		
+		List<BoardPostsDTO> list = template.selectList("BoardMapper.selectAll", map, new RowBounds(offset, perPage));
+
 		pDTO.setCurPage(curPage);
 		pDTO.setList(list);
 		pDTO.setTotalCount(totalCount(map));
-		
+
 		return pDTO;
 	}
 
-	private int totalCount( HashMap<String, String> map) {
+	private int totalCount(HashMap<String, String> map) {
 		return template.selectOne("BoardMapper.totalCount", map);
 	}
 
-	public int insert( TrainerBoardDTO dto) {
-		int n=template.insert("BoardMapper.insert", dto);
+	public int insert(BoardPostsDTO dto) {
+		int n = template.insert("BoardMapper.insert", dto);
 		return n;
 	}
 
-	public TrainerBoardDTO retrieve( int postid) {
-		TrainerBoardDTO dto=template.selectOne("BoardMapper.selectBytitle", postid);
-	
+	public BoardPostsDTO retrieve(int postid) {
+		BoardPostsDTO dto = template.selectOne("BoardMapper.selectBytitle", postid);
+
 		return dto;
 	}
 
-	public int update( TrainerBoardDTO dto) {
-		int n=template.update("BoardMapper.update", dto);
+	public int update(BoardPostsDTO dto) {
+		int n = template.update("BoardMapper.update", dto);
 		return n;
 	}
 
-	public int delete( int postid) {
-		int n= template.delete("BoardMapper.delete", postid);
-		 return n;
+	public int delete(int postid) {
+		int n = template.delete("BoardMapper.delete", postid);
+		return n;
 	}
-	
-	public void increaseViewCount( int postid) {
+
+	public void increaseViewCount(int postid) {
 		template.update("BoardMapper.increaseViewCount", postid);
 	}
 
@@ -65,9 +65,8 @@ public class TrainerBoardDAO {
 		return template.selectList("BoardMapper.list");
 	}
 
+	public List<BoardPostsDTO> selectTopPosts() {
+		return template.selectList("BoardMapper.selectTopPosts");
+	}
 
-	public List<TrainerBoardDTO> selectTopPosts() {
-       return template.selectList("BoardMapper.selectTopPosts");
-   }
-	
 }

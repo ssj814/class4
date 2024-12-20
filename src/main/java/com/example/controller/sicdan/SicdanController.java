@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.BoardPostsDTO;
 import com.example.dto.SicdanDTO;
 import com.example.service.sicdan.SicdanService;
 
@@ -60,7 +61,7 @@ public class SicdanController {
         totalPages = Math.max(totalPages, 1); // 최소 1페이지는 존재하도록 설정
 
         // 게시물 목록 가져오기
-        List<SicdanDTO> list = sicdanService.listAll(map);
+        List<BoardPostsDTO> list = sicdanService.listAll(map);
 
         // 모델에 데이터 저장
         model.addAttribute("list", list);
@@ -80,17 +81,17 @@ public class SicdanController {
      * @return 게시물 작성 또는 수정 폼 페이지 (sicdan/sicdanForm.jsp)
      */
     @GetMapping("/sicdan_form")
-    public String sicdanForm(@RequestParam(value = "num", required = false) Integer sic_num,
+    public String sicdanForm(@RequestParam(value = "num", required = false) Integer postId,
                              @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
                              Model model) {
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String user_id = authentication.getName();
   
 
-        SicdanDTO dto = new SicdanDTO();
-        dto.setUser_id(user_id);
-        if (sic_num != null) { // 수정하는 경우
-            dto = sicdanService.selectByNum(sic_num); // 게시물 번호로 해당 게시물 조회
+		BoardPostsDTO dto = new BoardPostsDTO();
+        dto.setWriter(user_id);
+        if (postId != null) { // 수정하는 경우
+            dto = sicdanService.selectByNum(postId); // 게시물 번호로 해당 게시물 조회
             model.addAttribute("isUpdate", true); // 수정 모드 설정
         } else { // 새로 작성하는 경우
             model.addAttribute("isUpdate", false); // 작성 모드 설정
@@ -108,7 +109,7 @@ public class SicdanController {
      * @return 게시물 목록 페이지로 리다이렉트
      */
     @PostMapping("/sicdan_submit")
-    public String submitSicdan(@ModelAttribute SicdanDTO dto,
+    public String submitSicdan(@ModelAttribute BoardPostsDTO dto,
                                @RequestParam(value = "isUpdate", defaultValue = "false") boolean isUpdate,
                                RedirectAttributes redirectAttributes) {
         try {
@@ -135,10 +136,10 @@ public class SicdanController {
      * @return 게시물 목록 페이지로 리다이렉트
      */
     @GetMapping("/sicdan_delete")
-    public String deleteSicdan(@RequestParam("num") int sic_num,
+    public String deleteSicdan(@RequestParam("num") int postId,
                                @RequestParam("currentPage") int currentPage,
                                RedirectAttributes redirectAttributes) {
-        int result = sicdanService.deleteNum(sic_num); // 게시물 삭제
+        int result = sicdanService.deleteNum(postId); // 게시물 삭제
         if (result == 1) {
             redirectAttributes.addFlashAttribute("mesg", "글을 삭제하였습니다.");
         } else {
@@ -156,10 +157,10 @@ public class SicdanController {
      * @return 게시물 상세 페이지 (sicdan/sicdanRetrieve.jsp)
      */
     @GetMapping("/sicdan_retrieve")
-    public String retrieveSicdan(@RequestParam("num") int sic_num,
+    public String retrieveSicdan(@RequestParam("num") int postId,
                                  @RequestParam("currentPage") int currentPage,
                                  Model model, RedirectAttributes redirectAttributes) {
-        SicdanDTO dto = sicdanService.selectByNum(sic_num); // 게시물 번호로 조회
+    	BoardPostsDTO dto = sicdanService.selectByNum(postId); // 게시물 번호로 조회
         if (dto == null) { // 게시물이 존재하지 않을 경우
             redirectAttributes.addFlashAttribute("error", "해당 게시물이 존재하지 않습니다.");
             return "redirect:sicdan_list?currentPage=" + currentPage; // 목록 페이지로 리다이렉트

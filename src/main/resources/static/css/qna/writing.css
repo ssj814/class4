@@ -8,7 +8,7 @@
 }
 
 /* 폼 스타일 */
-form {
+#qna_write {
     width: 80%;
     margin: 20px auto;
     padding: 20px;

@@ -8,30 +8,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    SELECT 'PRODUCT' AS category, 
 	           PRODUCT_NAME AS title, 
 	           PRODUCT_DESCRIPTION AS content, 
-	           null AS writer, 
-	           PRODUCT_CREATEDAT AS createdAt
+	           PRODUCT_IMAGENAME AS writer, 
+	           PRODUCT_CREATEDAT AS createdAt,
+	           PRODUCT_PRICE AS productPrice,
+	           PRODUCT_ID AS id
 	    FROM PRODUCT
 	    WHERE PRODUCT_NAME LIKE '%' || #{keyword} || '%'
 	       OR PRODUCT_DESCRIPTION LIKE '%' || #{keyword} || '%'
-	       
+	    
 	    UNION ALL
 	    
 	    SELECT 'POSTS' AS category, 
 	           TITLE AS title, 
 	           CONTENT AS content, 
 	           WRITER AS writer, 
-	           CREATED_AT AS createdAt
+	           CREATED_AT AS createdAt,
+	           CATEGORY_ID AS categoryId,
+	           POST_ID AS id
 	    FROM BOARD_POSTS
 	    WHERE TITLE LIKE '%' || #{keyword} || '%'
 	       OR CONTENT LIKE '%' || #{keyword} || '%'
-	       
+	    
 	    UNION ALL
 	    
 	    SELECT 'FAQ' AS category, 
 	           QUESTION AS title, 
 	           ANSWER AS content, 
 	           QUESTIONER AS writer, 
-	           FAQ_QNA_DATE AS createdAt
+	           FAQ_QNA_DATE AS createdAt,
+	           IS_SECRET AS categoryId,
+	           FAQ_QNA_ID AS id
 	    FROM FAQ_QNA
 	    WHERE QUESTION LIKE '%' || #{keyword} || '%'
 	       OR ANSWER LIKE '%' || #{keyword} || '%'

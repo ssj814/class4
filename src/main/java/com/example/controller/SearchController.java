@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,14 +19,21 @@ public class SearchController {
     private SearchService searchService;
 	
 	@GetMapping("/searchAll")
-    public String search(@RequestParam("keyword") String keyword, Model model) {
+    public String search(@RequestParam("keyword") String keyword, Model m) {
 		
-		System.out.println("keyword : "+keyword);
         // 검색어를 기반으로 결과를 조회
         List<SearchResultDTO> results = searchService.searchAll(keyword);
-        // 모델에 검색결과 추가
-        model.addAttribute("results", results);
-        model.addAttribute("keyword", keyword);
+        
+        // 게시판 섹션 데이터 추가
+        List<Map<String, String>> boardSections = List.of(
+            Map.of("id", "1", "name", "Notice"),
+            Map.of("id", "2", "name", "TrainerBoard"),
+            Map.of("id", "3", "name", "Sicdan")
+        );
+        
+        m.addAttribute("boardSections", boardSections);
+        m.addAttribute("results", results);
+        m.addAttribute("keyword", keyword);
 
         return "search/searchResult"; // 결과를 표시할 JSP 파일
     }

@@ -16,4 +16,6 @@ public class SearchResultDTO {
     private String content;  	// 내용
     private String writer;     	// 작성자
     private String createdAt;  	// 생성일자
+    private int productPrice;
+    private int id;
 }

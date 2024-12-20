@@ -57,7 +57,7 @@
 				</ul>
 				<!-- 검색창 들어갈 부분 -->
 				<form action="${pageContext.request.contextPath}/searchAll" method="get" class="d-flex ms-auto">
-				    <input class="form-control me-2" type="search" name="keyword" placeholder="검색어 입력" aria-label="Search" required>
+				    <input class="form-control me-2" type="text" name="keyword" placeholder="검색어 입력" aria-label="Search" required>
 				    <button class="btn btn-outline-light" type="submit">검색</button>
 				</form>
 				

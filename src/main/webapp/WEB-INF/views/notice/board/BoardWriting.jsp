@@ -17,14 +17,13 @@
     
 
 <div class="container">
-	<form action="notice_save" method="post">
+	<form action="notice_save" method="post" id="notice_write">
 		<input type="hidden" name="postid" value="${post.postId}">
 		<table border="1" width="90%">
 			<tbody>
 				<tr>
 					<th>제목</th>
 					<td><input type="text" name="title" id="title"
-						style="width: 90%;"
 						value="${post.title != null ? post.title : ''}"></td>
 				</tr>
 				<tr>
@@ -34,12 +33,12 @@
 				</tr>
 				<tr>
 					<td id="pop-up">
-                        팝업 표시<input type="checkbox" name="popup" id="popup" value="Y" style="width: 90%;">
+	                	팝업<input type="checkbox" name="popup" id="popup" value="Y">
                     </td>
 					<td colspan="2" align="center">
-						<button type="submit">작성 완료</button>
-						<button type="reset">다시 입력</button>
-						<button type="button" id="viewListButton">목록 보기</button>
+						<button type="submit" class="notice_write">작성 완료</button>
+						<button type="reset" class="notice_write">다시 입력</button>
+						<button type="button" id="viewListButton" class="notice_write">목록 보기</button>
 					</td>
 				</tr>
 			</tbody>

@@ -52,8 +52,10 @@
 						href="${pageContext.request.contextPath}/sicdan_list" style="color: beige;">Sicdan</a></li>
 					<li class="nav-item"><a class="nav-link active"
 						href="${pageContext.request.contextPath}/notice" style="color: beige;">Notice</a></li>
-						<li class="nav-item"><a class="nav-link active"
-							href="${pageContext.request.contextPath}/Faq_allList" style="color: beige;">FAQ</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="${pageContext.request.contextPath}/Faq_allList" style="color: beige;">FAQ</a></li>
+					<li class="nav-item"><a class="nav-link active"
+						href="${pageContext.request.contextPath}/qna" style="color: beige;">Q&A</a></li>
 				</ul>
 				<!-- 검색창 들어갈 부분 -->
 				<form action="${pageContext.request.contextPath}/searchAll" method="get" class="d-flex ms-auto">

@@ -4,7 +4,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <div class="container">
-	<form action="qna_save" method="post">
+	<form action="qna_save" method="post" id="qna_write">
 		<table border="1" width="90%">
 			<tbody>
 				<tr>

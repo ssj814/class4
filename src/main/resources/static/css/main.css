@@ -19,6 +19,37 @@ main {
 
 .note-btn.dropdown-toggle:after { content: none; }
 
+/* 검색창과 버튼 스타일 */
+.navbar .form-control {
+	width: 300px;
+    height: 38px; /* 높이 조정 */
+    border-radius: 5px; /* 부드러운 모서리 */
+    border: 2px solid #ccc; /* 테두리 색상 */
+    font-size: 14px; /* 폰트 크기 조정 */
+    padding: 5px 10px; /* 내부 여백 */
+}
+
+.navbar .btn {
+    height: 38px; /* 버튼 높이 검색창과 동일 */
+    border-radius: 5px; /* 부드러운 모서리 */
+    font-size: 14px; /* 폰트 크기 */
+    padding: 5px 15px; /* 버튼 내부 여백 */
+    border: 1px solid white;
+    background-color: #333; /* 버튼 배경색 */
+    color: #fff; /* 버튼 글자색 */
+    transition: background-color 0.3s, color 0.3s; /* 부드러운 전환 효과 */
+}
+
+.navbar .btn:hover {
+    border-color: pink;
+}
+
+.navbar .form-control:focus {
+	width: 350px; /* 포커스 시 가로폭 확대 */
+    border-color: pink; /* 포커스 시 테두리 색상 */
+    outline: none; /* 포커스 시 아웃라인 제거 */
+}
+
 footer {
 	width: 100%; /* 너비 100% */
 }

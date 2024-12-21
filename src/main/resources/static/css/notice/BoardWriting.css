@@ -49,6 +49,18 @@ input[type="text"], textarea {
 	margin-bottom: 10px; /* 필드 사이에 여백 추가 */
 }
 
+.noticeImage {
+	text-align: left;
+}
+
+.image-preview {
+	width: 150px;
+	height: 150px;
+	object-fit: cover;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+}
+
 /* 버튼 스타일 */
 .notice_write {
 	border: none;
@@ -83,7 +95,6 @@ td[colspan="2"] {
 	cursor: pointer;
 	transition: background-color 0.3s, border-color 0.3s;
 	display: block; /* 체크박스를 독립된 줄로 설정 */
-    margin: 0 auto; /* 중앙 정렬 */
 }
 
 #popup:checked {

@@ -29,6 +29,7 @@ import com.example.entity.User;
 import com.example.repository.UserRepository;
 import com.example.service.trainer.TrainerBoardCommentService;
 import com.example.service.trainer.TrainerBoardService;
+import com.example.util.HtmlFilter;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -123,8 +124,11 @@ public class TrainerBoardController {
 				
 				dto.setImageName(imgName);
 			}
-				dto.setTitle(title);
-				dto.setContent(content);
+				// JSoup을 이용해 content와 title의 태그를 필터링
+		        String filteredTitle = HtmlFilter.filterHtml(title);
+		        String filteredContent = HtmlFilter.filterHtml(content);
+				dto.setTitle(filteredTitle);
+				dto.setContent(filteredContent);
 				dto.setWriter(userid);
 				dto.setRealName(realUsername);
 
@@ -191,6 +195,11 @@ public class TrainerBoardController {
 	        }
 
 	        // 게시글 업데이트
+	        // JSoup을 이용해 content와 title의 태그를 필터링
+	        String filteredTitle = HtmlFilter.filterHtml(dto.getTitle());
+	        String filteredContent = HtmlFilter.filterHtml(dto.getContent());
+			dto.setTitle(filteredTitle);
+			dto.setContent(filteredContent);
 	        service.update(dto);
 
 	    } catch (IOException e) {

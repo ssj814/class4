@@ -25,6 +25,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.BoardPostsDTO;
 import com.example.dto.SicdanDTO;
 import com.example.service.sicdan.SicdanService;
+import com.example.util.HtmlFilter;
 
 @Controller
 public class SicdanController {
@@ -112,6 +113,11 @@ public class SicdanController {
     public String submitSicdan(@ModelAttribute BoardPostsDTO dto,
                                @RequestParam(value = "isUpdate", defaultValue = "false") boolean isUpdate,
                                RedirectAttributes redirectAttributes) {
+    	// JSoup을 이용해 content와 title의 태그를 필터링
+        String filteredTitle = HtmlFilter.filterHtml(dto.getTitle());
+        String filteredContent = HtmlFilter.filterHtml(dto.getContent());
+		dto.setTitle(filteredTitle);
+		dto.setContent(filteredContent);
         try {
             if (isUpdate) { // 수정 모드일 경우
                 sicdanService.updateByNum(dto); // 게시물 업데이트

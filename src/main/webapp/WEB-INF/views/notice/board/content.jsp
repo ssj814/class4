@@ -27,7 +27,12 @@
 			<div id="boardArticle_content">
 				<table border="0">
 					<tr>
-						<td>${BoardOne.content}</td>
+						<td>${BoardOne.content}
+							<c:if test="${not empty BoardOne.imageName}">
+				                 <img src="<c:url value='/images/notice/${BoardOne.imageName}'/>"  alt="Image"
+								class="img-fluid" style="object-fit: contain; max-height: 200px;">
+							</c:if>
+						</td>
 					</tr>
 				</table>
 			</div>

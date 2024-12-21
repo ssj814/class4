@@ -15,7 +15,31 @@ const imageDeleteUrl = "/app/sicdan/imageDelete";
                 ['para', ['ul', 'ol', 'paragraph']],
                 ['height', ['height']],
             ],
+            fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New','sans-serif' ,'맑은 고딕','궁서','굴림체','굴림','돋음체','바탕체'],
+            fontSizes: ['8','9','10','11','12','14','16','18','20','22','24','28','30','36','50','72'],
             callbacks: {
+				onChange: function (contents, $editable) {
+				    // <font> 태그를 <span> 태그로 변환
+				    let updatedContents = contents.replace(/<font(.*?)color="(.*?)">(.*?)<\/font>/g, function (match, fontAttrs, color, innerHTML) {
+				        return `<span style="color:${color};">${innerHTML}</span>`;
+				    });
+				
+				    // 중첩된 <span> 태그를 단일 태그로 병합
+				    updatedContents = updatedContents.replace(/<span(.*?)style="(.*?)"><span(.*?)style="(.*?)">(.*?)<\/span><\/span>/g, function (
+				        match,
+				        outerAttrs,
+				        outerStyle,
+				        innerAttrs,
+				        innerStyle,
+				        innerContent
+				    ) {
+				        return `<span style="${outerStyle} ${innerStyle}">${innerContent}</span>`;
+				    });
+				
+				    if (contents !== updatedContents) {
+				        $('.summernote').summernote('code', updatedContents);
+				    }
+				},
 				onInit: function () {
                 $('.note-editable').css('text-align', 'left'); // 왼쪽 정렬로 설정
             	},

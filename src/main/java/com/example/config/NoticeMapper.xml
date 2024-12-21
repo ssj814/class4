@@ -51,8 +51,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 글 저장 -->
     <insert id="insertContent" parameterType="BoardPostsDTO">
-        INSERT INTO BOARD_POSTS (post_id, title, content, writer, created_at, category_id, popup, image_name)
-        VALUES (#{postId}, #{title}, #{content}, #{writer}, SYSDATE, #{categoryId}, #{popup}, #{imageName})
+        INSERT INTO BOARD_POSTS (
+        post_id, title, content, writer, created_at, category_id, popup
+	        <if test="imageName != null">, image_name</if>
+	    )
+	    VALUES (
+	        #{postId}, #{title}, #{content}, #{writer}, SYSDATE, #{categoryId}, #{popup}
+	        <if test="imageName != null">, #{imageName}</if>
+	    )
     </insert>
 
     <!-- 글 삭제 -->

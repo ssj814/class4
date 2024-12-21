@@ -21,6 +21,7 @@ import com.example.dto.CommentDTO;
 import com.example.service.image.ImageService;
 import com.example.service.notice.CommentService;
 import com.example.service.notice.NoticeService;
+import com.example.util.HtmlFilter;
 
 @Controller
 public class NoticeController {
@@ -115,24 +116,32 @@ public class NoticeController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String writer = authentication.getName();
         
-        System.out.println("이미지 : "+notice_image);
+        // JSoup을 이용해 content와 title의 태그를 필터링
+        String filteredTitle = HtmlFilter.filterHtml(title);
+        String filteredContent = HtmlFilter.filterHtml(content);
         
-        String imgName = imageService.saveImg(notice_image, "notice");
-
         BoardPostsDTO dto = new BoardPostsDTO();
-        dto.setTitle(title);
-        dto.setContent(content);
+        dto.setTitle(filteredTitle);
+        dto.setContent(filteredContent);
         dto.setCategoryId(1); // NOTICE 게시판은 CATEGORY_ID = 1
         dto.setWriter(writer);
         dto.setPopup(popup); // 팝업 여부 설정
-        dto.setImageName(imgName);
-
+        
         String message;
         if (postid != null) {
             dto.setPostId(postid);
+            if (notice_image != null && !notice_image.isEmpty()) {
+            	String preImageName = service.selectBoardOne(postid).getImageName();
+            	String imgName = imageService.updateImg(notice_image, preImageName, "notice");
+            	dto.setImageName(imgName);
+            }
             service.updateContent(dto);
             message = "글을 수정하였습니다.";
         } else {
+        	if (notice_image != null && !notice_image.isEmpty()) {
+            	String imgName = imageService.saveImg(notice_image, "notice");
+            	dto.setImageName(imgName);
+            }
             service.insertContent(dto);
             message = "글을 저장하였습니다.";
         }

@@ -38,13 +38,13 @@
                     </td>
                 </tr>
                 <c:if test="${not empty post.imageName}">
-                <tr>
-                	<th>현재 이미지</th>
-                	<td class="noticeImage">
-                		<img src="<c:url value='/images/notice/${post.imageName}'/>"  alt="Image"
-						class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
-                	</td>
-                </tr>
+	                <tr>
+	                	<th>현재 이미지</th>
+	                	<td class="noticeImage">
+	                		<img src="<c:url value='/images/notice/${post.imageName}'/>"  alt="Image"
+							class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
+	                	</td>
+	                </tr>
                 </c:if>
                 <tr>
                 	<th>공지 이미지</th>

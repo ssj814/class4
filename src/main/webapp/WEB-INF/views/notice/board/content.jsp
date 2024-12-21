@@ -39,7 +39,10 @@
 					style="margin-left: ${comment.repIndent * 20}px;">
 					<table class="reply-table">
 						<tr class="reply">
-							<td class="reply-userid" colspan="2">${comment.userid}</td>
+							<td class="reply-userid" colspan="2">
+								<span>${comment.userid} | </span>
+								<span><button class="btn">신고</button></span>
+							</td>
 						</tr>
 						<tr class="reply">
 							<td class="reply-content" colspan="2">

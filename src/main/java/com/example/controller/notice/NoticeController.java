@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.BoardPostsDTO;
 import com.example.dto.CommentDTO;
+import com.example.service.image.ImageService;
 import com.example.service.notice.CommentService;
 import com.example.service.notice.NoticeService;
 
@@ -28,6 +30,9 @@ public class NoticeController {
 
 	@Autowired
 	CommentService cService;
+	
+	@Autowired
+	ImageService imageService;
 
 	@RequestMapping("/notice")
     public String BoardList(Model m, @RequestParam(value = "searchKey", required = false) String searchKey,
@@ -89,7 +94,12 @@ public class NoticeController {
     public String BoardDelete(@RequestParam("postid") int postid, @RequestParam("currentPage") int currentPage,
                                RedirectAttributes redirectAttributes) {
 
+    	BoardPostsDTO dto = service.selectBoardOne(postid);
+    	String imgName = dto.getImageName();
+		imageService.deleteImg(imgName,"notice");
+    	
         int num = service.boardDelete(postid);
+        
         String message = num == 1 ? "글을 삭제하였습니다." : "글 삭제 실패.";
         redirectAttributes.addFlashAttribute("mesg", message);
         return "redirect:/notice?currentPage=" + currentPage;
@@ -100,10 +110,14 @@ public class NoticeController {
                              @RequestParam("content") String content,
                              @RequestParam(value = "postid", required = false) Integer postid,
                              @RequestParam(value = "popup", required = false, defaultValue = "N") String popup,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes, MultipartFile notice_image) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String writer = authentication.getName();
+        
+        System.out.println("이미지 : "+notice_image);
+        
+        String imgName = imageService.saveImg(notice_image, "notice");
 
         BoardPostsDTO dto = new BoardPostsDTO();
         dto.setTitle(title);
@@ -111,6 +125,7 @@ public class NoticeController {
         dto.setCategoryId(1); // NOTICE 게시판은 CATEGORY_ID = 1
         dto.setWriter(writer);
         dto.setPopup(popup); // 팝업 여부 설정
+        dto.setImageName(imgName);
 
         String message;
         if (postid != null) {

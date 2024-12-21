@@ -17,7 +17,7 @@
     
 
 <div class="container">
-	<form action="notice_save" method="post" id="notice_write">
+	<form action="notice_save" method="post" id="notice_write" enctype="multipart/form-data">
 		<input type="hidden" name="postid" value="${post.postId}">
 		<table border="1" width="90%">
 			<tbody>
@@ -32,9 +32,28 @@
 					</td>
 				</tr>
 				<tr>
+					<th>팝업 여부</th>
 					<td id="pop-up">
-	                	팝업<input type="checkbox" name="popup" id="popup" value="Y">
+	                	<input type="checkbox" name="popup" id="popup" value="Y">
                     </td>
+                </tr>
+                <c:if test="${not empty post.imageName}">
+                <tr>
+                	<th>현재 이미지</th>
+                	<td class="noticeImage">
+                		<img src="<c:url value='/images/notice/${post.imageName}'/>"  alt="Image"
+						class="img-fluid" style="object-fit: contain; height: 100px; width:100px; ">
+                	</td>
+                </tr>
+                </c:if>
+                <tr>
+                	<th>공지 이미지</th>
+                    <td class="noticeImage">
+				        <input type="file" id="notice_image" name="notice_image" accept="image/*" onchange="showPreview(this, 'preview1')" />
+				        <img id="preview1" class="image-preview" style="display: none;" />
+                    </td>
+                </tr>
+                <tr>
 					<td colspan="2" align="center">
 						<button type="submit" class="notice_write">작성 완료</button>
 						<button type="reset" class="notice_write">다시 입력</button>
@@ -69,4 +88,25 @@
 		});
 
 	});
+	//이미지 미리보기
+    function showPreview(input, previewId) {
+        const file = input.files[0];
+        if (file) {
+        	//이미지 사이즈 제한
+        	const maxSize = 2 * 1024 * 1024;
+        	if (file.size > maxSize) {
+                alert('파일 크기는 2MB를 초과할 수 없습니다.');
+                input.value = '';
+                return;
+            }
+        	//이미지 미리보기
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.getElementById(previewId);
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    }
 </script>

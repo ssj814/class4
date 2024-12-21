@@ -55,13 +55,17 @@
         <p>${retrive.content}</p>
     </div>
 
-    <div class="mb-3" id="boardArticle_footer">  
-    	<c:if test="${retrive.writer == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name 
-    		|| fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
-        <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.postId}&currentPage=${currentPage}' />'">수정</button>
-        <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.postId}&currentPage=${currentPage}' />'">삭제</button>
-        </c:if>
-        <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
-    	
+    <div class="mb-3 d-flex justify-content-between" id="boardArticle_footer">  
+    	<div class="">
+    	    <c:if test="${retrive.writer == sessionScope.SPRING_SECURITY_CONTEXT.authentication.name 
+	    		|| fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+	        <button onclick="location.href='<c:url value='/sicdan_form?num=${retrive.postId}&currentPage=${currentPage}' />'">수정</button>
+	        <button onclick="location.href='<c:url value='/sicdan_delete?num=${retrive.postId}&currentPage=${currentPage}' />'">삭제</button>
+	        </c:if>
+	        <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
+    	</div>
+    	<div class="">
+    		<button>신고</button>
+    	</div>
     </div>
 </div>

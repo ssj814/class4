@@ -126,6 +126,14 @@
 	padding: 3px 10px;
 }
 
+.reply-userid .btn {
+	font-size: 12px;
+	opacity: 50%;
+	margin: 0px;
+	padding: 0px;
+	color: black;
+}
+
 .reply-content {
 	font-size: 17px;
 	border-bottom: 1px solid #ddd;

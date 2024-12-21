@@ -79,4 +79,14 @@ button {
 	cursor: pointer;
 }
 
+.report-container {
+	background-color: #F1F1F1;
+	width: 90%;
+	height: 100px;
+	margin: auto;
+	margin-top: 40px;
+	padding: 20px;
+	color : gray;
+}
+
 

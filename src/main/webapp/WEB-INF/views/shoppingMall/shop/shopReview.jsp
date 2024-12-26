@@ -79,15 +79,6 @@
 			<i class="fa-solid fa-chevron-down"></i>
 		</button>
 	</div>
-	
-	<!-- 상품 신고 (임시 위치입니다. 나중에 상품문의 하단으로 이동.) -->
-	<div class="report-container">
-		<h5>상품 신고</h5>
-		<div class="d-flex justify-content-between">
-			<span>부적절한 상품이나 지적재산권을 침해하는 상품의 경우 신고하여 주시기 바랍니다.</span>
-			<button class="btn text-dark m-0 p-0 opacity-50 text-decoration-underline">신고하기</button>
-		</div>
-	</div>
 
 </div>
 

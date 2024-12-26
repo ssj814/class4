@@ -26,12 +26,14 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.BoardPostsDTO;
+import com.example.dto.FaqDTO;
 import com.example.dto.NoticeDTO;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductRecentDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.service.faq.FaqService;
 import com.example.service.image.ImageService;
 import com.example.service.notice.NoticeService;
 import com.example.service.shoppingmall.ProductReviewService;
@@ -53,6 +55,9 @@ public class ProductController {
 	
 	@Autowired
 	ImageService imageService;
+	
+	@Autowired
+	FaqService faqService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m, HttpSession session) {
@@ -208,6 +213,11 @@ public class ProductController {
 		service.addViewCount(productId); //조회수++
 		List<ProductCategoryDTO> CategoryList = service.selectCategoryList();
 		
+		// 상품 문의
+		HashMap<String, Object> askMap = new HashMap<>();
+		askMap.put("category", "ask-product");
+		List<FaqDTO> ask = faqService.qnaList(askMap, new RowBounds());
+		
 		m.addAttribute("averageRating",roundedAverageRating);
 	    m.addAttribute("sortType",sortType);
 		m.addAttribute("recentProducts", recentProductWithImages);
@@ -217,6 +227,7 @@ public class ProductController {
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
 		m.addAttribute("options", options);
+		m.addAttribute("ask", ask);
 		return "shoppingMall/shopDetail";
 	}
 	
@@ -558,5 +569,27 @@ public class ProductController {
         	    }
         	}
 		}
+	
+	//상품 문의
+	@GetMapping("/user/shop_productAsk/{productId}")
+	public String getProductAskPage(@PathVariable int productId, Model m) {
+		m.addAttribute("productId", productId);
+		return "shoppingMall/shopAskForm";
+	}
+	
+	@PostMapping("/shop_productAsk")
+	public String postProductAsk(FaqDTO faqDTO,
+			RedirectAttributes redirectAttributes) {
+		//유저 처리
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		faqDTO.setQuestioner(user_id);
+		faqDTO.setCategory("ask-product");
+		
+		faqService.saveQuestion(faqDTO);
 
+		redirectAttributes.addFlashAttribute("closeWindow", true);
+		return "redirect:/user/shop_productAsk/" + faqDTO.getProduct_id();
+	}
+	
 }

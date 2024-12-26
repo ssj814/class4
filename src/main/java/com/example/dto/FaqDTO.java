@@ -21,5 +21,6 @@ public class FaqDTO {
 	private Date faq_qna_date;
 	private String category;
 	private int is_secret;
+	private int product_id;
 
 }

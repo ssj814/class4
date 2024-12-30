@@ -85,13 +85,22 @@
 		<h5>상품 신고</h5>
 		<div class="d-flex justify-content-between">
 			<span>부적절한 상품이나 지적재산권을 침해하는 상품의 경우 신고하여 주시기 바랍니다.</span>
-			<button class="btn text-dark m-0 p-0 opacity-50 text-decoration-underline">신고하기</button>
+			<button class="btn text-dark m-0 p-0 opacity-50 text-decoration-underline" id="report">신고하기</button>
 		</div>
 	</div>
 
 </div>
 
 <script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    const reportButton = document.getElementById("report");
+	
+	    reportButton.addEventListener("click", function () {
+	        const url = `${pageContext.request.contextPath}/user/reportWrite?targetType=PRODUCT&id=${product.getProduct_id()}`;
+	        
+	        location.href = url;
+	    });
+	});
 
 	$(function() {
 		

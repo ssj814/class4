@@ -46,7 +46,7 @@
 						<tr class="reply">
 							<td class="reply-userid" colspan="2">
 								<span>${comment.userid} | </span>
-								<span><button class="btn">신고</button></span>
+								<span><button class="btn" data-id="${comment.id}">신고</button></span>
 							</td>
 						</tr>
 						<tr class="reply">
@@ -242,17 +242,31 @@
 			});
 
 		document.addEventListener('DOMContentLoaded', function() {
-		var textarea = document.getElementById('comment-textarea');
-		var submitButton = document.getElementById('submit-comment');
+			var textarea = document.getElementById('comment-textarea');
+			var submitButton = document.getElementById('submit-comment');
+	
+			textarea.addEventListener('focus', function() {
+				submitButton.classList.remove('hidden'); // 버튼을 표시
+			});
+	
+			textarea.addEventListener('blur', function() {
+				if (!textarea.value.trim()) {
+					submitButton.classList.add('hidden'); // 버튼을 숨김
+				}
+			});
+			
+			const commnetReportButtons = document.querySelectorAll(".btn");
 
-		textarea.addEventListener('focus', function() {
-			submitButton.classList.remove('hidden'); // 버튼을 표시
+		    commnetReportButtons.forEach((button) => {
+		        button.addEventListener("click", function () {
+		        	
+		            let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=COMMENT&category=NOTICE`;
+		            if(button.dataset.id){
+						url += '&id=' + button.dataset.id;
+		            }
+		            console.log(url);
+		            location.href = url;
+		        });
+		    });
 		});
-
-		textarea.addEventListener('blur', function() {
-			if (!textarea.value.trim()) {
-				submitButton.classList.add('hidden'); // 버튼을 숨김
-			}
-		});
-	});
 </script>

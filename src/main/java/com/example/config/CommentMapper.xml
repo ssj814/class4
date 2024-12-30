@@ -33,4 +33,8 @@
 		WHERE id = #{id}
 		OR parentId = #{id}
 	</delete>
+	
+	<select id="getCommentbyId" parameterType="int" resultType="CommentDTO">
+		SELECT * FROM comments WHERE id = #{id}
+	</select>
 </mapper>

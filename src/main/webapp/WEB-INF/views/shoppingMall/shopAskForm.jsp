@@ -64,11 +64,11 @@
 			<table class="ask-container">
 				<tr class="ask-row">
 					<th>상품명</th>
-					<td>~~~</td>
+					<td>${productName}</td>
 				</tr>
 				<tr class="ask-row">
 					<th>작성자</th>
-					<td>~~~</td>
+					<td>${userId}</td>
 				</tr>
 				<tr class="ask-row">
 					<th class="ask-content-label">문의내용</th>

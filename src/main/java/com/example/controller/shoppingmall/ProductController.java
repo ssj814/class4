@@ -216,7 +216,8 @@ public class ProductController {
 		// 상품 문의
 		HashMap<String, Object> askMap = new HashMap<>();
 		askMap.put("category", "ask-product");
-		List<FaqDTO> ask = faqService.qnaList(askMap, new RowBounds());
+		askMap.put("product_id", productId);		
+		List<FaqDTO> askList = faqService.qnaList(askMap, new RowBounds());
 		
 		m.addAttribute("averageRating",roundedAverageRating);
 	    m.addAttribute("sortType",sortType);
@@ -227,7 +228,7 @@ public class ProductController {
 		m.addAttribute("product", productDTO);
 		m.addAttribute("productReview", productReviewDTO);
 		m.addAttribute("options", options);
-		m.addAttribute("ask", ask);
+		m.addAttribute("askList", askList);
 		return "shoppingMall/shopDetail";
 	}
 	
@@ -573,7 +574,15 @@ public class ProductController {
 	//상품 문의
 	@GetMapping("/user/shop_productAsk/{productId}")
 	public String getProductAskPage(@PathVariable int productId, Model m) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String user_id = authentication.getName();
+		
+		ProductDTO productDTO = service.selectDetailproduct(productId);
+		
 		m.addAttribute("productId", productId);
+		m.addAttribute("productName", productDTO.getProduct_name());
+		m.addAttribute("userId", user_id);
 		return "shoppingMall/shopAskForm";
 	}
 	
@@ -590,6 +599,12 @@ public class ProductController {
 
 		redirectAttributes.addFlashAttribute("closeWindow", true);
 		return "redirect:/user/shop_productAsk/" + faqDTO.getProduct_id();
+	}
+	
+	@PostMapping("/shop_productAsk_saveAnswer")
+	public String saveAskAnswer(FaqDTO faqDTO) {
+		faqService.saveAnswer(faqDTO);
+		return "redirect:/shopDetail?productId="+faqDTO.getProduct_id();
 	}
 	
 }

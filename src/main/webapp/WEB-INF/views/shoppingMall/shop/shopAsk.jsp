@@ -3,7 +3,55 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<div class="container mt-5 mb-5">
+
+<style>
+
+#ask-container {
+	margin-top: 80px;
+}
+
+.ask-answer {
+	background-color: #FAFAFA;
+}
+
+.ask-answer-input {
+	background-color: #eee;
+	display: none;
+
+}
+
+.ask-answer-input textarea {
+	resize: none;
+}
+
+.ask-saveAnswer{
+	margin-left: 30px;
+}
+
+.textarea-container {
+    width: 96%;
+    margin-left: 30px;
+    text-align: right;
+}
+
+.textarea-container .textarea-btn {
+    background-color: white; /* 버튼 색상 */
+    color: black;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-size: 10px;
+    cursor: pointer;
+}
+
+.textarea-container .textarea-btn:hover {
+    background-color: black; /* 버튼 hover 색상 */
+    color: white;
+}
+
+</style>
+
+<div id="ask-container" class="container mb-5">
 	
 	<input type="hidden" class="ProductId"
 		value="${product.getProduct_id()}">
@@ -11,7 +59,6 @@
 	<div class="d-flex justify-content-between align-items-center">
 		<h3 class="align-items-center fw-bold">상품문의</h3>
 		<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
-			<!-- 새창띄울 거면 이걸로. -->
 			<button id="product-ask-openWindow"
 				class="btn btn-link fst-italic text-dark mb-0">
 				<i class="fa-solid fa-pen"></i>문의하기
@@ -22,7 +69,7 @@
 	<hr class="mt-0">
 	
 	<div class="container p-4">
-	    <div class="">
+	    <div>
 	    	<ul>
 	    		<li>상품문의 및 후기게시판을 통해 취소나 환불, 반품 등은 처리되지 않습니다.</li>
 	    		<li>가격, 판매자, 교환/환불 및 배송 등 해당 상품 자체와 관련 없는 문의는 고객센터 내 Q&A 문의하기를 이용해주세요.</li>
@@ -31,22 +78,82 @@
 	    	</ul>
 	    </div>
 	</div>
-
-	<!-- 상품 리뷰 리스트 -->
+	
+	<!-- 상품 문의 리스트 -->
 	<div class="card">
 		<div class="list-group list-group-flush">
-			${ask}
+			<c:set var="nowAskCount" value="0" />
+			<c:set var="totalAskCount" value="0" />
+			<c:forEach var="ask" items="${askList}">
+				<c:set var="totalAskCount" value="${totalAskCount + 1}"/>
+			</c:forEach>
+			
+			<c:forEach var="ask" items="${askList}">
+				<div class="m-2 ask-item ${nowAskCount > 4 ? 'd-none' : ''}">
+					<c:set var="nowAskCount" value="${nowAskCount + 1}" />
+					<div class="ask-question d-flex justify-content-between border p-3 te">
+						<div class="ask-question-content">
+							<span class="badge text-bg-dark rounded-0 me-2">질문</span>
+							<span>${ask.question}</span>
+						</div>
+						<div class="ask-question-right">
+							<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+								<c:choose>
+									<c:when test="${empty ask.answer}">
+										<button class="ask-answer-btn btn btn-outline-dark m-0 me-2 btn-sm">답변</button>
+									</c:when>
+									<c:otherwise>
+										<button class="ask-answer-btn btn m-0 me-2 btn-sm btn-dark">수정</button>
+									</c:otherwise>
+								</c:choose>
+							</c:if>
+							<span class="text-muted">${ask.faq_qna_date}</span>
+						</div>
+					</div>
+					
+					<c:if test="${!empty ask.answer}">
+						<div class="ask-answer border p-3 border-top-0 d-flex">
+							<span class="badge bg-primary rounded-0 ms-3 me-2 h-50">답변</span>
+							<p style="white-space: pre-wrap;">${ask.answer}</p>
+						</div>
+					</c:if>
+
+					<c:if test="${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')}">
+						<form action="shop_productAsk_saveAnswer" method="post" class="ask-answer-input border p-3 border-top-0">
+							<input type="hidden" name="faq_qna_id" value="${ask.faq_qna_id}">
+							<input type="hidden" name="product_id" value="${ask.product_id}">
+							<c:choose>
+								<c:when test="${!empty ask.answer}">
+									<span class="ask-saveAnswer">답변 수정</span>
+								</c:when>
+								<c:otherwise>
+									<span class="ask-saveAnswer">답변 등록</span>
+								</c:otherwise>
+							</c:choose>
+							<div class="textarea-container">
+								<hr>
+								<textarea name="answer" rows="4" class="w-100 border">${ask.answer}</textarea>
+								<button type="submit" class="textarea-btn">등록</button>
+							</div>
+						</form>
+					</c:if>
+				</div>
+			</c:forEach>
 		</div>
 	</div>
 	
 	<!-- 문의 페이징 -->
 	<!-- (질문+답변 세트로)5개 보여주고, 전체보기 -->
-	<div class="askBtn-container text-center mt-3">
-		<button type="button" class="btn btn-dark">
-			<i class="fa-solid fa-chevron-down"></i>
-			<span> 전체보기</span>
-		</button>
-	</div>
+	<c:if test="${totalAskCount > 5 }">
+		<c:set var="totalAskView" value="false" />
+		<div class="askBtn-container text-center mt-3">
+			<button type="button" class="btn btn-dark" onclick="allAskList()">
+				<i class="fa-solid fa-chevron-down"></i>
+				<span> 전체보기</span>
+			</button>
+		</div>
+	</c:if>
+
 	
 	<!-- 상품 신고 -->
 	<div class="report-container">
@@ -67,26 +174,7 @@
 		const loginUser = `${sessionScope.SPRING_SECURITY_CONTEXT.authentication.name }`;
 		const isAdmin =  ${fn:contains(sessionScope.SPRING_SECURITY_CONTEXT.authentication.authorities, 'ADMIN')};
 		
-		//화면 최초 랜더링시 리뷰조회
-		var nowReviewPage = 0;
-		reviewPaging();
-		
-		//이벤트 핸들러
-		$('#review-paging').on('click', reviewPaging); //페이징버튼
-		$(document).on('click', '.review-more', reviewMore); //리뷰더보기버튼
-		
-		//리뷰 - 더보기 버튼
-		function reviewMore(){		
-			var reviewContainer = $(this).closest('.review-content');
-		    
-		    var buttonText = $(this).text() === '더보기...' ? '간략히 보기' : '더보기...';
-		    reviewContainer.find('.review-more').text(buttonText);  // 버튼 텍스트 변경
-		    
-		    reviewContainer.find('.full-review').toggle();  // 전체 텍스트 보여줌
-		    reviewContainer.find('.slice-review').toggle();  // 자른 텍스트 숨김
-		}
-		
-		//리뷰 - 등록
+		// 문의 등록
 		$('#product-ask-openWindow').on('click',function() {
 			console.log("새창열기");
 			var productId = $(".ProductId").val();
@@ -99,120 +187,23 @@
 							+ ", left=" + left + ",top=" + top
 							+ "scrollbars=yes");
 		});
-	
 		
-		//리뷰 - 페이징
-		function reviewPaging() {
-			// 기존 리뷰 지우기
-			$(".review-container").empty();
-
-			var productId = `${product.getProduct_id()}`; 
-		    var nextPage = nowReviewPage + 1;
-		    var sortType = $(".btn-up.fw-bold").data('sort') || '';
-			$.ajax({
-		        url: 'shop_productReview_paging',
-		        type: 'GET',
-		        data: {
-		        	productId: productId,
-		        	sortType: sortType,
-		        	reviewPage: nextPage
-		        },
-		        dataType: 'json',
-		        success: function(resData) {
-					resData.forEach(review => {
-						$(".review-container").append(generateReviewHTML(review));
-				    });
-					
-					reviewListStar() //리뷰 별점 표시
-					feedbackUpDown() //리뷰피드백 표시
-					nowReviewPage++; //리뷰페이징 번호+1
-					
-					//마지막 페이지면 페이징 버튼 숨기기
-					if(nowReviewPage>=`${totalPage}` || resData.length<5){
-						$(".askBtn-container").hide();
-					} 
-					
-		        },
-		        error: function(xhr, status, error) {
-		            console.log(error);
-		        }
-			});
-		}
-		
-
-		
-	
-		//리뷰 HTML 생성 함수
-		function generateReviewHTML(productReview) {
-			
-			// 이미지 태그 미리 생성
-		    let photosHTML = '';
-		    if (productReview.photos && productReview.photos.length > 0) {
-		        const photoList = productReview.photos.split(',');
-		        for (let photo of photoList) {
-		            const photoURL = "images/shoppingMall_review/" + photo;
-		            photosHTML += "<img src='" + photoURL +
-		            			"' alt='사용자 사진' class='img-thumbnail me-2 mb-2 review-img' style='width: 100px; height: 100px; object-fit: cover;' />";
-		        }
-		    }
-		    
-		    // 작성 유저에게만 수정, 삭제 버튼 노출 + admin
-		    let delUpdateHTML = '';	    
-		    if (productReview.user_id == loginUser || isAdmin){		    	
-		    	delUpdateHTML += '<button class="update-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-						        '<i class="fa-solid fa-pen-to-square"></i>' +
-						        '</button>' +
-						        '<button class="del-productReview btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-						        '<i class="fa-solid fa-trash"></i>' +
-						        '</button>'
-		    }
-		    
-		    // 리뷰내용이 길면 더보기 버튼 추가
-		    let reviewMoreBtn = '';
-		    if (productReview.content.length > 100) {
-		    	showReview = productReview.content.slice(0, 100);
-		    	reviewMoreBtn += '<span class="review-more">더보기...</span>';
+		// 관리자 답변창 토글
+		$(".ask-answer-btn").on("click",function() {
+			var answerInput = $(this).closest(".ask-question").siblings(".ask-answer-input");
+		    if (answerInput.is(":visible")) {
+		        answerInput.hide(); 
 		    } else {
-		    	showReview = productReview.content;
+		        $(".ask-answer-input").hide(); 
+		        answerInput.show(); 
 		    }
-		    
-			// 리뷰 HTML
-		    let reviewHTML = 
-		        '<input type="hidden" class="review_id" value="' + productReview.review_id + '">' +
-		        '<div class="list-group-item m-3">' +
-		        '<div class="d-flex align-items-start">' +
-		        '<img src="https://via.placeholder.com/50" alt="사용자1 이미지" class="rounded-circle me-3" style="width: 50px; height: 50px;">' +
-		        '<div>' +
-		        '<h6 class="mb-0 mt-1">' + productReview.user_id + 
-		        '<small class="text-muted"> ' + productReview.create_date + '</small>' +
-		        /* 리뷰 신고 버튼 */
-		        '<small class="text-muted"> | <button class="btn text-dark m-0 p-0 opacity-50" style="font-size:12px;">신고</button></small>' +
-		        '</h6>' +
-		        '<small class="text-muted">평점:<span class="rating-stars" data-rating="' + productReview.rating + '"></span></small>' +
-		        '</div>' +
-		        '</div>' +
-		        '<hr>' +
-		        '<div class="row">' + 
-		        '<div class="review-content col-10" data-photos="' + productReview.photos + '">' + photosHTML +
-		        '<p class="slice-review mb-3" style="white-space: pre-wrap;">' + showReview + reviewMoreBtn + '</p>' +
-		        '<p class="full-review" style="display: none; white-space: pre-wrap;">' + productReview.content + reviewMoreBtn + '</p>'+
-		        '</div>' +
-		        '<div class="ms-auto col-2 text-end">' + 
-		        delUpdateHTML + 
-		        '<button id="up-' + productReview.review_id + '" class="btn-feedback up btn btn-outline-dark me-2 btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-regular fa-thumbs-up"></i>' +
-		        '<span class="up-feedback-' + productReview.review_id + '">' + productReview.feedback_up + '</span>' +
-		        '</button>' +
-		        '<button id="down-' + productReview.review_id + '" class="btn-feedback down btn btn-outline-dark btn-sm" data-reviewid="' + productReview.review_id + '">' +
-		        '<i class="fa-regular fa-thumbs-down"></i>' +
-		        '<span class="down-feedback-' + productReview.review_id + '">' + productReview.feedback_down + '</span>' +
-		        '</button>' +
-		        '</div>' +
-		        '</div>' +
-		        '</div>';
-			return reviewHTML;
-		}
-
+		});
+		
 	})
+	
+	function allAskList(){
+	    $(".ask-item").removeClass("d-none"); 
+	    $(".askBtn-container").hide(); 
+	}
 
 </script>

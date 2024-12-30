@@ -21,6 +21,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        <if test="searchValue != null and searchKey != null">
 	            AND LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
 	        </if>
+	        <if test="product_id != null and product_id != 0">
+	        	AND product_id = #{product_id}
+	        </if>
 	    </where>
 	    ORDER BY faq_qna_date desc
 	</select>

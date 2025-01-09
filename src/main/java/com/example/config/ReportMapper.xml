@@ -5,7 +5,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="ReportMapper">
 
 	<select id="allReportType" resultType="ReportDTO">
-		SELECT REPORT_TYPE_ID AS reportTypeId, 
+		SELECT REPORT_TYPE_ID AS reportType, 
 				REPORT_TYPE_NAME AS reportTypeName, 
 				TARGET_TYPE AS targetType 
 		FROM REPORT_TYPES
@@ -25,4 +25,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="category != null">, #{category}</if>
 		)
 	</insert>
+	
+	<select id="allReportList" resultType="ReportDTO">
+		SELECT REPORT_ID AS reportId, 
+				TARGET_TYPE AS targetType, 
+				TARGET_ID AS targetId, 
+				REPORT_TYPE AS reportType, 
+				TITLE, 
+				CONTENT, 
+				REPORTER_NAME AS reporterName, 
+				REPORTER_EMAIL AS reporterEmail, 
+				REPORTER_PHONE AS reporterPhone, 
+				TO_CHAR(CREATED_AT, 'yyyy/mm/dd') AS createdAt, 
+				STATUS, 
+				HANDLER_ID AS handlerId, 
+				HANDLED_AT AS handledAt, 
+				COMMENTS, 
+				CATEGORY
+		FROM REPORTS
+		ORDER BY reportId DESC
+	</select>
+	
+	<select id="getReportById" parameterType="int" resultType="ReportDTO">
+	    SELECT REPORT_ID AS reportId, 
+				TARGET_TYPE AS targetType, 
+				TARGET_ID AS targetId, 
+				REPORT_TYPE AS reportType, 
+				TITLE, 
+				CONTENT, 
+				REPORTER_NAME AS reporterName, 
+				REPORTER_EMAIL AS reporterEmail, 
+				REPORTER_PHONE AS reporterPhone, 
+				TO_CHAR(CREATED_AT, 'yyyy/mm/dd') AS createdAt, 
+				STATUS, 
+				HANDLER_ID AS handlerId, 
+				HANDLED_AT AS handledAt, 
+				COMMENTS, 
+				CATEGORY
+		FROM REPORTS
+	    WHERE REPORT_ID = #{reportId}
+	</select>
+	
+	<update id="updateReport" parameterType="com.example.dto.ReportDTO">
+	    UPDATE REPORTS
+	    SET STATUS = #{status},
+	        HANDLER_ID = #{handlerId},
+	        HANDLED_AT = sysdate
+	        <if test="comments != null">, COMMENTS = #{comments}</if>
+	    WHERE REPORT_ID = #{reportId}
+	</update>
 </mapper>

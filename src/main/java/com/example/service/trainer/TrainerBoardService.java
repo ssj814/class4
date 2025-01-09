@@ -69,4 +69,5 @@ public class TrainerBoardService {
 		return dao.selectTopPosts();
 	}
 
+
 }

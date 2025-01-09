@@ -46,6 +46,9 @@ public class FaqDAO {
 	public int deleteQuestion(int faq_qna_id) {
 		return session.delete("FaqMapper.deleteQuestion",faq_qna_id);
 	}
-	
+
+	public List<FaqDTO> AllAskList(RowBounds bounds) {
+		return session.selectList("FaqMapper.AllAskList","",bounds);
+	}
 	
 }

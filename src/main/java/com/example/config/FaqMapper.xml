@@ -67,5 +67,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	DELETE FROM FAQ_QNA
         WHERE faq_qna_id = #{faq_qna_id}
     </delete>
+    
+   	<select id="AllAskList" resultType="FaqDTO">
+		 SELECT * FROM FAQ_QNA 
+	</select>
 	
 </mapper>

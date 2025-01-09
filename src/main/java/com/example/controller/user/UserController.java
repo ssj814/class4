@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.dto.FaqDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductWishDTO;
 import com.example.dto.user.UserDTO;
@@ -41,6 +43,7 @@ import com.example.entity.User;
 import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
 import com.example.service.Mypage.MyPageServiceImpl;
+import com.example.service.faq.FaqService;
 import com.example.service.shoppingmall.CartService;
 import com.example.service.shoppingmall.ProductService;
 import com.example.service.shoppingmall.WishService;
@@ -58,9 +61,6 @@ public class UserController {
     
     @Autowired
     private UserRepository userRepository;
-    
-    @Autowired
-    private CartService cartService;
 
     @Autowired
     private WishService wishService;
@@ -70,6 +70,9 @@ public class UserController {
 
     @Autowired
     private MyPageServiceImpl myPageService;
+    
+    @Autowired
+    private FaqService faqService;
     
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
     private final String uploadPath = "C:/images/user/"; // 외부 파일 저장 경로
@@ -229,8 +232,6 @@ public class UserController {
         }
     }
 
-    
-
     @ModelAttribute("validationUserDTO")
     public ValidationUserDTO createValidationUserDTO() {
         return new ValidationUserDTO();
@@ -305,6 +306,25 @@ public class UserController {
 	        userService.updateUserRole(usernumber, newRole);  // 역할 변경 서비스 호출
 	        return "redirect:/admin/view";  // 변경 후 목록 페이지로 리다이렉트
 	    }
+	
+	// 관리자 메뉴 - 문의관리
+    @RequestMapping("/admin/view_ask")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String managerAskView(Model m, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+		
+    	int perPage = 15;
+		RowBounds bounds = new RowBounds((currentPage-1)*perPage, perPage);
+		int totalCount = faqService.AllAskList(new RowBounds()).size();
+        int totalPages = (int) Math.ceil((double) totalCount / perPage);
+		
+    	List<FaqDTO> askList =  faqService.AllAskList(bounds);
+    	m.addAttribute("askList", askList);
+    	m.addAttribute("currentPage", currentPage);
+    	m.addAttribute("perPage", perPage);
+    	m.addAttribute("totalCount", totalCount);
+    	m.addAttribute("totalPages", totalPages);
+        return "user/adminAskView";
+    }
 
     @PostMapping("/user/withdraw")
     public String withdrawUser(@RequestParam("reason") String reason, Principal principal, HttpServletRequest request, HttpServletResponse response, RedirectAttributes redirectAttributes) {

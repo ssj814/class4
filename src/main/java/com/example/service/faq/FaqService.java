@@ -23,12 +23,7 @@ public class FaqService {
 	}
 
 	public List<FaqDTO> qnaList(HashMap<String, Object> map, RowBounds bounds) {
-		List<FaqDTO> list = null;
-		if(map == null) {
-			list = list();
-		} else {
-			list = dao.qnaList(map,bounds);
-		}
+		List<FaqDTO> list = map == null ? list = list() : dao.qnaList(map,bounds);		
 		return list;
 	}
 
@@ -37,24 +32,14 @@ public class FaqService {
 	}
 
 	public String saveQuestion(FaqDTO faqDTO) {
-		String message = null;
 		int saveResult = dao.saveQuestion(faqDTO);
-		if(saveResult==1) {
-			message = "질문을 등록하였습니다.";
-		} else {
-			message = "질문 등록 실패";
-		}
+		String message = saveResult==1 ? "질문을 등록하였습니다." : "질문 등록 실패";
 		return message;
 	}
 
 	public String saveAnswer(FaqDTO faqDTO) {
-		String message = null;
 		int saveResult = dao.saveAnswer(faqDTO);
-		if(saveResult==1) {
-			message = "답변을 등록하였습니다.";
-		} else {
-			message = "답변 등록 실패";
-		}
+		String message = saveResult==1 ? "답변을 등록하였습니다." : "답변 등록 실패";
 		return message;
 	}
 
@@ -67,7 +52,10 @@ public class FaqService {
 		String message = deleteResult == 1 ? "삭제하였습니다." : "삭제 실패.";
 		return message;
 	}
-
 	
-
+	public List<FaqDTO> AllAskList(RowBounds bounds){
+		List<FaqDTO> askList = dao.AllAskList(bounds);
+		return askList;
+	}
+	
 }

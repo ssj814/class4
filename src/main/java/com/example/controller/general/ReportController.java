@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.dto.BoardPostsDTO;
@@ -50,14 +51,17 @@ public class ReportController {
     public String reportWrite(@RequestParam("targetType") String targetType, 
     		@RequestParam(value = "category", required = false) String category,
     		@RequestParam(value = "id", required = false) Integer id,
+    		@RequestParam(value = "previousUrl", required = false) String previousUrl,
     		Model m) {
+    	System.out.println("previousUrl : "+previousUrl);
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userid = authentication.getName();
         User user = userRepository.findByUserid(userid).orElse(null);
-        Map<String, String> map = new HashMap<>();
-        map.put("realname", user.getRealusername());
-        map.put("email", user.getEmail());
-        map.put("phone", user.getPhone1()+user.getPhone2()+user.getPhone3());
+        
+        Map<String, String> userinfo = new HashMap<>();
+        userinfo.put("realname", user.getRealusername());
+        userinfo.put("email", user.getEmail());
+        userinfo.put("phone", user.getPhone1()+user.getPhone2()+user.getPhone3());
         
     	List<ReportDTO> reportTypes = rService.allReportType();
     	
@@ -77,7 +81,8 @@ public class ReportController {
     	    throw new IllegalArgumentException("잘못된 신고 요청입니다.");
     	}
     	
-        m.addAttribute("user", map);
+        m.addAttribute("user", userinfo);
+        m.addAttribute("previousUrl", previousUrl);
         m.addAttribute("targetId", id);
     	m.addAttribute("targetType", targetType);
     	m.addAttribute("reportTypes", reportTypes);
@@ -86,13 +91,16 @@ public class ReportController {
     }
     
     @PostMapping("/user/reportWrite")
-    public String reportSave(ReportDTO dto ) {
+    public String reportSave(ReportDTO dto, @RequestParam(value = "previousUrl", required = false) String previousUrl) {
     	System.out.println("reportDTO : "+dto);
     	rService.saveReport(dto);
     	System.out.println("저장완료");
     	
-    	// ↓↓ 신고 완료 후 어느 페이지로 이동할지 정하고 변경 ↓↓
-    	return "reports/reportWrite";
+    	if (previousUrl != null && !previousUrl.isEmpty()) {
+            return "redirect:" + previousUrl;
+        }
+    	
+    	return "redirect:/";
     }
 
     private String getContentByCategoryAndTarget(String category, String targetType, Integer id) {

@@ -79,6 +79,7 @@
         	<c:if test="${not empty category}">
 			    <input type="hidden" name="category" value="${category}">
 			</c:if>
+			<input type="hidden" name="previousUrl" value="${previousUrl}">
         </form>
     </div>
 <script>

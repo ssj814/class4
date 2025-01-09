@@ -28,6 +28,4 @@ public class ReportDTO {
     private String category;		  // 게시판 종류
     
     private String reportTypeName;
-    
-
 }

@@ -5,17 +5,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <mapper namespace="FaqMapper">
 
 	<select id="list" resultType="FaqDTO">
-		 SELECT * FROM FAQ_QNA
+		 SELECT * FROM FAQ_QNA 
+		 WHERE category != 'ask-product'
 	</select>
 	
 	<select id="qnaList" parameterType="hashmap" resultType="FaqDTO">
 	    SELECT * FROM FAQ_QNA
 	    <where>
+	    	<if test="category == null">
+	    		category != 'ask-product'
+	    	</if>
 	        <if test="category != null and category != ''">
 	            category = #{category}
 	        </if>
 	        <if test="searchValue != null and searchKey != null">
 	            AND LOWER(${searchKey}) LIKE '%' || LOWER(#{searchValue}) || '%'
+	        </if>
+	        <if test="product_id != null and product_id != 0">
+	        	AND product_id = #{product_id}
 	        </if>
 	    </where>
 	    ORDER BY faq_qna_date desc
@@ -29,6 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    	<select id="getTotalCount" parameterType="hashmap" resultType="int">
 	    SELECT COUNT(*) FROM FAQ_QNA
 	    <where>
+   	    	<if test="category == null">
+	    		category != 'ask-product'
+	    	</if>
 	        <if test="category != null and category != ''">
 	            category = #{category}
 	        </if>
@@ -39,8 +49,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
     
     <insert id="saveQuestion" parameterType="FaqDTO">
-    	INSERT INTO FAQ_QNA(faq_qna_id, question, questioner, faq_qna_date, category, is_secret)
-    	VALUES (FAQ_QNA_SEQ.nextval, #{question}, #{questioner}, SYSDATE, #{category}, #{is_secret})
+    	INSERT INTO FAQ_QNA(faq_qna_id, question, questioner, faq_qna_date, category, is_secret
+    	<if test="product_id != null and product_id != 0">, product_id</if>
+    	)
+    	VALUES (FAQ_QNA_SEQ.nextval, #{question}, #{questioner}, SYSDATE, #{category}, #{is_secret}
+    	<if test="product_id != null and product_id != 0">, #{product_id}</if>
+    	)
     </insert>
     
     <update id="saveAnswer" parameterType="FaqDTO">
@@ -53,5 +67,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	DELETE FROM FAQ_QNA
         WHERE faq_qna_id = #{faq_qna_id}
     </delete>
+    
+   	<select id="AllAskList" resultType="FaqDTO">
+		 SELECT * FROM FAQ_QNA 
+	</select>
 	
 </mapper>

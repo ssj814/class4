@@ -79,7 +79,6 @@
 			<i class="fa-solid fa-chevron-down"></i>
 		</button>
 	</div>
-	
 	<!-- 상품 신고 (임시 위치입니다. 나중에 상품문의 하단으로 이동.) -->
 	<div class="report-container">
 		<h5>상품 신고</h5>

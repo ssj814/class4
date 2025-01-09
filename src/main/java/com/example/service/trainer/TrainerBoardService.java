@@ -61,10 +61,8 @@ public class TrainerBoardService {
 		return dao.list();
 	}
 
-	public TrainerBoardDTO getPostById(int postid) {
-		TrainerBoardDTO dto = null;
-		dto.getPostid();
-		return dto;
+	public BoardPostsDTO getPostById(int postid) {
+		return dao.getPostbyId(postid);
 	}
 
 	public List<BoardPostsDTO> selectTopPosts() {

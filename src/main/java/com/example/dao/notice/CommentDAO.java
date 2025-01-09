@@ -32,4 +32,8 @@ public class CommentDAO {
     public void deleteComment(int id) {
     	session.delete("CommentMapper.deleteComment", id);
     }
+
+	public CommentDTO getCommentbyId(int id) {
+		return session.selectOne("CommentMapper.getCommentbyId", id);
+	}
 }

@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<link rel="stylesheet" href="<c:url value='/resources/css/searchResult.css'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/general/searchResult.css'/>">
 
 <div id="search-result-container" class="custom-search">
     <h2>검색 결과: "${keyword}"</h2>
@@ -56,7 +56,7 @@
             </tbody>
         </table>
         <c:if test="${totalProductCount > 3}">
-        	<a href="<c:url value='/searchDetail?category=PRODUCT&keyword=${keyword}' />" class="btn btn-primary">더보기</a>
+        	<a href="<c:url value='/searchDetail?category=PRODUCT&keyword=${keyword}' />" class="btn btn-dark">더보기</a>
         </c:if>
     </div>
 
@@ -114,7 +114,7 @@
                 </tbody>
             </table>
             <c:if test="${totalBoardCount > 3}">
-            	<a href="<c:url value='/searchDetail?category=POSTS&subcategory=${boardSection.id}&keyword=${keyword}' />" class="btn btn-primary">더보기</a>
+            	<a href="<c:url value='/searchDetail?category=POSTS&subcategory=${boardSection.id}&keyword=${keyword}' />" class="btn btn-dark">더보기</a>
             </c:if>
         </c:forEach>
     </div>
@@ -160,7 +160,7 @@
             </tbody>
         </table>
         <c:if test="${totalFaqCount > 3}">
-        	<a href="<c:url value='/searchDetail?category=FAQ&keyword=${keyword}' />" class="btn btn-primary">더보기</a>
+        	<a href="<c:url value='/searchDetail?category=FAQ&keyword=${keyword}' />" class="btn btn-dark">더보기</a>
         </c:if>
     </div>
 

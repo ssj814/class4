@@ -17,11 +17,11 @@ public class HtmlFilter {
         if (input == null || input.isEmpty()) {
             return "";
         }
-        System.out.println("Before decoding: " + input);
+        //System.out.println("Before decoding: " + input);
         
         // 1. HTML 디코딩
         String decodedInput = StringEscapeUtils.unescapeHtml4(input);
-        System.out.println("After decoding: " + decodedInput);
+        //System.out.println("After decoding: " + decodedInput);
         
         // 2. font-family 속성을 안전한 플레이스홀더로 변경
         String placeholderPrefix = "FONT_FAMILY_PLACEHOLDER_";
@@ -29,7 +29,7 @@ public class HtmlFilter {
             "font-family:\\s*\"([^\"]+)\"",
             "font-family:" + placeholderPrefix + "$1"
         );
-        System.out.println("Replaced Input: " + replacedInput);
+        //System.out.println("Replaced Input: " + replacedInput);
         
         // 3. 허용된 태그만 남기기 위한 Safelist 생성 (기본적으로 HTML 허용)
         Safelist safelist = Safelist.basicWithImages();
@@ -44,14 +44,14 @@ public class HtmlFilter {
 
         // 4. Safelist.basicWithImages()로 필터링
         String safeOutput = Jsoup.clean(replacedInput, safelist);
-        System.out.println("After Jsoup.clean: " + safeOutput);
+        //System.out.println("After Jsoup.clean: " + safeOutput);
         
         // 5. 플레이스홀더를 다시 복원
         String restoredHtml = safeOutput.replaceAll(
             "font-family:" + placeholderPrefix + "([^;]+)",
             "font-family: \'$1\'"
         );
-        System.out.println("Restored Html: " + restoredHtml);
+        //System.out.println("Restored Html: " + restoredHtml);
         
         return filterStyles(restoredHtml);
     }
@@ -89,7 +89,7 @@ public class HtmlFilter {
        
        for (String attribute : styleAttributes) {
            attribute = attribute.trim();
-           System.out.println("attribute : "+attribute.toString());
+           //System.out.println("attribute : "+attribute.toString());
            // 허용된 스타일 속성만 추가
            for (String allowed : allowedStyles) {
                if (attribute.startsWith(allowed + ":")) {

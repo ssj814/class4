@@ -1,9 +1,7 @@
-package com.example.controller;
+package com.example.controller.general;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.dto.SearchResultDTO;
-import com.example.service.SearchService;
+import com.example.service.general.SearchService;
 
 @Controller
 public class SearchController {

@@ -70,7 +70,7 @@
 	color: black;
 }
 
-.answered {
+.answered td{
 	background-color: #e9ecef !important;
 }
 
@@ -133,13 +133,13 @@
 			</thead>
 			<tbody>
 				<c:forEach var="ask" items="${askList}" varStatus="status">
-					<tr class="ask-container">
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">
+					<tr class="ask-container <c:if test="${ask.answer != null}">answered</c:if>">
+						<td class="text-nowrap">
 							${(currentPage - 1) * perPage + status.index + 1 }
 						</td>
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">${ask.category}</td>
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">${ask.faq_qna_date}</td>
-						<td class="text-nowrap ask-question <c:if test="${ask.answer != null}">answered</c:if>">
+						<td class="text-nowrap">${ask.category}</td>
+						<td class="text-nowrap">${ask.faq_qna_date}</td>
+						<td class="text-nowrap ask-question">
 							<c:choose>
 								<c:when test="${ask.product_id != 0}">
 									<a href="<c:url value='/shopDetail?productId=${ask.product_id}'/>">${ask.question}</a>
@@ -149,7 +149,7 @@
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td style="text-align: right;" class="<c:if test="${ask.answer != null}">answered</c:if>"><button class="answer-btn">답변하기</button></td>
+						<td style="text-align: right;"><button class="answer-btn">답변하기</button></td>
 					</tr>
 					<tr class="answer-container">
 						<td colspan="5">

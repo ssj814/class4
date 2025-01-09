@@ -1,0 +1,94 @@
+@charset "UTF-8";
+/* 공통 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 1.8em;
+    color: #444;
+}
+
+.report_container {
+    max-width: 600px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.section {
+    margin-bottom: 20px;
+}
+
+.section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.sectionHeader {
+	font-size: 20px;
+	border-bottom: 1px solid black;
+}
+
+.section input[type="text"],
+.section input[type="email"],
+.section input[type="tel"],
+.section select,
+.section textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: border-color 0.3s;
+}
+
+.section input[type="text"]:focus,
+.section input[type="email"]:focus,
+.section input[type="tel"]:focus,
+.section select:focus,
+.section textarea:focus {
+    border-color: pink;
+    outline: none;
+}
+
+textarea {
+    resize: none;
+}
+
+.submit-btn {
+    display: block;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #ccc;
+}
+
+.content-view {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    line-height: 1.5;
+    font-size: 14px;
+    white-space: pre-wrap; /* 줄 바꿈 적용 */
+    word-wrap: break-word; /* 긴 단어도 줄 바꿈 */
+}

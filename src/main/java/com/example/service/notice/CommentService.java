@@ -75,5 +75,9 @@ public class CommentService {
     public void deleteComment(int id) {
         dao.deleteComment(id);
     }
+    
+    public CommentDTO getCommentbyId(int id) {
+    	return dao.getCommentbyId(id);
+    }
 	
 }

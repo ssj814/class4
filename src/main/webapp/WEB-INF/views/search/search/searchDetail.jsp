@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<link rel="stylesheet" href="<c:url value='/resources/css/searchResult.css'/>">
+<link rel="stylesheet" href="<c:url value='/resources/css/general/searchResult.css'/>">
 
 <div id="search-result-container" class="custom-search">
     <h2>검색 결과: "${keyword}"</h2>

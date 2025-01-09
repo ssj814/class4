@@ -99,7 +99,7 @@
 			 	<!-- 폼안에서 button은 submit이 기본임. type으로 버튼 따로 지정해서 글 작성 도중에도 넘어가게 해줌  -->
         	</div>
         	<div>
-				<button class="buttonmulti" type="button">신고</button>
+				<button class="buttonmulti" type="button" id="report">신고</button>
 			</div>
 		</div>
 		<hr>
@@ -132,7 +132,7 @@
 									style="background-color: black; color:pink";
 									</c:if>>${comment.realUsername}</span>
 								<span> | </span>
-								<span><button class="btn text-dark m-0 p-0 opacity-50">신고</button></span>
+								<span><button class="btn text-dark m-0 p-0 opacity-50" data-id="${comment.commId}">신고</button></span>
 							</td>
 						<!-- comment.userid와 로그인한 user가 같으면 black배경에 pink글자색  -->
 						</tr>
@@ -302,6 +302,28 @@
 				submitButton.classList.add('hidden'); // 버튼을 숨김
 			}
 		});
+		
+		const reportButton = document.getElementById("report");
+		
+	    reportButton.addEventListener("click", function () {
+	        let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${dto.postId}&category=TRAINER`;
+	        url += '&previousUrl=' + encodeURIComponent(window.location.href);
+	        location.href = url;
+	    });
+	    
+	    const commnetReportButtons = document.querySelectorAll(".btn.text-dark.m-0.p-0.opacity-50");
+
+	    commnetReportButtons.forEach((button) => {
+	        button.addEventListener("click", function () {
+	        	
+	            let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=COMMENT&category=TRAINER`;
+	            if(button.dataset.id){
+					url += '&id=' + button.dataset.id;
+	            }
+	            url += '&previousUrl=' + encodeURIComponent(window.location.href);
+	            location.href = url;
+	        });
+	    });
 	});
 </script>
 </main>

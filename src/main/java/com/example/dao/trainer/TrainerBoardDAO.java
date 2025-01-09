@@ -69,4 +69,8 @@ public class TrainerBoardDAO {
 		return template.selectList("BoardMapper.selectTopPosts");
 	}
 
+	public BoardPostsDTO getPostbyId(int postid) {
+		return template.selectOne("BoardMapper.getPostbyId", postid);
+	}
+
 }

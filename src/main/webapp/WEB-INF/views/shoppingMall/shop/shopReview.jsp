@@ -83,7 +83,6 @@
 </div>
 
 <script>
-
 	$(function() {
 		
 		// 로그인 유저 정보

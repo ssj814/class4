@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReportMapper">
+
+	<select id="allReportType" resultType="ReportDTO">
+		SELECT REPORT_TYPE_ID AS reportTypeId, 
+				REPORT_TYPE_NAME AS reportTypeName, 
+				TARGET_TYPE AS targetType 
+		FROM REPORT_TYPES
+	</select>
+	
+	<insert id="saveReport" parameterType="ReportDTO">
+		INSERT INTO REPORTS (
+		report_id, target_type, target_id, report_type, title, content, 
+		reporter_name, reporter_email, created_at 
+		<if test="reporterPhone != null">, reporter_phone</if>
+		<if test="category != null">, category</if>
+		) 
+		VALUES (
+		#{reportId}, #{targetType}, #{targetId}, #{reportTypeId}, #{title}, #{content}, 
+		#{reporterName}, #{reporterEmail}, sysdate 
+		<if test="reporterPhone != null">, #{reporterPhone}</if>
+		<if test="category != null">, #{category}</if>
+		)
+	</insert>
+</mapper>

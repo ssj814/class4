@@ -64,8 +64,20 @@
 	        </c:if>
 	        <button onclick="location.href='<c:url value='/sicdan_list?currentPage=${currentPage}' />'">목록</button>
     	</div>
-    	<div class="">
-    		<button>신고</button>
+    	<div>
+    		<button id="report">신고하기</button>
     	</div>
     </div>
 </div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    const reportButton = document.getElementById("report");
+	
+	    reportButton.addEventListener("click", function () {
+	        let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${retrive.postId}&category=SICDAN`;
+	        url += '&previousUrl=' + encodeURIComponent(window.location.href);
+	        location.href = url;
+	    });
+	});
+</script>

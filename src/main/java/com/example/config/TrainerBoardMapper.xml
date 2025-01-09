@@ -97,5 +97,8 @@
         </where>
     </select>
 
+	<select id="getPostbyId" parameterType="int" resultType="BoardPostsDTO">
+		SELECT * FROM BOARD_POSTS WHERE post_id = #{id}
+	</select>
 
 </mapper>

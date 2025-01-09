@@ -14,7 +14,7 @@ public class ReportDTO {
 	private int reportId;             // 신고 ID
 	private String targetType;        // 분류 종류 (PRODUCT, POST, COMMENT)
     private int targetId;             // 신고 대상 ID (상품, 게시글, 댓글 등)
-    private int reportTypeId;         // 신고 유형 ID (report_types 참조)
+    private int reportType;         // 신고 유형 ID (report_types 참조)
     private String title;             // 신고 제목
     private String content;           // 신고 내용
     private String reporterName;      // 신고자 이름

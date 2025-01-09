@@ -51,7 +51,7 @@
     <h4 class="sidebar-title text-center">관리자 메뉴</h4>
     <a href="<c:url value='/admin/view'/>">회원관리</a>
     <a href="<c:url value='/admin/view_ask'/>">문의관리</a>
-    <a href="#">신고관리</a>
+    <a href="<c:url value='/admin/view_reports'/>">신고관리</a>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>

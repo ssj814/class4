@@ -15,10 +15,10 @@
                         <option value="">선택하세요</option>
                         <c:forEach var="type" items="${reportTypes}">
                             <c:if test="${targetType == 'PRODUCT' && type.targetType == 'PRODUCT'}">
-                                <option value="${type.reportTypeId}">${type.reportTypeName}</option>
+                                <option value="${type.reportType}">${type.reportTypeName}</option>
                             </c:if>
                             <c:if test="${(targetType == 'POST' || targetType == 'COMMENT') && type.targetType == 'CONTENT'}">
-                                <option value="${type.reportTypeId}">${type.reportTypeName}</option>
+                                <option value="${type.reportType}">${type.reportTypeName}</option>
                             </c:if>
                         </c:forEach>
                     </select>

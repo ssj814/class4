@@ -306,8 +306,8 @@
 		const reportButton = document.getElementById("report");
 		
 	    reportButton.addEventListener("click", function () {
-	        const url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${dto.postId}&category=TRAINER`;
-	        
+	        let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${dto.postId}&category=TRAINER`;
+	        url += '&previousUrl=' + encodeURIComponent(window.location.href);
 	        location.href = url;
 	    });
 	    
@@ -320,7 +320,7 @@
 	            if(button.dataset.id){
 					url += '&id=' + button.dataset.id;
 	            }
-	            console.log(url);
+	            url += '&previousUrl=' + encodeURIComponent(window.location.href);
 	            location.href = url;
 	        });
 	    });

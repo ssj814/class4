@@ -259,11 +259,12 @@
 
 		    commnetReportButtons.forEach((button) => {
 		        button.addEventListener("click", function () {
+		        	
 		            let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=COMMENT&category=NOTICE`;
+		            
 		            if(button.dataset.id){
 						url += '&id=' + button.dataset.id;
 		            }
-		         	// 현재 페이지 URL을 previousUrl로 추가
 		            url += '&previousUrl=' + encodeURIComponent(window.location.href);
 
 		            console.log(url);

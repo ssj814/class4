@@ -75,8 +75,8 @@
 	    const reportButton = document.getElementById("report");
 	
 	    reportButton.addEventListener("click", function () {
-	        const url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${retrive.postId}&category=SICDAN`;
-	        
+	        let url = `${pageContext.request.contextPath}/user/reportWrite?targetType=POST&id=${retrive.postId}&category=SICDAN`;
+	        url += '&previousUrl=' + encodeURIComponent(window.location.href);
 	        location.href = url;
 	    });
 	});

@@ -131,6 +131,7 @@ public class ReportController {
     @PostMapping("/admin/handle_report")
     @PreAuthorize("hasRole('ADMIN')")
     public String processReport(ReportDTO report) {
+    	
     	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String handlerId = authentication.getName();
         
@@ -140,7 +141,6 @@ public class ReportController {
         dto.setComments(report.getComments());
         dto.setHandlerId(handlerId);
         
-        // 상태가 RESOLVED인 경우 해당 대상 삭제
         if ("RESOLVED".equals(report.getStatus())) {
             if ("PRODUCT".equals(report.getTargetType())) {
                 pService.productDelete(report.getTargetId()); // 상품 삭제

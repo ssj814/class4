@@ -37,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.dto.FaqDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductWishDTO;
+import com.example.dto.ReportDTO;
 import com.example.dto.user.UserDTO;
 import com.example.dto.user.ValidationUserDTO;
 import com.example.entity.User;
@@ -44,7 +45,7 @@ import com.example.entity.User.Role;
 import com.example.repository.UserRepository;
 import com.example.service.Mypage.MyPageServiceImpl;
 import com.example.service.faq.FaqService;
-import com.example.service.shoppingmall.CartService;
+import com.example.service.general.ReportService;
 import com.example.service.shoppingmall.ProductService;
 import com.example.service.shoppingmall.WishService;
 import com.example.service.user.UserService;
@@ -73,6 +74,9 @@ public class UserController {
     
     @Autowired
     private FaqService faqService;
+    
+    @Autowired
+    private ReportService reportService;
     
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
     private final String uploadPath = "C:/images/user/"; // 외부 파일 저장 경로
@@ -324,6 +328,27 @@ public class UserController {
     	m.addAttribute("totalCount", totalCount);
     	m.addAttribute("totalPages", totalPages);
         return "user/adminAskView";
+    }
+    // 관리자 메뉴 - 신고관리
+    @RequestMapping("/admin/view_reports")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String managerReportsView(Model m, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+    	
+    	int perPage = 10;
+    	RowBounds bounds = new RowBounds((currentPage-1)*perPage, perPage);
+    	int totalCount = reportService.allReportList(new RowBounds()).size();
+    	int totalPages = (int) Math.ceil((double) totalCount / perPage);
+    	
+    	List<ReportDTO> reportTypes = reportService.allReportType();
+    	List<ReportDTO> reportList =  reportService.allReportList(bounds);
+    	
+    	m.addAttribute("reportList", reportList);
+    	m.addAttribute("reportTypes", reportTypes);
+    	m.addAttribute("currentPage", currentPage);
+    	m.addAttribute("perPage", perPage);
+    	m.addAttribute("totalCount", totalCount);
+    	m.addAttribute("totalPages", totalPages);
+    	return "user/adminReportsView";
     }
 
     @PostMapping("/user/withdraw")

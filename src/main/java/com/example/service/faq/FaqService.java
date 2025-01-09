@@ -2,6 +2,7 @@ package com.example.service.faq;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +57,14 @@ public class FaqService {
 	public List<FaqDTO> AllAskList(RowBounds bounds){
 		List<FaqDTO> askList = dao.AllAskList(bounds);
 		return askList;
+	}
+	
+	public List<FaqDTO> AllUnAnsweredAskList(RowBounds bounds){
+		List<FaqDTO> askList = dao.AllAskList(bounds);
+		List<FaqDTO> unAnsweredAskList = askList.stream()
+			    .filter(faq -> faq.getAnswer() == null)
+			    .collect(Collectors.toList());
+		return unAnsweredAskList;
 	}
 	
 }

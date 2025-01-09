@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
     
    	<select id="AllAskList" resultType="FaqDTO">
-		 SELECT * FROM FAQ_QNA 
+		 SELECT * FROM FAQ_QNA ORDER BY faq_qna_date DESC
 	</select>
 	
 </mapper>

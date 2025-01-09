@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="category != null">, category</if>
 		) 
 		VALUES (
-		#{reportId}, #{targetType}, #{targetId}, #{reportTypeId}, #{title}, #{content}, 
+		#{reportId}, #{targetType}, #{targetId}, #{reportType}, #{title}, #{content}, 
 		#{reporterName}, #{reporterEmail}, sysdate 
 		<if test="reporterPhone != null">, #{reporterPhone}</if>
 		<if test="category != null">, #{category}</if>

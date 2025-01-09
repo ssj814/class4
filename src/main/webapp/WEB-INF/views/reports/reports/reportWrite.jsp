@@ -10,8 +10,8 @@
             <div class="section">
                 <label class="sectionHeader">신고 정보 (필수)</label>
                 <div>
-                    <label for="reportTypeId">신고분류</label>
-                    <select id="reportTypeId" name="reportTypeId" required>
+                    <label for="reportType">신고분류</label>
+                    <select id="reportType" name="reportType" required>
                         <option value="">선택하세요</option>
                         <c:forEach var="type" items="${reportTypes}">
                             <c:if test="${targetType == 'PRODUCT' && type.targetType == 'PRODUCT'}">

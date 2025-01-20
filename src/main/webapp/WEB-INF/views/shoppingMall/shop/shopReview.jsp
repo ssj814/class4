@@ -32,7 +32,7 @@
 
 	<div class="d-flex justify-content-between align-items-center">
 		<h3 class="align-items-center fw-bold">상품 리뷰</h3>
-		<c:if test="${!empty sessionScope.SPRING_SECURITY_CONTEXT.authentication }"> 
+		<c:if test="${isReviewWritable eq 'T'}"> 
 			<button id="Product-Review-openWindow"
 				class="btn btn-link fst-italic text-dark mb-0">
 				<i class="fa-solid fa-pen"></i>리뷰 등록하기

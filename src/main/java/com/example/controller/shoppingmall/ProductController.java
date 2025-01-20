@@ -27,15 +27,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.dto.BoardPostsDTO;
 import com.example.dto.FaqDTO;
-import com.example.dto.NoticeDTO;
 import com.example.dto.ProductCategoryDTO;
 import com.example.dto.ProductDTO;
 import com.example.dto.ProductOptionDTO;
 import com.example.dto.ProductRecentDTO;
 import com.example.dto.ProductReviewDTO;
+import com.example.entity.OrderMain;
+import com.example.entity.OrderProduct;
 import com.example.service.faq.FaqService;
 import com.example.service.image.ImageService;
 import com.example.service.notice.NoticeService;
+import com.example.service.shoppingmall.OrderService;
 import com.example.service.shoppingmall.ProductReviewService;
 import com.example.service.shoppingmall.ProductService;
 
@@ -58,6 +60,9 @@ public class ProductController {
 	
 	@Autowired
 	FaqService faqService;
+	
+	@Autowired
+	OrderService orderService;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String shopMain(Model m, HttpSession session) {
@@ -170,6 +175,22 @@ public class ProductController {
 			    .orElse(0.0); // 값이 없을 경우 기본값 설정
 		long roundedAverageRating = Math.round(averageRating);
 		
+		//구매한 유저면 리뷰 작성 가능
+		
+		String isReviewWritable = "F";
+		List<OrderMain> orderMainList  = orderService.findOrderMainByUserId(user_id);
+		if(orderMainList  != null && !orderMainList.isEmpty() ) {
+			for (OrderMain orderMain : orderMainList ) {
+			    Long orderProductId = orderService
+			    						.findOrderProductByOrderId(orderMain.getOrderId())
+			    						.getProductId();
+			    if(orderProductId.equals((long)productId) || "admin".equals(user_id)) {
+			    	isReviewWritable = "T";
+			    	break;
+			    }
+			}
+		}
+
 		//리뷰 페이징
 		int perPage = 5;
 		int totalReviews = allProductReview.size();
@@ -183,7 +204,7 @@ public class ProductController {
 	    Map<String, List<ProductOptionDTO>> groupedOptions = rawOptions.stream()
 	            .collect(Collectors.groupingBy(ProductOptionDTO::getOption_type));
 	    
-	    System.out.println("groupedOptions" + groupedOptions);
+	    //System.out.println("groupedOptions" + groupedOptions);
 	    
 	    List<Map<String, String>> options = new ArrayList<>();
 	    for (String optionType : groupedOptions.keySet()) {
@@ -229,6 +250,7 @@ public class ProductController {
 		m.addAttribute("productReview", productReviewDTO);
 		m.addAttribute("options", options);
 		m.addAttribute("askList", askList);
+		m.addAttribute("isReviewWritable",isReviewWritable);
 		return "shoppingMall/shopDetail";
 	}
 	

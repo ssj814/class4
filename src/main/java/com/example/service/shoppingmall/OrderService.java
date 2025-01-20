@@ -1,16 +1,19 @@
 package com.example.service.shoppingmall;
 
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.entity.OrderMain;
 import com.example.entity.OrderPayment;
 import com.example.entity.OrderProduct;
 import com.example.entity.OrderProductOption;
 import com.example.repository.OrderMainRepository;
 import com.example.repository.OrderPaymentRepository;
-import com.example.repository.OrderProductRepository;
 import com.example.repository.OrderProductOptionRepository;
+import com.example.repository.OrderProductRepository;
 
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,5 +67,15 @@ public class OrderService {
     // OrderProductOption 조회
     public OrderProductOption findOrderProductOptionById(Long id) {
         return orderProductOptionRepository.findById(id).orElse(null);
+    }
+    
+    // OrderMain 조회 : userId 기준
+    public List<OrderMain> findOrderMainByUserId(String userId) {
+        return orderMainRepository.findByUserId(userId);
+    }
+    
+    // OrderProduct 조회 : orderId 기준
+    public OrderProduct findOrderProductByOrderId(Long orderId) {
+        return orderProductRepository.findFirstByOrderId(orderId).orElse(null);
     }
 }

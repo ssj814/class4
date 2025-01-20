@@ -117,12 +117,16 @@
 	</div>
 
 	<div>
+		<c:set var="count" value="0" />
 		<c:forEach var="list" items="${allData}">
+			<c:if test="${count < 12}">
 			<div class="question" data-faq-qna-id="${list.faq_qna_id}"
 				onclick="toggleAnswer('answer_${list.faq_qna_id}')">
 				${list.question}</div>
 			<div class="answer" id="answer_${list.faq_qna_id}">
 				${list.answer}</div>
+			<c:set var="count" value="${count + 1}" />
+			</c:if>
 		</c:forEach>
 	</div>
 </div>

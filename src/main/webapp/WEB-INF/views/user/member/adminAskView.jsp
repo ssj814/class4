@@ -21,6 +21,10 @@
 	color: black;
 }
 
+.ask-container {
+	vertical-align: middle
+}
+
 .answer-container {
 	display: none;
 }
@@ -66,7 +70,7 @@
 	color: black;
 }
 
-.answered {
+.answered td{
 	background-color: #e9ecef !important;
 }
 
@@ -113,6 +117,11 @@
 <div class="content">
 	<div class="container mt-3">
 		<h2 class="mb-3 pb-1 fw-bold border-bottom border-dark">문의 관리</h2>
+		<div class="form-check form-switch mb-3">
+		  <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault"
+		         <c:if test="${unAnswered == true}">checked</c:if>>
+		  <label class="form-check-label" for="flexSwitchCheckDefault">답변 대기 질문만 보기</label>
+		</div>
 		<table class="table">
 			<thead>
 				<tr>
@@ -124,13 +133,13 @@
 			</thead>
 			<tbody>
 				<c:forEach var="ask" items="${askList}" varStatus="status">
-					<tr class="ask-container">
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">
+					<tr class="ask-container <c:if test="${ask.answer != null}">answered</c:if>">
+						<td class="text-nowrap">
 							${(currentPage - 1) * perPage + status.index + 1 }
 						</td>
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">${ask.category}</td>
-						<td class="text-nowrap <c:if test="${ask.answer != null}">answered</c:if>">${ask.faq_qna_date}</td>
-						<td class="text-nowrap ask-question <c:if test="${ask.answer != null}">answered</c:if>">
+						<td class="text-nowrap">${ask.category}</td>
+						<td class="text-nowrap">${ask.faq_qna_date}</td>
+						<td class="text-nowrap ask-question">
 							<c:choose>
 								<c:when test="${ask.product_id != 0}">
 									<a href="<c:url value='/shopDetail?productId=${ask.product_id}'/>">${ask.question}</a>
@@ -140,7 +149,7 @@
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td style="text-align: right;" class="<c:if test="${ask.answer != null}">answered</c:if>"><button class="answer-btn">답변하기</button></td>
+						<td style="text-align: right;"><button class="answer-btn">답변하기</button></td>
 					</tr>
 					<tr class="answer-container">
 						<td colspan="5">
@@ -215,6 +224,13 @@
 	            }
 	        });
 	    });
+	    
+	    $("#flexSwitchCheckDefault").on("change",function(){
+	    	const isChecked = $(this).prop("checked");
+		    const url = isChecked ? '/app/admin/view_ask?unAnswered=true' : '/app/admin/view_ask';
+		    window.location.href = url;
+	    });
+
 
 	});
 </script>

@@ -314,19 +314,22 @@ public class UserController {
 	// 관리자 메뉴 - 문의관리
     @RequestMapping("/admin/view_ask")
     @PreAuthorize("hasRole('ADMIN')")
-    public String managerAskView(Model m, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage) {
+    public String managerAskView(Model m, @RequestParam(value = "currentPage", defaultValue = "1") int currentPage,
+    								@RequestParam(value = "unAnswered", defaultValue = "false") Boolean unAnswered) {
 		
     	int perPage = 15;
 		RowBounds bounds = new RowBounds((currentPage-1)*perPage, perPage);
-		int totalCount = faqService.AllAskList(new RowBounds()).size();
+		int totalCount = !unAnswered ? faqService.AllAskList(new RowBounds()).size() : faqService.AllUnAnsweredAskList(new RowBounds()).size();
         int totalPages = (int) Math.ceil((double) totalCount / perPage);
 		
-    	List<FaqDTO> askList =  faqService.AllAskList(bounds);
+        List<FaqDTO> askList = !unAnswered ? faqService.AllAskList(bounds) : faqService.AllUnAnsweredAskList(bounds);
+
     	m.addAttribute("askList", askList);
     	m.addAttribute("currentPage", currentPage);
     	m.addAttribute("perPage", perPage);
     	m.addAttribute("totalCount", totalCount);
     	m.addAttribute("totalPages", totalPages);
+    	m.addAttribute("unAnswered", unAnswered);
         return "user/adminAskView";
     }
     // 관리자 메뉴 - 신고관리
